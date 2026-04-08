@@ -63,14 +63,14 @@
               <p class="text-xs text-slate-600 mt-1"><%= time_ago_in_words(link.created_at) %> ago</p>
             </div>
 
-            <%# Stats — relative + z-10 so they sit above the overlay %>
-            <div class="text-right shrink-0 hidden sm:block relative z-10">
-              <p class="text-lg font-semibold text-white tabular-nums"><%= number_with_delimiter(link.clicks_count) %></p>
-              <p class="text-xs text-slate-500">clicks</p>
-            </div>
+            <%# Stats + Actions grouped so they align with each other, not the full row height %>
+            <div class="flex items-center gap-3 shrink-0 relative z-10">
+              <div class="text-right hidden sm:block">
+                <p class="text-lg font-semibold text-white tabular-nums"><%= number_with_delimiter(link.clicks_count) %></p>
+                <p class="text-xs text-slate-500">clicks</p>
+              </div>
 
-            <%# Actions — relative + z-10 so clicks aren't swallowed by the overlay %>
-            <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 relative z-10">
+            <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <button class="btn-ghost p-1.5" data-controller="copy"
                       data-copy-text-value="<%= redirect_url(link.slug) %>"
                       data-action="click->copy#copy" title="Copy short URL">
@@ -101,6 +101,7 @@
                 </svg>
               <% end %>
             </div>
+            </div><%# /stats+actions wrapper %>
           </div>
         </div>
       <% end %>
