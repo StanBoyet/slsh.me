@@ -1,0 +1,23 @@
+<% content_for :title, "Set new password — slsh.me" %>
+<div class="min-h-screen flex items-center justify-center px-4">
+  <div class="w-full max-w-sm">
+    <div class="text-center mb-8">
+      <h1 class="text-2xl font-semibold text-white">slsh.me</h1>
+      <p class="text-slate-400 mt-1 text-sm">Set a new password</p>
+    </div>
+
+    <%= form_with url: password_path(params[:token]), method: :put, class: "card p-6 space-y-4" do |f| %>
+      <div>
+        <%= f.label :password, "New password", class: "label" %>
+        <%= f.password_field :password, required: true, autocomplete: "new-password",
+            maxlength: 72, class: "input", placeholder: "Min. 12 characters" %>
+      </div>
+      <div>
+        <%= f.label :password_confirmation, "Confirm password", class: "label" %>
+        <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password",
+            maxlength: 72, class: "input", placeholder: "••••••••" %>
+      </div>
+      <%= f.submit "Update password", class: "btn-primary w-full justify-center py-2.5" %>
+    <% end %>
+  </div>
+</div>
