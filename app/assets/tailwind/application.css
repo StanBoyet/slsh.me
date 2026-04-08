@@ -19,6 +19,15 @@
   }
 }
 
+@keyframes visit-flash {
+  0%   { background-color: rgb(139 92 246 / 0.15); }
+  100% { background-color: transparent; }
+}
+
+.new-visit-row {
+  animation: visit-flash 2s ease-out forwards;
+}
+
 @layer components {
   /* Base button shape (don't use @apply btn in derivatives — expand inline) */
   .btn {

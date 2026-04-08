@@ -1,8 +1,4 @@
 <% content_for :title, "/#{@link.slug} analytics — slsh.me" %>
-<%= content_for :head do %>
-  <%= javascript_include_tag "https://www.chartjs.org/dist/4.4.6/chart.umd.min.js", defer: true %>
-  <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/chartkick@5/dist/chartkick.js", defer: true %>
-<% end %>
 
 <div class="space-y-6">
   <%# Header %>
@@ -202,52 +198,41 @@
     </div>
   </div>
 
-  <%# Recent visits table %>
+  <%# Recent visits table — live-updating via Turbo Streams %>
+  <%= turbo_stream_from "link_#{@link.id}_visits" %>
+
   <div class="card overflow-hidden">
-    <div class="px-5 py-4 border-b border-slate-800">
+    <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
       <h3 class="text-sm font-medium text-slate-300">Recent visits</h3>
+      <span class="flex items-center gap-1.5 text-xs text-emerald-400">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        Live
+      </span>
     </div>
-    <% if @recent_visits.any? %>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="border-b border-slate-800">
-              <th class="text-left px-5 py-3 text-xs font-medium text-slate-500">Time</th>
-              <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Location</th>
-              <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Browser</th>
-              <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">OS</th>
-              <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Device</th>
-              <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Referrer</th>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-slate-800">
+            <th class="text-left px-5 py-3 text-xs font-medium text-slate-500">Time</th>
+            <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Location</th>
+            <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Browser</th>
+            <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">OS</th>
+            <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Device</th>
+            <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Referrer</th>
+          </tr>
+        </thead>
+        <tbody id="visits-table-body" class="divide-y divide-slate-800/50">
+          <% if @recent_visits.any? %>
+            <%= render partial: "visit_row", collection: @recent_visits, as: :visit %>
+          <% else %>
+            <tr id="visits-empty-state">
+              <td colspan="6" class="text-slate-500 text-sm text-center py-8">
+                No visits recorded yet for this period.
+              </td>
             </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-800/50">
-            <% @recent_visits.each do |visit| %>
-              <tr class="hover:bg-slate-800/30 transition-colors">
-                <td class="px-5 py-3 text-slate-400 whitespace-nowrap text-xs">
-                  <%= visit.created_at.strftime("%b %d, %H:%M") %>
-                </td>
-                <td class="px-4 py-3 text-slate-300 whitespace-nowrap">
-                  <%= [visit.city, visit.country_code].compact.join(", ").presence || "—" %>
-                </td>
-                <td class="px-4 py-3 text-slate-300 whitespace-nowrap">
-                  <%= visit.browser.presence || "—" %>
-                </td>
-                <td class="px-4 py-3 text-slate-400 whitespace-nowrap">
-                  <%= visit.os.presence || "—" %>
-                </td>
-                <td class="px-4 py-3 whitespace-nowrap">
-                  <span class="badge-slate capitalize"><%= visit.device_type || "—" %></span>
-                </td>
-                <td class="px-4 py-3 text-slate-500 text-xs max-w-[200px] truncate">
-                  <%= visit.referer.presence || "Direct" %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      <p class="text-slate-500 text-sm text-center py-8">No visits recorded yet for this period.</p>
-    <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

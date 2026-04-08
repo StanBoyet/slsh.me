@@ -1,0 +1,21 @@
+<tr id="<%= dom_id(visit) %>"
+    class="hover:bg-slate-800/30 transition-colors new-visit-row">
+  <td class="px-5 py-3 text-slate-400 whitespace-nowrap text-xs">
+    <%= visit.created_at.strftime("%b %d, %H:%M") %>
+  </td>
+  <td class="px-4 py-3 text-slate-300 whitespace-nowrap">
+    <%= [visit.city, visit.country_code].compact.join(", ").presence || "—" %>
+  </td>
+  <td class="px-4 py-3 text-slate-300 whitespace-nowrap">
+    <%= visit.browser.presence || "—" %>
+  </td>
+  <td class="px-4 py-3 text-slate-400 whitespace-nowrap">
+    <%= visit.os.presence || "—" %>
+  </td>
+  <td class="px-4 py-3 whitespace-nowrap">
+    <span class="badge-slate capitalize"><%= visit.device_type || "—" %></span>
+  </td>
+  <td class="px-4 py-3 text-slate-500 text-xs max-w-[200px] truncate">
+    <%= visit.referer.presence || "Direct" %>
+  </td>
+</tr>
