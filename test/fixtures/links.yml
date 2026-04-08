@@ -1,0 +1,36 @@
+active_link:
+  user: one
+  original_url: "https://example.com/some/long/path"
+  slug: "abc1234"
+  active: true
+  clicks_count: 5
+
+inactive_link:
+  user: one
+  original_url: "https://example.com/another"
+  slug: "xyz9999"
+  active: false
+  clicks_count: 0
+
+password_link:
+  user: one
+  original_url: "https://example.com/secret"
+  slug: "secret1"
+  password_digest: "<%= BCrypt::Password.create('hunter2') %>"
+  active: true
+  clicks_count: 0
+
+expired_link:
+  user: one
+  original_url: "https://example.com/old"
+  slug: "expired"
+  active: true
+  expires_at: "2020-01-01 00:00:00"
+  clicks_count: 0
+
+other_user_link:
+  user: two
+  original_url: "https://example.com/other"
+  slug: "other11"
+  active: true
+  clicks_count: 0

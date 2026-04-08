@@ -135,8 +135,6 @@ GEM
       activesupport (>= 6.1)
     groupdate (6.8.0)
       activesupport (>= 7.2)
-    hightop (1.0.0)
-      activesupport (>= 7.2)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
     image_processing (1.14.0)
@@ -428,7 +426,6 @@ DEPENDENCIES
   debug
   geocoder
   groupdate
-  hightop
   image_processing (~> 1.2)
   importmap-rails
   jbuilder

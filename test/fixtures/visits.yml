@@ -1,0 +1,19 @@
+human_visit:
+  link: active_link
+  ip_address: "1.2.3.4"
+  browser: "Chrome"
+  browser_version: "120"
+  os: "macOS"
+  device_type: "desktop"
+  country: "France"
+  country_code: "FR"
+  city: "Paris"
+  bot: false
+
+bot_visit:
+  link: active_link
+  ip_address: "66.249.0.1"
+  browser: "Googlebot"
+  os: "Other"
+  device_type: "bot"
+  bot: true

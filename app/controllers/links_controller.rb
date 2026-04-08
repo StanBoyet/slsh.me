@@ -56,11 +56,11 @@ class LinksController < ApplicationController
     @visits        = @link.visits.human.in_range(from, Time.current)
     @total_visits  = @link.visits.human.count
     @clicks_by_day = @visits.group_by_day(:created_at).count
-    @top_browsers  = @visits.hightop(:browser, n: 6)
-    @top_countries = @visits.hightop(:country, n: 10)
+    @top_browsers  = top_n(@visits, :browser, 6)
+    @top_countries = top_n(@visits, :country, 10)
     @device_breakdown = @visits.group(:device_type).count
-    @top_os        = @visits.hightop(:os, n: 6)
-    @top_referers  = @visits.where.not(referer: [ nil, "" ]).hightop(:referer, n: 5)
+    @top_os        = top_n(@visits, :os, 6)
+    @top_referers  = top_n(@visits.where.not(referer: [ nil, "" ]), :referer, 5)
     @recent_visits = @link.visits.human.recent.limit(20)
   end
 
@@ -88,6 +88,10 @@ class LinksController < ApplicationController
   end
 
   private
+
+  def top_n(relation, column, n)
+    relation.group(column).count.sort_by { |_, v| -v }.first(n).to_h
+  end
 
   def set_link
     @link = Current.user.links.find(params[:id])

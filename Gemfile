@@ -27,7 +27,6 @@ gem "browser"       # User-agent parsing
 gem "geocoder"      # IP geolocation via ipinfo.io
 gem "chartkick"     # One-liner charts
 gem "groupdate"     # Group by time period
-gem "hightop"       # Top-N value aggregation
 
 # Features
 gem "rqrcode"       # QR code SVG generation

@@ -16,7 +16,6 @@ class CreateLinks < ActiveRecord::Migration[8.1]
       t.timestamps
     end
     add_index :links, :slug, unique: true
-    add_index :links, :user_id
     add_index :links, [ :user_id, :created_at ]
   end
 end
