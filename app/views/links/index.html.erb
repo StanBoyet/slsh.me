@@ -28,10 +28,13 @@
   <% if @links.any? %>
     <div class="space-y-3">
       <% @links.each do |link| %>
-        <div class="card p-4 hover:border-slate-700 transition-colors group">
-          <div class="flex items-start gap-3">
+        <%# Whole card is clickable via an absolute overlay; action buttons sit above it with relative z-10 %>
+        <div class="card p-4 hover:border-slate-700 transition-colors group relative cursor-pointer">
+          <%= link_to analytics_link_path(link), class: "absolute inset-0 rounded-2xl", aria: { label: "View analytics for /#{link.slug}" } do %><% end %>
+
+          <div class="flex items-center gap-3">
             <%# Favicon %>
-            <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 mt-0.5 overflow-hidden">
+            <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 overflow-hidden">
               <img src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.original_url).host rescue '' %>&sz=32"
                    class="w-5 h-5" alt="" onerror="this.style.display='none'">
             </div>
@@ -46,21 +49,28 @@
                   <span class="badge-slate">expired</span>
                 <% end %>
                 <% if link.password_protected? %>
-                  <span class="badge-violet text-xs">🔒 protected</span>
+                  <span class="badge-violet">🔒 protected</span>
                 <% end %>
               </div>
-              <p class="text-sm text-slate-400 truncate mt-0.5"><%= link.original_url %></p>
+              <%# URL: bold base, muted UTM query string %>
+              <% url_base, url_query = link.original_url.split("?", 2) %>
+              <p class="text-sm truncate mt-0.5">
+                <span class="text-slate-300 font-medium"><%= url_base %></span>
+                <% if url_query.present? %>
+                  <span class="text-slate-600">?<%= url_query %></span>
+                <% end %>
+              </p>
               <p class="text-xs text-slate-600 mt-1"><%= time_ago_in_words(link.created_at) %> ago</p>
             </div>
 
-            <%# Stats %>
-            <div class="text-right shrink-0 hidden sm:block">
+            <%# Stats — relative + z-10 so they sit above the overlay %>
+            <div class="text-right shrink-0 hidden sm:block relative z-10">
               <p class="text-lg font-semibold text-white tabular-nums"><%= number_with_delimiter(link.clicks_count) %></p>
               <p class="text-xs text-slate-500">clicks</p>
             </div>
 
-            <%# Actions %>
-            <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+            <%# Actions — relative + z-10 so clicks aren't swallowed by the overlay %>
+            <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 relative z-10">
               <button class="btn-ghost p-1.5" data-controller="copy"
                       data-copy-text-value="<%= redirect_url(link.slug) %>"
                       data-action="click->copy#copy" title="Copy short URL">
