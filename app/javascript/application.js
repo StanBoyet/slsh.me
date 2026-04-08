@@ -1,9 +1,8 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
-// Load in dependency order: Chart.js → Luxon → date adapter → Chartkick
-// All UMD bundles; they set window.Chart / window.luxon as side effects
+// Chart.js UMD sets window.Chart, then the bundled date adapter registers
+// itself against it — no separate date-fns/luxon import needed
 import "Chart.bundle.min"
-import "luxon"
-import "chartjs-adapter-luxon"
+import "chartjs-adapter-date-fns"
 import "chartkick"
