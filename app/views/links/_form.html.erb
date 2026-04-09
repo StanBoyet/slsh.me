@@ -1,6 +1,6 @@
 <%= form_with model: link, class: "space-y-6", data: { controller: "link-form" } do |f| %>
   <% if link.errors.any? %>
-    <div class="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-sm text-red-300 space-y-1">
+    <div class="bg-red-50 border border-red-200 dark:bg-red-500/10 dark:border-red-500/20 rounded-xl px-4 py-3 text-sm text-red-700 dark:text-red-300 space-y-1">
       <% link.errors.full_messages.each do |msg| %>
         <p>&bull; <%= msg %></p>
       <% end %>
@@ -21,7 +21,7 @@
 
       <%# UTM builder %>
       <details class="mt-3 group">
-        <summary class="text-xs text-slate-500 hover:text-violet-400 cursor-pointer select-none flex items-center gap-1 transition-colors">
+        <summary class="text-xs text-slate-500 hover:text-violet-600 dark:hover:text-violet-400 cursor-pointer select-none flex items-center gap-1 transition-colors">
           <svg class="w-3.5 h-3.5 transition-transform group-open:rotate-90" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
           </svg>
@@ -51,7 +51,7 @@
         </div>
         <div class="mt-3" data-utm-target="preview" style="display:none">
           <label class="label">Preview</label>
-          <p class="font-mono text-xs text-slate-400 bg-slate-950 border border-slate-800 rounded-lg p-3 break-all" data-utm-target="previewText"></p>
+          <p class="font-mono text-xs text-slate-500 dark:text-slate-400 bg-slate-50 border border-slate-200 dark:bg-slate-950 dark:border-slate-800 rounded-lg p-3 break-all" data-utm-target="previewText"></p>
         </div>
       </details>
     </div>
@@ -60,18 +60,29 @@
   <%# Section: Short link %>
   <div class="card p-5 space-y-4">
     <h2 class="section-title">Short link</h2>
+
+    <% domains = Current.user.custom_domains.order(:domain) %>
+    <% if domains.any? %>
+      <div>
+        <%= f.label :custom_domain_id, "Domain", class: "label" %>
+        <%= f.select :custom_domain_id,
+            [["slsh.me", nil]] + domains.map { |d| [d.domain, d.id] },
+            {}, class: "input" %>
+      </div>
+    <% end %>
+
     <div data-controller="slug-check" data-slug-check-exists-url-value="<%= links_path(format: :json) %>">
-      <label class="label">Custom slug <span class="text-slate-600 font-normal">(leave blank to auto-generate)</span></label>
+      <label class="label">Custom slug <span class="text-slate-400 dark:text-slate-600 font-normal">(leave blank to auto-generate)</span></label>
       <div class="flex items-center gap-0">
-        <span class="flex items-center px-3 h-9 bg-slate-800 border border-r-0 border-slate-700 rounded-l-lg text-slate-500 text-sm shrink-0">
-          slsh.me/
+        <span class="flex items-center px-3 h-9 bg-slate-100 border border-r-0 border-slate-300 dark:bg-slate-800 dark:border-slate-700 rounded-l-lg text-slate-500 text-sm shrink-0">
+          <%= link.custom_domain&.domain || "slsh.me" %>/
         </span>
         <%= f.text_field :slug, placeholder: "my-custom-slug",
             class: "input rounded-l-none font-mono text-sm flex-1",
             data: { slug_check_target: "input", action: "input->slug-check#check" } %>
       </div>
-      <p class="text-xs mt-1.5 hidden text-red-400" data-slug-check-target="taken">That slug is already taken.</p>
-      <p class="text-xs mt-1.5 text-slate-600">Letters, numbers, hyphens and underscores only.</p>
+      <p class="text-xs mt-1.5 hidden text-red-500 dark:text-red-400" data-slug-check-target="taken">That slug is already taken.</p>
+      <p class="text-xs mt-1.5 text-slate-400 dark:text-slate-600">Letters, numbers, hyphens and underscores only.</p>
     </div>
   </div>
 
@@ -94,7 +105,7 @@
       <%= f.label :og_image_url, "Image URL", class: "label" %>
       <%= f.url_field :og_image_url, placeholder: "https://example.com/image.png",
           class: "input text-xs font-mono" %>
-      <p class="text-xs text-slate-600 mt-1">Recommended size: 1200×630px</p>
+      <p class="text-xs text-slate-400 dark:text-slate-600 mt-1">Recommended size: 1200×630px</p>
     </div>
   </div>
 
@@ -107,13 +118,13 @@
         <%= f.label :expires_at, "Expires at", class: "label" %>
         <%= f.datetime_local_field :expires_at, class: "input text-sm",
             value: link.expires_at&.strftime("%Y-%m-%dT%H:%M") %>
-        <p class="text-xs text-slate-600 mt-1">Leave blank for no expiry</p>
+        <p class="text-xs text-slate-400 dark:text-slate-600 mt-1">Leave blank for no expiry</p>
       </div>
       <div>
         <%= f.label :max_clicks, "Click limit", class: "label" %>
         <%= f.number_field :max_clicks, min: 1, placeholder: "e.g. 1000",
             class: "input" %>
-        <p class="text-xs text-slate-600 mt-1">Deactivates after N clicks</p>
+        <p class="text-xs text-slate-400 dark:text-slate-600 mt-1">Deactivates after N clicks</p>
       </div>
     </div>
 
@@ -128,8 +139,8 @@
 
     <% if link.persisted? %>
       <div class="flex items-center gap-3">
-        <%= f.check_box :active, class: "w-4 h-4 rounded border-slate-700 bg-slate-900 text-violet-600 focus:ring-violet-500 focus:ring-offset-slate-950" %>
-        <%= f.label :active, "Link is active", class: "text-sm text-slate-300 cursor-pointer" %>
+        <%= f.check_box :active, class: "w-4 h-4 rounded border-slate-300 bg-white text-violet-600 focus:ring-violet-500 dark:border-slate-700 dark:bg-slate-900 dark:focus:ring-offset-slate-950" %>
+        <%= f.label :active, "Link is active", class: "text-sm text-slate-700 dark:text-slate-300 cursor-pointer" %>
       </div>
     <% end %>
   </div>

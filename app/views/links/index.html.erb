@@ -4,18 +4,34 @@
   <%# Header %>
   <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
     <div>
-      <h1 class="text-xl font-semibold text-white">My links</h1>
+      <h1 class="text-xl font-semibold text-slate-900 dark:text-white">My links</h1>
       <p class="text-sm text-slate-500 mt-0.5">
         <%= @links_count %> link<%= "s" unless @links_count == 1 %> &middot;
         <%= number_with_delimiter(@total_clicks) %> total clicks
       </p>
     </div>
-    <%= link_to "New link", new_link_path, class: "btn-primary" %>
+    <div class="flex items-center gap-2">
+      <%= link_to "Domains", custom_domains_path, class: "btn-secondary text-xs py-1.5" %>
+      <%= link_to "New link", new_link_path, class: "btn-primary text-xs py-1.5" %>
+    </div>
+  </div>
+
+  <%# Tabs: Active / Archived %>
+  <div class="flex items-center gap-1">
+    <%= link_to "Active", links_path,
+        class: "text-xs px-3 py-1.5 rounded-lg transition-colors #{@filter != 'archived' ? 'bg-violet-600 text-white' : 'bg-slate-100 text-slate-600 hover:text-slate-800 dark:bg-slate-800 dark:text-slate-400 dark:hover:text-slate-200'}" %>
+    <% if @archived_count > 0 %>
+      <%= link_to "Archived (#{@archived_count})", links_path(filter: "archived"),
+          class: "text-xs px-3 py-1.5 rounded-lg transition-colors #{@filter == 'archived' ? 'bg-violet-600 text-white' : 'bg-slate-100 text-slate-600 hover:text-slate-800 dark:bg-slate-800 dark:text-slate-400 dark:hover:text-slate-200'}" %>
+    <% end %>
   </div>
 
   <%# Search %>
-  <%= form_with url: links_path, method: :get, class: "relative" do |f| %>
-    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none"
+  <%= form_with url: links_path(filter: @filter.presence), method: :get, class: "relative" do |f| %>
+    <% if @filter.present? %>
+      <%= f.hidden_field :filter, value: @filter %>
+    <% end %>
+    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500 pointer-events-none"
          fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
@@ -28,21 +44,26 @@
   <% if @links.any? %>
     <div class="space-y-3">
       <% @links.each do |link| %>
-        <%# Whole card is clickable via an absolute overlay; action buttons sit above it with relative z-10 %>
-        <div class="card p-4 hover:border-slate-700 transition-colors group relative cursor-pointer">
+        <div class="card p-4 hover:border-slate-300 dark:hover:border-slate-700 transition-colors group relative cursor-pointer <%= 'opacity-60' if link.archived? %>">
           <%= link_to analytics_link_path(link), class: "absolute inset-0 rounded-2xl", aria: { label: "View analytics for /#{link.slug}" } do %><% end %>
 
           <div class="flex items-center gap-3">
             <%# Favicon %>
-            <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 overflow-hidden">
+            <div class="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 flex items-center justify-center shrink-0 overflow-hidden">
               <img src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.original_url).host rescue '' %>&sz=32"
                    class="w-5 h-5" alt="" onerror="this.style.display='none'">
             </div>
 
             <div class="flex-1 min-w-0">
               <div class="flex items-center gap-2 flex-wrap">
-                <span class="font-mono text-sm font-medium text-violet-400">/<%= link.slug %></span>
-                <% unless link.active? %>
+                <span class="font-mono text-sm font-medium text-violet-600 dark:text-violet-400">/<%= link.slug %></span>
+                <% if link.custom_domain %>
+                  <span class="badge-violet"><%= link.domain_label %></span>
+                <% end %>
+                <% if link.archived? %>
+                  <span class="badge-slate">archived</span>
+                <% end %>
+                <% unless link.active? || link.archived? %>
                   <span class="badge-red">inactive</span>
                 <% end %>
                 <% if link.expired? %>
@@ -55,21 +76,22 @@
               <%# URL: bold base, muted UTM query string %>
               <% url_base, url_query = link.original_url.split("?", 2) %>
               <p class="text-sm truncate mt-0.5">
-                <span class="text-slate-300 font-medium"><%= url_base %></span>
+                <span class="text-slate-600 dark:text-slate-300 font-medium"><%= url_base %></span>
                 <% if url_query.present? %>
-                  <span class="text-slate-600">?<%= url_query %></span>
+                  <span class="text-slate-400 dark:text-slate-600">?<%= url_query %></span>
                 <% end %>
               </p>
-              <p class="text-xs text-slate-600 mt-1"><%= time_ago_in_words(link.created_at) %> ago</p>
+              <p class="text-xs text-slate-400 dark:text-slate-600 mt-1"><%= time_ago_in_words(link.created_at) %> ago</p>
             </div>
 
-            <%# Stats + Actions grouped so they align with each other, not the full row height %>
+            <%# Stats + Actions %>
             <div class="flex items-center gap-3 shrink-0 relative z-10">
               <div class="text-right hidden sm:block">
-                <p class="text-lg font-semibold text-white tabular-nums"><%= number_with_delimiter(link.clicks_count) %></p>
+                <p class="text-lg font-semibold text-slate-900 dark:text-white tabular-nums"><%= number_with_delimiter(link.clicks_count) %></p>
                 <p class="text-xs text-slate-500">clicks</p>
               </div>
 
+            <% unless link.archived? %>
             <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <button class="btn-ghost p-1.5" data-controller="copy"
                       data-copy-text-value="<%= redirect_url(link.slug) %>"
@@ -92,7 +114,7 @@
                 </svg>
               <% end %>
               <%= button_to link_path(link), method: :delete,
-                  class: "btn-danger p-1.5 border-0 bg-transparent hover:bg-red-500/10",
+                  class: "btn-danger p-1.5 border-0 bg-transparent hover:bg-red-50 dark:hover:bg-red-500/10",
                   data: { turbo_confirm: "Delete this link and all its analytics?" },
                   title: "Delete" do %>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,6 +123,7 @@
                 </svg>
               <% end %>
             </div>
+            <% end %>
             </div><%# /stats+actions wrapper %>
           </div>
         </div>
@@ -108,15 +131,19 @@
     </div>
   <% else %>
     <div class="card p-12 text-center">
-      <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center mx-auto mb-4">
-        <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-        </svg>
-      </div>
-      <p class="text-slate-400 font-medium">No links yet</p>
-      <p class="text-slate-600 text-sm mt-1">Create your first short link to get started</p>
-      <%= link_to "Create a link", new_link_path, class: "btn-primary mt-4" %>
+      <% if @filter == "archived" %>
+        <p class="text-slate-600 dark:text-slate-400 font-medium">No archived links</p>
+      <% else %>
+        <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-6 h-6 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+          </svg>
+        </div>
+        <p class="text-slate-600 dark:text-slate-400 font-medium">No links yet</p>
+        <p class="text-slate-400 dark:text-slate-600 text-sm mt-1">Create your first short link to get started</p>
+        <%= link_to "Create a link", new_link_path, class: "btn-primary mt-4" %>
+      <% end %>
     </div>
   <% end %>
 </div>

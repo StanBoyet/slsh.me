@@ -11,7 +11,7 @@
       <% end %>
       <div>
         <div class="flex items-center gap-2 flex-wrap">
-          <h1 class="text-xl font-semibold text-white font-mono">/<%= @link.slug %></h1>
+          <h1 class="text-xl font-semibold text-slate-900 dark:text-white font-mono">/<%= @link.slug %></h1>
           <% unless @link.active? %><span class="badge-red">inactive</span><% end %>
           <% if @link.expired? %><span class="badge-slate">expired</span><% end %>
         </div>
@@ -54,19 +54,19 @@
   <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
     <div class="stat-card">
       <p class="section-title">Total clicks</p>
-      <p class="text-2xl font-semibold text-white tabular-nums"><%= number_with_delimiter(@total_visits) %></p>
+      <p class="text-2xl font-semibold text-slate-900 dark:text-white tabular-nums"><%= number_with_delimiter(@total_visits) %></p>
     </div>
     <div class="stat-card">
       <p class="section-title">This period</p>
-      <p class="text-2xl font-semibold text-white tabular-nums"><%= number_with_delimiter(@visits.count) %></p>
+      <p class="text-2xl font-semibold text-slate-900 dark:text-white tabular-nums"><%= number_with_delimiter(@visits.count) %></p>
     </div>
     <div class="stat-card">
       <p class="section-title">Top country</p>
-      <p class="text-lg font-semibold text-white truncate"><%= @top_countries&.first&.first || "—" %></p>
+      <p class="text-lg font-semibold text-slate-900 dark:text-white truncate"><%= @top_countries&.first&.first || "—" %></p>
     </div>
     <div class="stat-card">
       <p class="section-title">Top browser</p>
-      <p class="text-lg font-semibold text-white truncate"><%= @top_browsers&.first&.first || "—" %></p>
+      <p class="text-lg font-semibold text-slate-900 dark:text-white truncate"><%= @top_browsers&.first&.first || "—" %></p>
     </div>
   </div>
 
@@ -75,20 +75,20 @@
     <span class="section-title">Period:</span>
     <% [["7d", "7 days"], ["30d", "30 days"], ["90d", "90 days"]].each do |value, label| %>
       <%= link_to label, analytics_link_path(@link, range: value),
-          class: "text-xs px-3 py-1.5 rounded-lg transition-colors #{@range == value ? 'bg-violet-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-slate-200'}" %>
+          class: "text-xs px-3 py-1.5 rounded-lg transition-colors #{@range == value ? 'bg-violet-600 text-white' : 'bg-slate-100 text-slate-600 hover:text-slate-800 dark:bg-slate-800 dark:text-slate-400 dark:hover:text-slate-200'}" %>
     <% end %>
   </div>
 
   <%# Clicks over time %>
   <div class="card p-5">
-    <h3 class="text-sm font-medium text-slate-300 mb-4">Clicks over time</h3>
+    <h3 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">Clicks over time</h3>
     <% if @clicks_by_day.any? %>
       <%= line_chart @clicks_by_day,
           colors: ["#8b5cf6"],
           curve: true,
           dataset: { borderWidth: 2, fill: true, backgroundColor: "rgba(139,92,246,0.08)" },
-          library: { scales: { x: { grid: { color: "rgba(255,255,255,0.04)" }, ticks: { color: "#94a3b8" } },
-                               y: { grid: { color: "rgba(255,255,255,0.04)" }, ticks: { color: "#94a3b8" }, beginAtZero: true } },
+          library: { scales: { x: { grid: { color: "rgba(100,116,139,0.1)" }, ticks: { color: "#94a3b8" } },
+                               y: { grid: { color: "rgba(100,116,139,0.1)" }, ticks: { color: "#94a3b8" }, beginAtZero: true } },
                      plugins: { legend: { display: false } } } %>
     <% else %>
       <p class="text-slate-500 text-sm text-center py-8">No data for this period</p>
@@ -99,7 +99,7 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
     <%# Devices %>
     <div class="card p-5">
-      <h3 class="text-sm font-medium text-slate-300 mb-4">Devices</h3>
+      <h3 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">Devices</h3>
       <% if @device_breakdown.any? %>
         <%= pie_chart @device_breakdown,
             colors: ["#8b5cf6", "#06b6d4", "#10b981", "#f59e0b"],
@@ -111,14 +111,14 @@
 
     <%# Browsers %>
     <div class="card p-5">
-      <h3 class="text-sm font-medium text-slate-300 mb-4">Browsers</h3>
+      <h3 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">Browsers</h3>
       <% if @top_browsers&.any? %>
         <div class="space-y-2">
           <% max = @top_browsers.first&.last.to_f %>
           <% @top_browsers.each do |name, count| %>
             <div class="flex items-center gap-3">
-              <span class="text-sm text-slate-300 w-24 truncate"><%= name.presence || "Unknown" %></span>
-              <div class="flex-1 bg-slate-800 rounded-full h-1.5">
+              <span class="text-sm text-slate-600 dark:text-slate-300 w-24 truncate"><%= name.presence || "Unknown" %></span>
+              <div class="flex-1 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5">
                 <div class="bg-violet-500 h-1.5 rounded-full transition-all"
                      style="width:<%= max > 0 ? (count / max * 100).round : 0 %>%"></div>
               </div>
@@ -133,14 +133,14 @@
 
     <%# Countries %>
     <div class="card p-5">
-      <h3 class="text-sm font-medium text-slate-300 mb-4">Countries</h3>
+      <h3 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">Countries</h3>
       <% if @top_countries&.any? %>
         <div class="space-y-2">
           <% max = @top_countries.first&.last.to_f %>
           <% @top_countries.each do |name, count| %>
             <div class="flex items-center gap-3">
-              <span class="text-sm text-slate-300 w-28 truncate"><%= name.presence || "Unknown" %></span>
-              <div class="flex-1 bg-slate-800 rounded-full h-1.5">
+              <span class="text-sm text-slate-600 dark:text-slate-300 w-28 truncate"><%= name.presence || "Unknown" %></span>
+              <div class="flex-1 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5">
                 <div class="bg-cyan-500 h-1.5 rounded-full transition-all"
                      style="width:<%= max > 0 ? (count / max * 100).round : 0 %>%"></div>
               </div>
@@ -155,14 +155,14 @@
 
     <%# OS %>
     <div class="card p-5">
-      <h3 class="text-sm font-medium text-slate-300 mb-4">Operating systems</h3>
+      <h3 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">Operating systems</h3>
       <% if @top_os&.any? %>
         <div class="space-y-2">
           <% max = @top_os.first&.last.to_f %>
           <% @top_os.each do |name, count| %>
             <div class="flex items-center gap-3">
-              <span class="text-sm text-slate-300 w-24 truncate"><%= name.presence || "Unknown" %></span>
-              <div class="flex-1 bg-slate-800 rounded-full h-1.5">
+              <span class="text-sm text-slate-600 dark:text-slate-300 w-24 truncate"><%= name.presence || "Unknown" %></span>
+              <div class="flex-1 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5">
                 <div class="bg-emerald-500 h-1.5 rounded-full transition-all"
                      style="width:<%= max > 0 ? (count / max * 100).round : 0 %>%"></div>
               </div>
@@ -177,14 +177,14 @@
 
     <%# Referrers %>
     <div class="card p-5">
-      <h3 class="text-sm font-medium text-slate-300 mb-4">Referrers</h3>
+      <h3 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">Referrers</h3>
       <% if @top_referers&.any? %>
         <div class="space-y-2">
           <% max = @top_referers.first&.last.to_f %>
           <% @top_referers.each do |name, count| %>
             <div class="flex items-center gap-3">
-              <span class="text-sm text-slate-300 w-28 truncate"><%= name.presence || "Direct" %></span>
-              <div class="flex-1 bg-slate-800 rounded-full h-1.5">
+              <span class="text-sm text-slate-600 dark:text-slate-300 w-28 truncate"><%= name.presence || "Direct" %></span>
+              <div class="flex-1 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5">
                 <div class="bg-amber-500 h-1.5 rounded-full transition-all"
                      style="width:<%= max > 0 ? (count / max * 100).round : 0 %>%"></div>
               </div>
@@ -202,17 +202,17 @@
   <%= turbo_stream_from "link_#{@link.id}_visits" %>
 
   <div class="card overflow-hidden">
-    <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
-      <h3 class="text-sm font-medium text-slate-300">Recent visits</h3>
-      <span class="flex items-center gap-1.5 text-xs text-emerald-400">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+    <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+      <h3 class="text-sm font-medium text-slate-700 dark:text-slate-300">Recent visits</h3>
+      <span class="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse"></span>
         Live
       </span>
     </div>
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
         <thead>
-          <tr class="border-b border-slate-800">
+          <tr class="border-b border-slate-200 dark:border-slate-800">
             <th class="text-left px-5 py-3 text-xs font-medium text-slate-500">Time</th>
             <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Location</th>
             <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Browser</th>
@@ -221,7 +221,7 @@
             <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Referrer</th>
           </tr>
         </thead>
-        <tbody id="visits-table-body" class="divide-y divide-slate-800/50">
+        <tbody id="visits-table-body" class="divide-y divide-slate-100 dark:divide-slate-800/50">
           <% if @recent_visits.any? %>
             <%= render partial: "visit_row", collection: @recent_visits, as: :visit %>
           <% else %>
