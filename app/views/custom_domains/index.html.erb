@@ -50,8 +50,11 @@
               <span class="badge-green">verified</span>
             <% else %>
               <span class="badge-slate">pending</span>
-              <%= button_to check_custom_domain_path(domain), method: :post, class: "btn-secondary text-xs py-1" do %>
-                Check now
+              <%= form_with url: check_custom_domain_path(domain), method: :post do %>
+                <button type="submit" class="btn-secondary text-xs py-1 group disabled:opacity-50"
+                        data-turbo-submits-with='<svg class="w-3.5 h-3.5 inline animate-spin -mt-px" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Checking…'>
+                  Check now
+                </button>
               <% end %>
             <% end %>
 

@@ -69,6 +69,11 @@
            dark:bg-slate-900 dark:border-slate-800;
   }
 
+  .card-elevated {
+    @apply bg-slate-50 border border-slate-200 rounded-2xl shadow-sm
+           dark:bg-slate-800/50 dark:border-slate-700/60;
+  }
+
   .input {
     @apply w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm
            text-slate-900 placeholder-slate-400 transition-colors

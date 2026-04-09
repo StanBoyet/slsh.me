@@ -8,7 +8,7 @@
   <% end %>
 
   <%# Section: Destination %>
-  <div class="card p-5 space-y-4">
+  <div class="card-elevated p-5 space-y-4">
     <h2 class="section-title">Destination</h2>
 
     <div data-controller="utm">
@@ -58,25 +58,23 @@
   </div>
 
   <%# Section: Short link %>
-  <div class="card p-5 space-y-4">
+  <div class="card-elevated p-5 space-y-4">
     <h2 class="section-title">Short link</h2>
 
     <% domains = Current.user.custom_domains.order(:domain) %>
-    <% if domains.any? %>
-      <div>
-        <%= f.label :custom_domain_id, "Domain", class: "label" %>
-        <%= f.select :custom_domain_id,
-            [["slsh.me", nil]] + domains.map { |d| [d.domain, d.id] },
-            {}, class: "input" %>
-      </div>
-    <% end %>
 
     <div data-controller="slug-check" data-slug-check-exists-url-value="<%= links_path(format: :json) %>">
       <label class="label">Custom slug <span class="text-slate-400 dark:text-slate-600 font-normal">(leave blank to auto-generate)</span></label>
       <div class="flex items-center gap-0">
-        <span class="flex items-center px-3 h-9 bg-slate-100 border border-r-0 border-slate-300 dark:bg-slate-800 dark:border-slate-700 rounded-l-lg text-slate-500 text-sm shrink-0">
-          <%= link.custom_domain&.domain || "slsh.me" %>/
-        </span>
+        <% if domains.any? %>
+          <%= f.select :custom_domain_id,
+              [["slsh.me/", nil]] + domains.map { |d| ["#{d.domain}/", d.id] },
+              {}, class: "h-9 bg-slate-100 border border-r-0 border-slate-300 dark:bg-slate-800 dark:border-slate-700 rounded-l-lg text-slate-500 text-sm pl-3 pr-7 appearance-none cursor-pointer focus:outline-none font-mono shrink-0" %>
+        <% else %>
+          <span class="flex items-center px-3 h-9 bg-slate-100 border border-r-0 border-slate-300 dark:bg-slate-800 dark:border-slate-700 rounded-l-lg text-slate-500 text-sm shrink-0 font-mono">
+            slsh.me/
+          </span>
+        <% end %>
         <%= f.text_field :slug, placeholder: "my-custom-slug",
             class: "input rounded-l-none font-mono text-sm flex-1",
             data: { slug_check_target: "input", action: "input->slug-check#check" } %>
@@ -87,7 +85,7 @@
   </div>
 
   <%# Section: Social preview %>
-  <div class="card p-5 space-y-4">
+  <div class="card-elevated p-5 space-y-4">
     <h2 class="section-title">Social preview (OpenGraph)</h2>
     <p class="text-xs text-slate-500">Override how this link appears when shared on social media.</p>
 
@@ -110,7 +108,7 @@
   </div>
 
   <%# Section: Advanced %>
-  <div class="card p-5 space-y-4">
+  <div class="card-elevated p-5 space-y-4">
     <h2 class="section-title">Advanced</h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
