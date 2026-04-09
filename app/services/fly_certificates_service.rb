@@ -42,10 +42,10 @@ class FlyCertificatesService
     http.read_timeout = 15
 
     req = case method
-          when :post   then Net::HTTP::Post.new(uri)
-          when :delete then Net::HTTP::Delete.new(uri)
-          else raise ArgumentError, "Unsupported method: #{method}"
-          end
+    when :post   then Net::HTTP::Post.new(uri)
+    when :delete then Net::HTTP::Delete.new(uri)
+    else raise ArgumentError, "Unsupported method: #{method}"
+    end
 
     req["Authorization"] = "Bearer #{@api_token}"
     req["Content-Type"] = "application/json"

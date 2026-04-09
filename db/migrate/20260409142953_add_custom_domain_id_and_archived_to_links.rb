@@ -8,7 +8,7 @@ class AddCustomDomainIdAndArchivedToLinks < ActiveRecord::Migration[8.1]
     remove_index :links, :slug
     add_index :links, :slug, unique: true, where: "custom_domain_id IS NULL AND archived = false",
               name: "index_links_on_slug_unique_default"
-    add_index :links, [:custom_domain_id, :slug], unique: true,
+    add_index :links, [ :custom_domain_id, :slug ], unique: true,
               where: "custom_domain_id IS NOT NULL AND archived = false",
               name: "index_links_on_domain_and_slug_unique"
   end

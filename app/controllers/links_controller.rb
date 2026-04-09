@@ -50,10 +50,10 @@ class LinksController < ApplicationController
   def analytics
     @range = (params[:range] || "30d").to_s
     from = case @range
-           when "7d"  then 7.days.ago
-           when "90d" then 90.days.ago
-           else            30.days.ago
-           end
+    when "7d"  then 7.days.ago
+    when "90d" then 90.days.ago
+    else            30.days.ago
+    end
 
     @visits        = @link.visits.human.in_range(from, Time.current)
     @total_visits  = @link.visits.human.count

@@ -52,7 +52,7 @@ class CustomDomainsController < ApplicationController
   private
 
   def custom_domain_params
-    params.expect(custom_domain: [:domain])
+    params.expect(custom_domain: [ :domain ])
   end
 
   def fly_certs
