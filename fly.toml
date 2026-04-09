@@ -8,6 +8,7 @@ primary_region = "cdg"
 
 [env]
   APP_HOST                  = "slsh.me"
+  PORT                      = "3000"
   RAILS_ENV                 = "production"
   RAILS_LOG_TO_STDOUT       = "true"
   RAILS_SERVE_STATIC_FILES  = "true"
