@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>slsh.me — Short links. Full control.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Instrument Sans', 'system-ui', 'sans-serif'],
+            mono: ['IBM Plex Mono', 'monospace'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .cursor-blink {
+      animation: blink 1s step-end infinite;
+    }
+    .fade-up {
+      animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+    .fade-up-d1 { animation-delay: 0.1s; }
+    .fade-up-d2 { animation-delay: 0.2s; }
+    .fade-up-d3 { animation-delay: 0.35s; }
+    .fade-up-d4 { animation-delay: 0.5s; }
+    .fade-up-d5 { animation-delay: 0.65s; }
+
+    /* Terminal typing */
+    @keyframes typeLine1 {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    .terminal-line {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    /* Grain texture overlay */
+    .grain::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      opacity: 0.018;
+      z-index: 9999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Demo arrow animation */
+    @keyframes arrowPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+    .arrow-pulse {
+      animation: arrowPulse 2s ease-in-out infinite;
+    }
+
+    /* Feature card hover */
+    .feature-card {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .feature-card:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="grain bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans antialiased selection:bg-violet-200 dark:selection:bg-violet-900/50">
+
+  <!-- Nav -->
+  <nav class="fade-up max-w-5xl mx-auto px-6 py-6 flex items-center justify-between">
+    <a href="/" class="font-mono text-sm tracking-tight text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">
+      slsh<span class="text-violet-600 dark:text-violet-400">.</span>me
+    </a>
+    <a href="/session/new" class="text-sm text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">
+      Sign in
+    </a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="max-w-5xl mx-auto px-6 pt-24 pb-20 md:pt-36 md:pb-28">
+    <div class="fade-up fade-up-d1">
+      <h1 class="font-mono text-5xl sm:text-6xl md:text-8xl font-semibold tracking-tighter leading-none">
+        slsh<span class="text-violet-600 dark:text-violet-400">.</span>me<span class="text-violet-600 dark:text-violet-400">/</span><span class="cursor-blink text-violet-600/60 dark:text-violet-400/60 font-light">_</span>
+      </h1>
+    </div>
+
+    <p class="fade-up fade-up-d2 mt-6 text-lg sm:text-xl text-zinc-400 dark:text-zinc-500 font-medium max-w-md leading-relaxed">
+      Short links. Full control.<br>
+      Analytics, custom domains, and more.
+    </p>
+
+    <div class="fade-up fade-up-d3 mt-10 flex items-center gap-4">
+      <a href="/registration/new"
+         class="inline-flex items-center gap-2 px-5 py-2.5 bg-violet-600 hover:bg-violet-500 text-white text-sm font-medium rounded-lg transition-all shadow-sm shadow-violet-600/20 hover:shadow-violet-500/30">
+        Get started
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </a>
+      <a href="/session/new" class="text-sm text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">
+        Sign in
+      </a>
+    </div>
+
+    <!-- Demo -->
+    <div class="fade-up fade-up-d4 mt-16 md:mt-20">
+      <div class="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-0 max-w-2xl">
+        <div class="flex-1 px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg sm:rounded-r-none font-mono text-xs sm:text-sm text-zinc-400 dark:text-zinc-600 truncate">
+          https://example.com/campaigns/2026/spring-launch
+        </div>
+        <div class="hidden sm:flex items-center justify-center w-12 border-y border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900">
+          <svg class="w-4 h-4 text-zinc-300 dark:text-zinc-700 arrow-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </div>
+        <div class="px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg sm:rounded-l-none font-mono text-xs sm:text-sm">
+          <span class="text-zinc-400 dark:text-zinc-600">slsh.me/</span><span class="text-violet-600 dark:text-violet-400 font-medium">spring26</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="fade-up fade-up-d5 max-w-5xl mx-auto px-6 pb-24 md:pb-32">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <div class="feature-card group p-5 rounded-xl border border-zinc-100 dark:border-zinc-800/60 hover:border-zinc-200 dark:hover:border-zinc-700 bg-white dark:bg-zinc-900/40">
+        <svg class="w-5 h-5 text-zinc-300 dark:text-zinc-600 group-hover:text-violet-500 transition-colors mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/>
+        </svg>
+        <h3 class="font-medium text-sm mb-1">Real-time Analytics</h3>
+        <p class="text-xs text-zinc-400 dark:text-zinc-500 leading-relaxed">Clicks, countries, devices, browsers, referrers. Updated live.</p>
+      </div>
+
+      <div class="feature-card group p-5 rounded-xl border border-zinc-100 dark:border-zinc-800/60 hover:border-zinc-200 dark:hover:border-zinc-700 bg-white dark:bg-zinc-900/40">
+        <svg class="w-5 h-5 text-zinc-300 dark:text-zinc-600 group-hover:text-violet-500 transition-colors mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.354-5.646M12 21a9.004 9.004 0 01-8.354-5.646M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5a17.92 17.92 0 01-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/>
+        </svg>
+        <h3 class="font-medium text-sm mb-1">Custom Domains</h3>
+        <p class="text-xs text-zinc-400 dark:text-zinc-500 leading-relaxed">Serve links from your own domain. Auto TLS provisioning.</p>
+      </div>
+
+      <div class="feature-card group p-5 rounded-xl border border-zinc-100 dark:border-zinc-800/60 hover:border-zinc-200 dark:hover:border-zinc-700 bg-white dark:bg-zinc-900/40">
+        <svg class="w-5 h-5 text-zinc-300 dark:text-zinc-600 group-hover:text-violet-500 transition-colors mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+        </svg>
+        <h3 class="font-medium text-sm mb-1">Password Protection</h3>
+        <p class="text-xs text-zinc-400 dark:text-zinc-500 leading-relaxed">Gate access to any link with a password. Simple.</p>
+      </div>
+
+      <div class="feature-card group p-5 rounded-xl border border-zinc-100 dark:border-zinc-800/60 hover:border-zinc-200 dark:hover:border-zinc-700 bg-white dark:bg-zinc-900/40">
+        <svg class="w-5 h-5 text-zinc-300 dark:text-zinc-600 group-hover:text-violet-500 transition-colors mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/>
+        </svg>
+        <h3 class="font-medium text-sm mb-1">Social Previews</h3>
+        <p class="text-xs text-zinc-400 dark:text-zinc-500 leading-relaxed">Custom OpenGraph title, description, and image per link.</p>
+      </div>
+
+      <div class="feature-card group p-5 rounded-xl border border-zinc-100 dark:border-zinc-800/60 hover:border-zinc-200 dark:hover:border-zinc-700 bg-white dark:bg-zinc-900/40">
+        <svg class="w-5 h-5 text-zinc-300 dark:text-zinc-600 group-hover:text-violet-500 transition-colors mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <h3 class="font-medium text-sm mb-1">Expiring Links</h3>
+        <p class="text-xs text-zinc-400 dark:text-zinc-500 leading-relaxed">Set a date or click limit. Links auto-deactivate.</p>
+      </div>
+
+      <div class="feature-card group p-5 rounded-xl border border-zinc-100 dark:border-zinc-800/60 hover:border-zinc-200 dark:hover:border-zinc-700 bg-white dark:bg-zinc-900/40">
+        <svg class="w-5 h-5 text-zinc-300 dark:text-zinc-600 group-hover:text-violet-500 transition-colors mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14.625 13.5h4.5m-4.5 3.75h4.5M14.625 20.25h4.5"/>
+        </svg>
+        <h3 class="font-medium text-sm mb-1">QR Codes</h3>
+        <p class="text-xs text-zinc-400 dark:text-zinc-500 leading-relaxed">Generate a QR code for any short link instantly.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Terminal -->
+  <section class="max-w-5xl mx-auto px-6 pb-24 md:pb-32">
+    <div class="rounded-2xl bg-zinc-950 dark:bg-zinc-900 border border-zinc-800 dark:border-zinc-700/50 overflow-hidden shadow-2xl shadow-zinc-950/20">
+      <!-- Title bar -->
+      <div class="flex items-center gap-2 px-5 py-3.5 border-b border-zinc-800 dark:border-zinc-700/50">
+        <span class="w-2.5 h-2.5 rounded-full bg-zinc-700"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-zinc-700"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-zinc-700"></span>
+        <span class="ml-3 text-[11px] font-mono text-zinc-500">terminal</span>
+      </div>
+      <!-- Content -->
+      <div class="p-5 sm:p-6 font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto">
+        <div class="text-zinc-500">
+          <span class="text-emerald-400/70">$</span> curl -X POST https://slsh.me/api/links \
+        </div>
+        <div class="text-zinc-500 pl-4">
+          -H "Authorization: Bearer sk_live_..." \
+        </div>
+        <div class="text-zinc-500 pl-4">
+          -d '{"url": "https://example.com/long/path"}'
+        </div>
+        <div class="mt-4 text-zinc-600 dark:text-zinc-500">// Response</div>
+        <div class="mt-1">
+          <span class="text-zinc-500">{</span><br>
+          <span class="pl-4 text-violet-400/80">"short_url"</span><span class="text-zinc-500">:</span> <span class="text-emerald-400/80">"https://slsh.me/spring26"</span><span class="text-zinc-500">,</span><br>
+          <span class="pl-4 text-violet-400/80">"slug"</span><span class="text-zinc-500">:</span> <span class="text-emerald-400/80">"spring26"</span><span class="text-zinc-500">,</span><br>
+          <span class="pl-4 text-violet-400/80">"clicks"</span><span class="text-zinc-500">:</span> <span class="text-amber-400/80">0</span><span class="text-zinc-500">,</span><br>
+          <span class="pl-4 text-violet-400/80">"active"</span><span class="text-zinc-500">:</span> <span class="text-cyan-400/80">true</span><br>
+          <span class="text-zinc-500">}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="max-w-5xl mx-auto px-6 pb-24 md:pb-32 text-center">
+    <div class="max-w-md mx-auto">
+      <p class="font-mono text-xs text-zinc-300 dark:text-zinc-600 uppercase tracking-widest mb-4">Ready?</p>
+      <a href="/registration/new"
+         class="inline-flex items-center gap-2 px-6 py-3 bg-violet-600 hover:bg-violet-500 text-white text-sm font-medium rounded-lg transition-all shadow-sm shadow-violet-600/20 hover:shadow-violet-500/30">
+        Start shortening
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </a>
+      <p class="mt-4 text-xs text-zinc-400 dark:text-zinc-600">
+        Already have an account?
+        <a href="/session/new" class="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white underline underline-offset-2 decoration-zinc-300 dark:decoration-zinc-700 transition-colors">Sign in</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="max-w-5xl mx-auto px-6 pb-8">
+    <div class="border-t border-zinc-100 dark:border-zinc-800/60 pt-6 flex items-center justify-between">
+      <p class="font-mono text-[11px] text-zinc-300 dark:text-zinc-700">&copy; 2026 slsh.me</p>
+      <p class="font-mono text-[11px] text-zinc-300 dark:text-zinc-700">Short links. Full control.</p>
+    </div>
+  </footer>
+
+  <!-- Theme toggle -->
+  <button id="theme-toggle"
+          class="fixed bottom-4 left-4 z-50 p-2 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-md hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+          aria-label="Toggle theme">
+    <!-- Sun -->
+    <svg class="w-4 h-4 text-zinc-400 dark:text-zinc-500 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    <!-- Moon -->
+    <svg class="w-4 h-4 text-zinc-400 dark:text-zinc-500 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+  </button>
+
+  <script>
+    // Theme
+    (function() {
+      const html = document.documentElement;
+      const toggle = document.getElementById('theme-toggle');
+      const stored = localStorage.getItem('theme');
+
+      if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        html.classList.add('dark');
+      }
+
+      toggle.addEventListener('click', () => {
+        html.classList.toggle('dark');
+        localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+      });
+    })();
+  </script>
+</body>
+</html>
