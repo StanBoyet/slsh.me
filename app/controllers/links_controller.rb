@@ -35,7 +35,7 @@ class LinksController < ApplicationController
   end
 
   def update
-    if @link.update(link_params)
+    if @link.update(link_params.except(:custom_domain_id, :slug))
       redirect_to links_path, notice: "Link updated."
     else
       render :edit, status: :unprocessable_entity

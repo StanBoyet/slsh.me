@@ -7,6 +7,9 @@
     </div>
   <% end %>
 
+  <%# Row 1: Destination + Short link %>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+
   <%# Section: Destination %>
   <div class="card-elevated p-5 space-y-4">
     <h2 class="section-title">Destination</h2>
@@ -63,26 +66,46 @@
 
     <% domains = Current.user.custom_domains.order(:domain) %>
 
-    <div data-controller="slug-check" data-slug-check-exists-url-value="<%= links_path(format: :json) %>">
-      <label class="label">Custom slug <span class="text-slate-400 dark:text-slate-600 font-normal">(leave blank to auto-generate)</span></label>
-      <div class="flex items-center gap-0">
-        <% if domains.any? %>
-          <%= f.select :custom_domain_id,
-              [["slsh.me/", nil]] + domains.map { |d| ["#{d.domain}/", d.id] },
-              {}, class: "h-9 bg-slate-100 border border-r-0 border-slate-300 dark:bg-slate-800 dark:border-slate-700 rounded-l-lg text-slate-500 text-sm pl-3 pr-7 appearance-none cursor-pointer focus:outline-none font-mono shrink-0" %>
-        <% else %>
-          <span class="flex items-center px-3 h-9 bg-slate-100 border border-r-0 border-slate-300 dark:bg-slate-800 dark:border-slate-700 rounded-l-lg text-slate-500 text-sm shrink-0 font-mono">
-            slsh.me/
-          </span>
-        <% end %>
-        <%= f.text_field :slug, placeholder: "my-custom-slug",
-            class: "input rounded-l-none font-mono text-sm flex-1",
-            data: { slug_check_target: "input", action: "input->slug-check#check" } %>
+    <% if link.persisted? %>
+      <div>
+        <label class="label">Short URL</label>
+        <div class="flex items-center px-3 h-9 bg-slate-100 border border-slate-300 dark:bg-slate-800 dark:border-slate-700 rounded-lg text-slate-500 text-sm font-mono">
+          <%= link.domain_label %>/<%= link.slug %>
+        </div>
+        <p class="text-xs mt-1.5 text-slate-400 dark:text-slate-600">Domain and slug cannot be changed after creation.</p>
       </div>
-      <p class="text-xs mt-1.5 hidden text-red-500 dark:text-red-400" data-slug-check-target="taken">That slug is already taken.</p>
-      <p class="text-xs mt-1.5 text-slate-400 dark:text-slate-600">Letters, numbers, hyphens and underscores only.</p>
-    </div>
+    <% else %>
+      <div data-controller="slug-check" data-slug-check-exists-url-value="<%= links_path(format: :json) %>">
+        <label class="label">Custom slug <span class="text-slate-400 dark:text-slate-600 font-normal">(leave blank to auto-generate)</span></label>
+        <div class="flex items-center gap-0">
+          <% if domains.any? %>
+            <div class="relative shrink-0">
+              <%= f.select :custom_domain_id,
+                  [["slsh.me/", nil]] + domains.map { |d| ["#{d.domain}/", d.id] },
+                  {}, class: "h-9 bg-slate-100 border border-r-0 border-slate-300 dark:bg-slate-800 dark:border-slate-700 rounded-l-lg text-slate-500 text-sm pl-3 pr-7 appearance-none cursor-pointer focus:outline-none font-mono" %>
+              <svg class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          <% else %>
+            <span class="flex items-center px-3 h-9 bg-slate-100 border border-r-0 border-slate-300 dark:bg-slate-800 dark:border-slate-700 rounded-l-lg text-slate-500 text-sm shrink-0 font-mono">
+              slsh.me/
+            </span>
+          <% end %>
+          <%= f.text_field :slug, placeholder: "my-custom-slug",
+              class: "input rounded-l-none font-mono text-sm flex-1",
+              data: { slug_check_target: "input", action: "input->slug-check#check" } %>
+        </div>
+        <p class="text-xs mt-1.5 hidden text-red-500 dark:text-red-400" data-slug-check-target="taken">That slug is already taken.</p>
+        <p class="text-xs mt-1.5 text-slate-400 dark:text-slate-600">Letters, numbers, hyphens and underscores only.</p>
+      </div>
+    <% end %>
   </div>
+
+  </div><%# /Row 1 grid %>
+
+  <%# Row 2: Social preview + Advanced %>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
 
   <%# Section: Social preview %>
   <div class="card-elevated p-5 space-y-4">
@@ -142,6 +165,8 @@
       </div>
     <% end %>
   </div>
+
+  </div><%# /Row 2 grid %>
 
   <div class="flex gap-3 justify-end">
     <%= link_to "Cancel", links_path, class: "btn-secondary" %>

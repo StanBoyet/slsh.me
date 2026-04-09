@@ -16,6 +16,7 @@ class Link < ApplicationRecord
                    format: { with: SLUG_FORMAT, message: "only allows letters, numbers, hyphens and underscores" },
                    exclusion: { in: RESERVED_SLUGS, message: "is reserved" }
   validate :slug_unique_within_scope
+  validate :domain_immutable, on: :update
   validates :max_clicks, numericality: { greater_than: 0, allow_nil: true }
 
   before_validation :assign_slug, on: :create
@@ -63,6 +64,13 @@ class Link < ApplicationRecord
     end
   rescue URI::InvalidURIError
     errors.add(:original_url, "is not a valid URL")
+  end
+
+  def domain_immutable
+    return unless custom_domain_id_changed?
+    return if archived? # allow clearing domain_id when archiving
+
+    errors.add(:custom_domain_id, "cannot be changed after creation")
   end
 
   def slug_unique_within_scope
