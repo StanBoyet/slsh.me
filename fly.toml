@@ -4,7 +4,7 @@ primary_region = "cdg"
 [build]
 
 [deploy]
-  release_command = "bin/rails db:prepare"
+  release_command = "bin/deploy"
 
 [env]
   APP_HOST                  = "slsh.me"
