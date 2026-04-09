@@ -1,24 +1,54 @@
-# README
+# slsh.me
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+URL shortener and link analytics service.
 
-Things you may want to cover:
+## Development
 
-* Ruby version
+### Requirements
 
-* System dependencies
+- Ruby (see `.ruby-version`)
+- PostgreSQL
 
-* Configuration
+### Setup
 
-* Database creation
+```sh
+bin/setup
+bin/dev
+```
 
-* Database initialization
+### Tests
 
-* How to run the test suite
+```sh
+bin/rails test
+bin/rails test:system
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+## Deployment
 
-* Deployment instructions
+The app is deployed to [Fly.io](https://fly.io). Deploys happen automatically on push to `master` after CI passes.
 
-* ...
+### Infrastructure
+
+- **App**: `slsh-me` (region: `cdg`)
+- **Database**: `slsh-me-db` (Fly Postgres, shared-cpu-1x, 1GB volume)
+
+### Secrets
+
+The following secrets must be set on the Fly app:
+
+```sh
+flyctl secrets set RAILS_MASTER_KEY=<value from config/master.key> --app slsh-me
+```
+
+For CI/CD, add `FLY_API_TOKEN` to GitHub repo secrets:
+
+```sh
+flyctl tokens create deploy -a slsh-me
+# Then add the token at Settings > Secrets and variables > Actions > FLY_API_TOKEN
+```
+
+### Manual deploy
+
+```sh
+flyctl deploy --remote-only
+```
