@@ -31,5 +31,5 @@ primary_region = "cdg"
   memory = "256mb"
 
 [processes]
-  app    = "bin/thrust bin/rails server -p 3000 -b 0.0.0.0"
+  app    = "bin/rails server -p 3000 -b 0.0.0.0"
   worker = "bin/jobs"
