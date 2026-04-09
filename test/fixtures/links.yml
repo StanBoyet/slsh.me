@@ -34,3 +34,19 @@ other_user_link:
   slug: "other11"
   active: true
   clicks_count: 0
+
+custom_domain_link:
+  user: one
+  custom_domain: example_domain
+  original_url: "https://example.com/custom"
+  slug: "promo"
+  active: true
+  clicks_count: 3
+
+archived_link:
+  user: one
+  original_url: "https://example.com/archived"
+  slug: "oldlink"
+  active: false
+  archived: true
+  clicks_count: 10

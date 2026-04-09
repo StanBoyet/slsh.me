@@ -2,17 +2,19 @@ class LinksController < ApplicationController
   before_action :set_link, only: %i[edit update destroy analytics qr]
 
   def index
-    @links = Current.user.links
-                    .order(created_at: :desc)
-                    .includes(:visits)
+    @filter = params[:filter].to_s
+    base = Current.user.links.order(created_at: :desc).includes(:visits, :custom_domain)
+
+    @links = @filter == "archived" ? base.archived : base.not_archived
 
     if params[:q].present?
       q = "%#{params[:q].downcase}%"
       @links = @links.where("LOWER(slug) LIKE ? OR LOWER(original_url) LIKE ? OR LOWER(title) LIKE ?", q, q, q)
     end
 
-    @total_clicks = Current.user.links.sum(:clicks_count)
-    @links_count  = Current.user.links.count
+    @total_clicks    = Current.user.links.not_archived.sum(:clicks_count)
+    @links_count     = Current.user.links.not_archived.count
+    @archived_count  = Current.user.links.archived.count
   end
 
   def new
@@ -101,7 +103,8 @@ class LinksController < ApplicationController
     params.expect(
       link: [
         :original_url, :slug, :title, :description, :og_image_url,
-        :password, :password_confirmation, :expires_at, :max_clicks, :active
+        :password, :password_confirmation, :expires_at, :max_clicks, :active,
+        :custom_domain_id
       ]
     )
   end

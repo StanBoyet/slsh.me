@@ -2,26 +2,30 @@ class Link < ApplicationRecord
   has_secure_password :password, validations: false
 
   belongs_to :user
+  belongs_to :custom_domain, optional: true
   has_many :visits, dependent: :destroy
 
   RESERVED_SLUGS = %w[session sessions password passwords link links user users
-                       admin dashboard analytics health assets login logout register signup].freeze
+                       admin dashboard analytics health assets login logout register signup
+                       custom_domains].freeze
   SLUG_FORMAT = /\A[a-zA-Z0-9_-]+\z/
 
   validates :original_url, presence: true
   validate :original_url_is_valid
   validates :slug, presence: true,
-                   uniqueness: { case_sensitive: false },
                    format: { with: SLUG_FORMAT, message: "only allows letters, numbers, hyphens and underscores" },
                    exclusion: { in: RESERVED_SLUGS, message: "is reserved" }
+  validate :slug_unique_within_scope
   validates :max_clicks, numericality: { greater_than: 0, allow_nil: true }
 
   before_validation :assign_slug, on: :create
 
-  scope :active,   -> { where(active: true) }
-  scope :inactive, -> { where(active: false) }
-  scope :expired,  -> { where("expires_at IS NOT NULL AND expires_at < ?", Time.current) }
-  scope :alive,    -> { active.where("expires_at IS NULL OR expires_at >= ?", Time.current) }
+  scope :active,       -> { where(active: true) }
+  scope :inactive,     -> { where(active: false) }
+  scope :archived,     -> { where(archived: true) }
+  scope :not_archived, -> { where(archived: false) }
+  scope :expired,      -> { where("expires_at IS NOT NULL AND expires_at < ?", Time.current) }
+  scope :alive,        -> { active.not_archived.where("expires_at IS NULL OR expires_at >= ?", Time.current) }
 
   def expired?
     (expires_at.present? && expires_at < Time.current) ||
@@ -40,6 +44,10 @@ class Link < ApplicationRecord
     description.presence || original_url
   end
 
+  def domain_label
+    custom_domain&.domain || "slsh.me"
+  end
+
   private
 
   def assign_slug
@@ -55,5 +63,13 @@ class Link < ApplicationRecord
     end
   rescue URI::InvalidURIError
     errors.add(:original_url, "is not a valid URL")
+  end
+
+  def slug_unique_within_scope
+    return if slug.blank? || archived?
+
+    scope = Link.not_archived.where(custom_domain_id: custom_domain_id).where(slug: slug)
+    scope = scope.where.not(id: id) if persisted?
+    errors.add(:slug, "has already been taken") if scope.exists?
   end
 end

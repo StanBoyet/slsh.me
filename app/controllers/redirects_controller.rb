@@ -6,7 +6,7 @@ class RedirectsController < ApplicationController
                    vkShare|W3C_Validator|ia_archiver/xi.freeze
 
   def show
-    @link = Link.find_by!(slug: params[:slug])
+    @link = find_link!
 
     unless @link.active?
       return render :gone, status: :gone
@@ -37,7 +37,7 @@ class RedirectsController < ApplicationController
   end
 
   def unlock
-    @link = Link.find_by!(slug: params[:slug])
+    @link = find_link!
 
     if @link.authenticate_password(params[:password].to_s)
       session["unlocked_link_#{@link.id}"] = true
@@ -56,6 +56,15 @@ class RedirectsController < ApplicationController
   end
 
   private
+
+  def find_link!
+    if custom_domain_request?
+      domain = CustomDomain.find_by!(domain: request.host)
+      domain.links.find_by!(slug: params[:slug])
+    else
+      Link.where(custom_domain_id: nil).find_by!(slug: params[:slug])
+    end
+  end
 
   def social_bot?
     request.user_agent.to_s.match?(SOCIAL_BOT_UA)

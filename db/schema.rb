@@ -10,14 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_08_130409) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_09_142953) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
+  create_table "custom_domains", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "domain", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.boolean "verified", default: false, null: false
+    t.index ["domain"], name: "index_custom_domains_on_domain", unique: true
+    t.index ["user_id"], name: "index_custom_domains_on_user_id"
+  end
+
   create_table "links", force: :cascade do |t|
     t.boolean "active", default: true, null: false
+    t.boolean "archived", default: false, null: false
     t.integer "clicks_count", default: 0, null: false
     t.datetime "created_at", null: false
+    t.bigint "custom_domain_id"
     t.text "description"
     t.datetime "expires_at"
     t.integer "max_clicks"
@@ -28,7 +40,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_130409) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.index ["slug"], name: "index_links_on_slug", unique: true
+    t.index ["custom_domain_id", "slug"], name: "index_links_on_domain_and_slug_unique", unique: true, where: "((custom_domain_id IS NOT NULL) AND (archived = false))"
+    t.index ["custom_domain_id"], name: "index_links_on_custom_domain_id"
+    t.index ["slug"], name: "index_links_on_slug_unique_default", unique: true, where: "((custom_domain_id IS NULL) AND (archived = false))"
     t.index ["user_id", "created_at"], name: "index_links_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_links_on_user_id"
   end
@@ -74,6 +88,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_130409) do
     t.index ["link_id"], name: "index_visits_on_link_id"
   end
 
+  add_foreign_key "custom_domains", "users"
+  add_foreign_key "links", "custom_domains"
   add_foreign_key "links", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "visits", "links"

@@ -1,0 +1,9 @@
+example_domain:
+  user: one
+  domain: "links.example.com"
+  verified: true
+
+unverified_domain:
+  user: one
+  domain: "short.test.com"
+  verified: false

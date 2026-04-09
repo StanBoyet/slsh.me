@@ -69,4 +69,49 @@ class LinkTest < ActiveSupport::TestCase
   test "password_protected? is true when password digest present" do
     assert links(:password_link).password_protected?
   end
+
+  test "same slug allowed on different custom domains" do
+    domain_a = custom_domains(:example_domain)
+    domain_b = custom_domains(:unverified_domain)
+
+    @user.links.create!(original_url: "https://a.com", slug: "sameslug", custom_domain: domain_a)
+    link_b = @user.links.build(original_url: "https://b.com", slug: "sameslug", custom_domain: domain_b)
+    assert link_b.valid?
+  end
+
+  test "same slug allowed on custom domain and default domain" do
+    domain = custom_domains(:example_domain)
+    @user.links.create!(original_url: "https://a.com", slug: "dualslug", custom_domain: domain)
+    link_default = @user.links.build(original_url: "https://b.com", slug: "dualslug")
+    assert link_default.valid?
+  end
+
+  test "duplicate slug rejected on same custom domain" do
+    domain = custom_domains(:example_domain)
+    @user.links.create!(original_url: "https://a.com", slug: "dup", custom_domain: domain)
+    dup = @user.links.build(original_url: "https://b.com", slug: "dup", custom_domain: domain)
+    assert_not dup.valid?
+    assert_includes dup.errors[:slug], "has already been taken"
+  end
+
+  test "archived links excluded from uniqueness check" do
+    # archived_link fixture has slug "oldlink" and archived: true
+    new_link = @user.links.build(original_url: "https://new.com", slug: "oldlink")
+    assert new_link.valid?
+  end
+
+  test "not_archived scope excludes archived links" do
+    assert_includes Link.not_archived, links(:active_link)
+    assert_not_includes Link.not_archived, links(:archived_link)
+  end
+
+  test "archived scope includes only archived links" do
+    assert_includes Link.archived, links(:archived_link)
+    assert_not_includes Link.archived, links(:active_link)
+  end
+
+  test "domain_label returns custom domain name or slsh.me" do
+    assert_equal "links.example.com", links(:custom_domain_link).domain_label
+    assert_equal "slsh.me", links(:active_link).domain_label
+  end
 end

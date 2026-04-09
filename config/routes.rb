@@ -11,6 +11,9 @@ Rails.application.routes.draw do
 
   # Authenticated
   root "links#index"
+  resources :custom_domains, only: %i[index create destroy] do
+    member { post :check }
+  end
   resources :links, except: [:show] do
     member do
       get  :analytics
