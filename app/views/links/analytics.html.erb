@@ -11,7 +11,7 @@
       <% end %>
       <div>
         <div class="flex items-center gap-2 flex-wrap">
-          <h1 class="text-xl font-semibold font-mono"><span class="text-slate-300 dark:text-slate-700"><%= @link.domain_label %>/l/</span><span class="text-slate-900 dark:text-white"><%= @link.slug %></span></h1>
+          <h1 class="text-xl font-semibold font-mono"><span class="text-slate-300 dark:text-slate-700"><%= @link.domain_label %>/l</span><span class="text-slate-900 dark:text-white">/<%= @link.slug %></span></h1>
           <% unless @link.active? %><span class="badge-red">inactive</span><% end %>
           <% if @link.expired? %><span class="badge-slate">expired</span><% end %>
         </div>
