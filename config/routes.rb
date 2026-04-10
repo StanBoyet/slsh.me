@@ -2,15 +2,15 @@ Rails.application.routes.draw do
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Auth (from authentication generator)
+  # Landing page — served on root domain (slsh.me)
+  root "pages#landing"
+
+  # Auth
   resource  :session
   resources :passwords, param: :token
+  resource  :registration, only: %i[new create]
 
-  # Registrations
-  resource :registration, only: %i[new create]
-
-  # Authenticated
-  root "links#index"
+  # Dashboard (authenticated)
   resources :custom_domains, only: %i[index create destroy] do
     member { post :check }
   end
@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     end
   end
 
-  # Public redirect — must come last
-  post "/:slug/unlock", to: "redirects#unlock", as: :unlock_redirect
-  get  "/:slug",        to: "redirects#show",   as: :redirect
+  # Public redirects — under /l/ prefix
+  post "/l/:slug/unlock", to: "redirects#unlock", as: :unlock_redirect
+  get  "/l/:slug",        to: "redirects#show",   as: :redirect
 end

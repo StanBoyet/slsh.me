@@ -10,17 +10,17 @@ class CustomDomainRedirectTest < ActionDispatch::IntegrationTest
   end
 
   test "custom domain resolves its own link" do
-    get "/promo", headers: { "HOST" => "links.example.com" }
+    get "/l/promo", headers: { "HOST" => "links.example.com" }
     assert_redirected_to links(:custom_domain_link).original_url
   end
 
   test "custom domain does not resolve slsh.me links" do
-    get "/#{links(:active_link).slug}", headers: { "HOST" => "links.example.com" }
+    get "/l/#{links(:active_link).slug}", headers: { "HOST" => "links.example.com" }
     assert_response :not_found
   end
 
   test "slsh.me does not resolve custom domain links" do
-    get "/promo"
+    get "/l/promo"
     assert_response :not_found
   end
 
@@ -30,15 +30,15 @@ class CustomDomainRedirectTest < ActionDispatch::IntegrationTest
     user = users(:one)
     user.links.create!(original_url: "https://default.example.com", slug: "promo")
 
-    get "/promo"
+    get "/l/promo"
     assert_redirected_to "https://default.example.com"
 
-    get "/promo", headers: { "HOST" => "links.example.com" }
+    get "/l/promo", headers: { "HOST" => "links.example.com" }
     assert_redirected_to "https://example.com/custom"
   end
 
   test "archived link returns 410" do
-    get "/#{links(:archived_link).slug}"
+    get "/l/#{links(:archived_link).slug}"
     assert_response :gone
   end
 
