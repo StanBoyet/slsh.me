@@ -15,7 +15,7 @@ class Visit < ApplicationRecord
       "link_#{link_id}_visits",
       target:  "visits-table-body",
       partial: "links/visit_row",
-      locals:  { visit: self }
+      locals:  { visit: self, animate: true }
     )
   end
 end
