@@ -74,7 +74,7 @@ class LinksController < ApplicationController
 
   def qr
     require "rqrcode"
-    short_url = redirect_url(@link.slug)
+    short_url = @link.short_url
     qr = RQRCode::QRCode.new(short_url)
     svg = qr.as_svg(
       color: "000",

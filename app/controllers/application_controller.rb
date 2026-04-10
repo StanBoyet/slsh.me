@@ -8,12 +8,7 @@ class ApplicationController < ActionController::Base
 
   prepend_before_action :enforce_domain_routing
 
-  helper_method :redirect_url, :custom_domain_request?, :app_url
-
-  def redirect_url(slug)
-    host = ENV["APP_HOST"].present? ? "https://#{primary_host}" : request.base_url
-    "#{host}/l/#{slug}"
-  end
+  helper_method :custom_domain_request?, :app_url
 
   private
 

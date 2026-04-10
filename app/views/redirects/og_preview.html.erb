@@ -8,7 +8,7 @@
   <%# OpenGraph %>
   <meta property="og:title"       content="<%= @link.og_title %>">
   <meta property="og:description" content="<%= @link.og_description %>">
-  <meta property="og:url"         content="<%= redirect_url(@link.slug) %>">
+  <meta property="og:url"         content="<%= @link.short_url %>">
   <% if @link.og_image_url.present? %>
     <meta property="og:image"     content="<%= @link.og_image_url %>">
     <meta property="og:image:width"  content="1200">

@@ -22,7 +22,7 @@
     <div class="flex items-center gap-2 flex-wrap">
       <%# Copy button %>
       <button class="btn-secondary" data-controller="copy"
-              data-copy-text-value="<%= redirect_url(@link.slug) %>"
+              data-copy-text-value="<%= @link.short_url %>"
               data-action="click->copy#copy">
         <svg data-copy-target="icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

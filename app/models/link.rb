@@ -46,7 +46,11 @@ class Link < ApplicationRecord
   end
 
   def domain_label
-    custom_domain&.domain || "slsh.me"
+    custom_domain&.domain || ENV.fetch("APP_HOST", "slsh.me")
+  end
+
+  def short_url
+    "https://#{domain_label}/l/#{slug}"
   end
 
   private
