@@ -53,7 +53,7 @@
   <% frame_src = analytics_link_path(@link, range: @range) %>
 
   <%# Stats row %>
-  <turbo-frame id="analytics-stats" data-analytics-refresh-target="frame" data-src="<%= frame_src %>">
+  <turbo-frame id="analytics-stats" class="contents" data-analytics-refresh-target="frame" data-src="<%= frame_src %>">
     <%= render "analytics_stats" %>
   </turbo-frame>
 
@@ -67,12 +67,12 @@
   </div>
 
   <%# Clicks over time %>
-  <turbo-frame id="analytics-chart" data-analytics-refresh-target="frame" data-src="<%= frame_src %>">
+  <turbo-frame id="analytics-chart" class="contents" data-analytics-refresh-target="frame" data-src="<%= frame_src %>">
     <%= render "analytics_chart" %>
   </turbo-frame>
 
   <%# Breakdown grid %>
-  <turbo-frame id="analytics-breakdowns" data-analytics-refresh-target="frame" data-src="<%= frame_src %>">
+  <turbo-frame id="analytics-breakdowns" class="contents" data-analytics-refresh-target="frame" data-src="<%= frame_src %>">
     <%= render "analytics_breakdowns" %>
   </turbo-frame>
 
