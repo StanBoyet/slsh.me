@@ -7,10 +7,16 @@
     <%= [visit.city, visit.country_code].compact.join(", ").presence || "—" %>
   </td>
   <td class="px-4 py-3 text-slate-700 dark:text-slate-300 whitespace-nowrap">
-    <%= visit.browser.presence || "—" %>
+    <span class="inline-flex items-center gap-1.5">
+      <span class="text-slate-500 dark:text-slate-400"><%= browser_icon(visit.browser.presence || "", css_class: "w-3 h-3") %></span>
+      <%= visit.browser.presence || "—" %>
+    </span>
   </td>
   <td class="px-4 py-3 text-slate-500 dark:text-slate-400 whitespace-nowrap">
-    <%= visit.os.presence || "—" %>
+    <span class="inline-flex items-center gap-1.5">
+      <span class="text-slate-500 dark:text-slate-400"><%= os_icon(visit.os.presence || "", css_class: "w-3 h-3") %></span>
+      <%= visit.os.presence || "—" %>
+    </span>
   </td>
   <td class="px-4 py-3 whitespace-nowrap">
     <span class="badge-slate capitalize"><%= visit.device_type || "—" %></span>

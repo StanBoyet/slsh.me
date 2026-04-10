@@ -1,5 +1,5 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-  <%# Devices %>
+  <%# Devices — no icons in pie chart legend %>
   <div class="card p-5">
     <h3 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">Devices</h3>
     <% if @device_breakdown.any? %>
@@ -19,8 +19,9 @@
       <div class="space-y-2">
         <% max = @top_browsers.first&.last.to_f %>
         <% @top_browsers.each do |name, count| %>
-          <div class="flex items-center gap-3">
-            <span class="text-sm text-slate-600 dark:text-slate-300 w-24 truncate"><%= name.presence || "Unknown" %></span>
+          <div class="flex items-center gap-2.5">
+            <span class="text-slate-500 dark:text-slate-400 shrink-0"><%= browser_icon(name.presence || "Unknown") %></span>
+            <span class="text-sm text-slate-600 dark:text-slate-300 w-20 truncate"><%= name.presence || "Unknown" %></span>
             <div class="flex-1 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5">
               <div class="bg-violet-500 h-1.5 rounded-full transition-all"
                    style="width:<%= max > 0 ? (count / max * 100).round : 0 %>%"></div>
@@ -63,8 +64,9 @@
       <div class="space-y-2">
         <% max = @top_os.first&.last.to_f %>
         <% @top_os.each do |name, count| %>
-          <div class="flex items-center gap-3">
-            <span class="text-sm text-slate-600 dark:text-slate-300 w-24 truncate"><%= name.presence || "Unknown" %></span>
+          <div class="flex items-center gap-2.5">
+            <span class="text-slate-500 dark:text-slate-400 shrink-0"><%= os_icon(name.presence || "Unknown") %></span>
+            <span class="text-sm text-slate-600 dark:text-slate-300 w-20 truncate"><%= name.presence || "Unknown" %></span>
             <div class="flex-1 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5">
               <div class="bg-emerald-500 h-1.5 rounded-full transition-all"
                    style="width:<%= max > 0 ? (count / max * 100).round : 0 %>%"></div>
