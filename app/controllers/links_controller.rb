@@ -56,7 +56,7 @@ class LinksController < ApplicationController
     end
 
     @visits        = @link.visits.human.in_range(from, Time.current)
-    @total_visits  = @link.visits.human.count
+    @total_visits  = @link.clicks_count
     @clicks_by_day = @visits.group_by_day(:created_at).count
     @top_browsers  = top_n(@visits, :browser, 5)
     @top_countries = top_n(@visits, :country, 10)
