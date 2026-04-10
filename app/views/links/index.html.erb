@@ -56,10 +56,7 @@
 
             <div class="flex-1 min-w-0">
               <div class="flex items-center gap-2 flex-wrap">
-                <span class="font-mono text-sm font-medium text-violet-600 dark:text-violet-400">/<%= link.slug %></span>
-                <% if link.custom_domain %>
-                  <span class="badge-violet"><%= link.domain_label %></span>
-                <% end %>
+                <span class="font-mono text-sm font-medium"><span class="text-slate-400 dark:text-slate-600"><%= link.domain_label %>/l/</span><span class="text-violet-600 dark:text-violet-400"><%= link.slug %></span></span>
                 <% if link.archived? %>
                   <span class="badge-slate">archived</span>
                 <% end %>
