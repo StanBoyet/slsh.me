@@ -33,3 +33,7 @@ primary_region = "cdg"
 [processes]
   app    = "bin/rails server -p 3000 -b 0.0.0.0"
   worker = "bin/jobs"
+
+[[restart]]
+  policy = "always"
+  processes = ["worker"]
