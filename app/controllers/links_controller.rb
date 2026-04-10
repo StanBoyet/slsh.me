@@ -55,7 +55,7 @@ class LinksController < ApplicationController
     else            30.days.ago
     end
 
-    @visits        = @link.visits.human.in_range(from, Time.current)
+    @visits        = @link.visits.in_range(from, Time.current)
     @total_visits  = @link.clicks_count
     @clicks_by_day = @visits.group_by_day(:created_at).count
     @top_browsers  = top_n(@visits, :browser, 5)
@@ -63,7 +63,7 @@ class LinksController < ApplicationController
     @device_breakdown = @visits.group(:device_type).count
     @top_os        = top_n(@visits, :os, 5)
     @top_referers  = top_n(@visits.where.not(referer: [ nil, "" ]), :referer, 5)
-    @recent_visits = @link.visits.human.recent.limit(20)
+    @recent_visits = @link.visits.recent.limit(20)
   end
 
   def check_slug

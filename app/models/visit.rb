@@ -1,7 +1,7 @@
 class Visit < ApplicationRecord
   belongs_to :link
 
-  after_create_commit :broadcast_to_analytics, unless: :bot?
+  after_create_commit :broadcast_to_analytics
 
   scope :human,    -> { where(bot: false) }
   scope :bots,     -> { where(bot: true) }
