@@ -114,4 +114,14 @@ class LinkTest < ActiveSupport::TestCase
     assert_equal "links.example.com", links(:custom_domain_link).domain_label
     assert_equal "slsh.me", links(:active_link).domain_label
   end
+
+  test "short_url uses /l/ prefix for default domain links" do
+    link = links(:active_link)
+    assert_equal "https://slsh.me/l/#{link.slug}", link.short_url
+  end
+
+  test "short_url uses root path for custom domain links" do
+    link = links(:custom_domain_link)
+    assert_equal "https://links.example.com/#{link.slug}", link.short_url
+  end
 end

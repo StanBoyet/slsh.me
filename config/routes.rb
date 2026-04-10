@@ -24,7 +24,11 @@ Rails.application.routes.draw do
     end
   end
 
-  # Public redirects — under /l/ prefix
+  # Public redirects — /l/ prefix on primary domain
   post "/l/:slug/unlock", to: "redirects#unlock", as: :unlock_redirect
   get  "/l/:slug",        to: "redirects#show",   as: :redirect
+
+  # Custom domain redirects — slug at root
+  post "/:slug/unlock", to: "redirects#unlock", as: :unlock_custom_redirect
+  get  "/:slug",        to: "redirects#show",   as: :custom_redirect
 end

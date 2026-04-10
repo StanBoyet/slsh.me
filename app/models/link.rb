@@ -50,7 +50,11 @@ class Link < ApplicationRecord
   end
 
   def short_url
-    "https://#{domain_label}/l/#{slug}"
+    if custom_domain.present?
+      "https://#{domain_label}/#{slug}"
+    else
+      "https://#{domain_label}/l/#{slug}"
+    end
   end
 
   private
