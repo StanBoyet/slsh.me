@@ -68,7 +68,7 @@ class LinksController < ApplicationController
     @top_countries = top_n(scoped, :country, 10)
     @device_breakdown = scoped.group(:device_type).count
     @top_os        = top_n(scoped, :os, 5)
-    @top_referers  = top_n(scoped.where.not(referer: [nil, ""]), :referer, 5)
+    @top_referers  = top_n(scoped.where.not(referer: [ nil, "" ]), :referer, 5)
     @recent_visits = @link.visits.recent.limit(20)
   end
 
