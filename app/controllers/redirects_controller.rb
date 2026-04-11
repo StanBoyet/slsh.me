@@ -25,15 +25,7 @@ class RedirectsController < ApplicationController
       return render :password, status: :ok
     end
 
-    RecordVisitJob.perform_later(
-      @link.id,
-      request.remote_ip,
-      request.user_agent.to_s,
-      request.referer.to_s
-    )
-    @link.increment!(:clicks_count)
-
-    redirect_to @link.original_url, status: :found, allow_other_host: true
+    track_and_redirect!
   end
 
   def unlock
@@ -41,14 +33,7 @@ class RedirectsController < ApplicationController
 
     if @link.authenticate_password(params[:password].to_s)
       session["unlocked_link_#{@link.id}"] = true
-      RecordVisitJob.perform_later(
-        @link.id,
-        request.remote_ip,
-        request.user_agent.to_s,
-        request.referer.to_s
-      )
-      @link.increment!(:clicks_count)
-      redirect_to @link.original_url, status: :found, allow_other_host: true
+      track_and_redirect!
     else
       flash.now[:alert] = "Incorrect password."
       render :password, status: :unprocessable_entity
@@ -56,6 +41,12 @@ class RedirectsController < ApplicationController
   end
 
   private
+
+  def track_and_redirect!
+    RecordVisitJob.perform_later(@link.id, request.remote_ip, request.user_agent.to_s, request.referer.to_s)
+    @link.increment!(:clicks_count)
+    redirect_to @link.original_url, status: :found, allow_other_host: true
+  end
 
   def find_link!
     if custom_domain_request?

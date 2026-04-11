@@ -20,22 +20,16 @@ class Visit < ApplicationRecord
   end
 
   def broadcast_clicks_update
-    count = link.reload.clicks_count
+    count, user_id = Link.where(id: link_id).pick(:clicks_count, :user_id)
+    return unless count
+
+    stream = "user_#{user_id}_clicks"
     formatted = ActiveSupport::NumberHelper.number_to_delimited(count)
 
-    # Update the per-link click count on the index page
-    Turbo::StreamsChannel.broadcast_update_to(
-      "user_#{link.user_id}_clicks",
-      target: "link_#{link_id}_clicks",
-      html: formatted
-    )
+    Turbo::StreamsChannel.broadcast_update_to(stream, target: "link_#{link_id}_clicks", html: formatted)
 
-    # Update total clicks in the header
-    total = link.user.links.not_archived.sum(:clicks_count)
-    Turbo::StreamsChannel.broadcast_update_to(
-      "user_#{link.user_id}_clicks",
-      target: "total_clicks",
-      html: ActiveSupport::NumberHelper.number_to_delimited(total)
-    )
+    total = Link.where(user_id: user_id, archived: false).sum(:clicks_count)
+    Turbo::StreamsChannel.broadcast_update_to(stream, target: "total_clicks",
+      html: ActiveSupport::NumberHelper.number_to_delimited(total))
   end
 end

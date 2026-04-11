@@ -12,9 +12,14 @@ class LinksController < ApplicationController
       @links = @links.where("LOWER(slug) LIKE ? OR LOWER(original_url) LIKE ? OR LOWER(title) LIKE ?", q, q, q)
     end
 
-    @total_clicks    = Current.user.links.not_archived.sum(:clicks_count)
-    @links_count     = Current.user.links.not_archived.count
-    @archived_count  = Current.user.links.archived.count
+    counts = Current.user.links
+      .group(:archived)
+      .select("archived, COUNT(*) AS cnt, COALESCE(SUM(clicks_count), 0) AS total")
+      .index_by(&:archived)
+
+    @links_count    = counts[false]&.cnt   || 0
+    @total_clicks   = counts[false]&.total || 0
+    @archived_count = counts[true]&.cnt    || 0
   end
 
   def new
@@ -55,20 +60,22 @@ class LinksController < ApplicationController
     else            30.days.ago
     end
 
-    @visits        = @link.visits.in_range(from, Time.current)
+    scoped         = @link.visits.in_range(from, Time.current)
     @total_visits  = @link.clicks_count
-    @clicks_by_day = @visits.group_by_day(:created_at).count
-    @top_browsers  = top_n(@visits, :browser, 5)
-    @top_countries = top_n(@visits, :country, 10)
-    @device_breakdown = @visits.group(:device_type).count
-    @top_os        = top_n(@visits, :os, 5)
-    @top_referers  = top_n(@visits.where.not(referer: [ nil, "" ]), :referer, 5)
+    @period_count  = scoped.count
+    @clicks_by_day = scoped.group_by_day(:created_at).count
+    @top_browsers  = top_n(scoped, :browser, 5)
+    @top_countries = top_n(scoped, :country, 10)
+    @device_breakdown = scoped.group(:device_type).count
+    @top_os        = top_n(scoped, :os, 5)
+    @top_referers  = top_n(scoped.where.not(referer: [nil, ""]), :referer, 5)
     @recent_visits = @link.visits.recent.limit(20)
   end
 
   def check_slug
-    slug  = params[:slug].to_s.strip
-    taken = slug.present? && Link.exists?(slug: slug)
+    slug = params[:slug].to_s.strip
+    domain_id = params[:custom_domain_id].presence
+    taken = slug.present? && Link.not_archived.where(slug: slug, custom_domain_id: domain_id).exists?
     render json: { taken: taken }
   end
 
@@ -92,7 +99,7 @@ class LinksController < ApplicationController
   private
 
   def top_n(relation, column, n)
-    relation.group(column).count.sort_by { |_, v| -v }.first(n).to_h
+    relation.group(column).order("count_all DESC").limit(n).count
   end
 
   def set_link
