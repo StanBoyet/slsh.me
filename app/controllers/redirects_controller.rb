@@ -43,7 +43,8 @@ class RedirectsController < ApplicationController
   private
 
   def track_and_redirect!
-    RecordVisitJob.perform_later(@link.id, request.remote_ip, request.user_agent.to_s, request.referer.to_s)
+    real_ip = request.headers["CF-Connecting-IP"].presence || request.remote_ip
+    RecordVisitJob.perform_later(@link.id, real_ip, request.user_agent.to_s, request.referer.to_s)
     @link.increment!(:clicks_count)
     redirect_to @link.original_url, status: :found, allow_other_host: true
   end
