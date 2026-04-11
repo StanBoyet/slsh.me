@@ -9,19 +9,19 @@
   <meta property="og:title"       content="<%= @link.og_title %>">
   <meta property="og:description" content="<%= @link.og_description %>">
   <meta property="og:url"         content="<%= @link.short_url %>">
-  <% if @link.og_image_url.present? %>
-    <meta property="og:image"     content="<%= @link.og_image_url %>">
+  <% if (og_img = @link.og_image_or_url) %>
+    <meta property="og:image"     content="<%= og_img %>">
     <meta property="og:image:width"  content="1200">
     <meta property="og:image:height" content="630">
   <% end %>
   <meta property="og:type" content="website">
 
   <%# Twitter Card %>
-  <meta name="twitter:card"        content="<%= @link.og_image_url.present? ? 'summary_large_image' : 'summary' %>">
+  <meta name="twitter:card"        content="<%= @link.og_image_or_url ? 'summary_large_image' : 'summary' %>">
   <meta name="twitter:title"       content="<%= @link.og_title %>">
   <meta name="twitter:description" content="<%= @link.og_description %>">
-  <% if @link.og_image_url.present? %>
-    <meta name="twitter:image"     content="<%= @link.og_image_url %>">
+  <% if (og_img = @link.og_image_or_url) %>
+    <meta name="twitter:image"     content="<%= og_img %>">
   <% end %>
 
   <%# SEO %>

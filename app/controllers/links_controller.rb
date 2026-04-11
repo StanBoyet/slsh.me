@@ -109,7 +109,7 @@ class LinksController < ApplicationController
   def link_params
     params.expect(
       link: [
-        :original_url, :slug, :title, :description, :og_image_url,
+        :original_url, :slug, :title, :description, :og_image, :og_image_url,
         :password, :password_confirmation, :expires_at, :max_clicks, :active,
         :custom_domain_id
       ]

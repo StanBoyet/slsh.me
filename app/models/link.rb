@@ -4,6 +4,7 @@ class Link < ApplicationRecord
   belongs_to :user
   belongs_to :custom_domain, optional: true
   has_many :visits, dependent: :destroy
+  has_one_attached :og_image
 
   RESERVED_SLUGS = %w[session sessions password passwords link links user users
                        admin dashboard analytics health assets login logout register signup
@@ -43,6 +44,14 @@ class Link < ApplicationRecord
 
   def og_description
     description.presence || original_url
+  end
+
+  def og_image_or_url
+    if og_image.attached?
+      Rails.application.routes.url_helpers.rails_blob_url(og_image, host: ENV.fetch("APP_HOST", "localhost"))
+    elsif og_image_url.present?
+      og_image_url
+    end
   end
 
   def domain_label
