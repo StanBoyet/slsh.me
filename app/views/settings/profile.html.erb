@@ -22,7 +22,7 @@
             <% if Current.user.avatar.attached? %>
               <%= image_tag Current.user.avatar.variant(resize_to_fill: [ 128, 128 ]), class: "w-full h-full object-cover" %>
             <% else %>
-              <span class="text-2xl">🦥</span>
+              <span class="text-[40px] leading-none">🦥</span>
             <% end %>
           </div>
           <div class="flex-1 min-w-0">
@@ -44,7 +44,8 @@
 
         <div>
           <label class="label">Email</label>
-          <p class="text-sm text-slate-600 dark:text-slate-300"><%= Current.user.email_address %></p>
+          <input type="email" value="<%= Current.user.email_address %>" disabled
+                 class="input opacity-60 cursor-not-allowed" />
         </div>
       </div>
 
