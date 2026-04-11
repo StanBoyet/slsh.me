@@ -34,6 +34,10 @@ class Link < ApplicationRecord
       (max_clicks.present? && clicks_count >= max_clicks)
   end
 
+  def expires_soon?
+    expires_at.present? && expires_at > Time.current && expires_at < 7.days.from_now
+  end
+
   def password_protected?
     password_digest.present?
   end
