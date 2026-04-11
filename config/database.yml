@@ -3,6 +3,9 @@ default: &default
   encoding: unicode
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  checkout_timeout: 5
+  reaping_frequency: 10
+  idle_timeout: 300
 
 development:
   <<: *default
