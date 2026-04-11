@@ -25,15 +25,21 @@
                   data: { image_preview_target: "preview" } %>
             <% else %>
               <img src="" class="w-full h-full object-cover hidden" data-image-preview-target="preview">
-              <span class="text-[40px] leading-none" data-image-preview-target="placeholder">🦥</span>
             <% end %>
+            <span class="text-[40px] leading-none <%= 'hidden' if Current.user.avatar.attached? %>" data-image-preview-target="placeholder">🦥</span>
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium text-slate-900 dark:text-white mb-1">Profile picture</p>
             <p class="text-xs text-slate-500 mb-3">JPG or PNG. 2 MB max.</p>
-            <%= f.file_field :avatar, accept: "image/jpeg,image/png",
-                data: { image_preview_target: "input", action: "change->image-preview#preview" },
-                class: "text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-slate-100 file:text-slate-700 dark:file:bg-slate-800 dark:file:text-slate-300 hover:file:bg-slate-200 dark:hover:file:bg-slate-700 file:cursor-pointer file:transition-colors" %>
+            <div class="flex items-center gap-3">
+              <%= f.file_field :avatar, accept: "image/jpeg,image/png",
+                  data: { image_preview_target: "input", action: "change->image-preview#preview" },
+                  class: "text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-slate-100 file:text-slate-700 dark:file:bg-slate-800 dark:file:text-slate-300 hover:file:bg-slate-200 dark:hover:file:bg-slate-700 file:cursor-pointer file:transition-colors" %>
+              <input type="hidden" name="user[remove_avatar]" value="" data-image-preview-target="remove">
+              <button type="button" data-action="click->image-preview#removeImage"
+                      data-image-preview-target="removeBtn"
+                      class="text-xs text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors <%= 'hidden' unless Current.user.avatar.attached? %>">Remove</button>
+            </div>
           </div>
         </div>
       </div>

@@ -40,6 +40,8 @@ class LinksController < ApplicationController
   end
 
   def update
+    @link.og_image.purge if params.dig(:link, :remove_og_image) == "1"
+
     if @link.update(link_params.except(:custom_domain_id, :slug))
       redirect_to links_path, notice: "Link updated."
     else

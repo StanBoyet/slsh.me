@@ -3,6 +3,8 @@ class SettingsController < ApplicationController
   end
 
   def update_profile
+    Current.user.avatar.purge if params.dig(:user, :remove_avatar) == "1"
+
     if Current.user.update(profile_params)
       redirect_to profile_settings_path, notice: "Profile updated."
     else

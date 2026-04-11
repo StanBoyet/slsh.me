@@ -133,9 +133,15 @@
           <img src="" class="block max-w-[400px] hidden" data-image-preview-target="preview">
         <% end %>
       </div>
-      <%= f.file_field :og_image, accept: "image/jpeg,image/png,image/webp",
-          data: { image_preview_target: "input", action: "change->image-preview#preview" },
-          class: "text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-slate-100 file:text-slate-700 dark:file:bg-slate-800 dark:file:text-slate-300 hover:file:bg-slate-200 dark:hover:file:bg-slate-700 file:cursor-pointer file:transition-colors" %>
+      <div class="flex items-center gap-3">
+        <%= f.file_field :og_image, accept: "image/jpeg,image/png,image/webp",
+            data: { image_preview_target: "input", action: "change->image-preview#preview" },
+            class: "text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-slate-100 file:text-slate-700 dark:file:bg-slate-800 dark:file:text-slate-300 hover:file:bg-slate-200 dark:hover:file:bg-slate-700 file:cursor-pointer file:transition-colors" %>
+        <input type="hidden" name="link[remove_og_image]" value="" data-image-preview-target="remove">
+        <button type="button" data-action="click->image-preview#removeImage"
+                data-image-preview-target="removeBtn"
+                class="text-xs text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors <%= 'hidden' unless @link.og_image.attached? %>">Remove</button>
+      </div>
       <p class="text-xs text-slate-400 dark:text-slate-600 mt-1">JPG, PNG or WebP. Recommended: 1200×630px</p>
     </div>
   </div>
