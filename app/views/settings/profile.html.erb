@@ -16,19 +16,23 @@
       <% end %>
 
       <%# Avatar %>
-      <div class="card p-5">
+      <div class="card p-5" data-controller="image-preview">
         <div class="flex items-center gap-5">
           <div class="w-16 h-16 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 flex items-center justify-center">
             <% if Current.user.avatar.attached? %>
-              <%= image_tag Current.user.avatar.variant(resize_to_fill: [ 128, 128 ]), class: "w-full h-full object-cover" %>
+              <%= image_tag Current.user.avatar.variant(resize_to_fill: [ 128, 128 ]),
+                  class: "w-full h-full object-cover",
+                  data: { image_preview_target: "preview" } %>
             <% else %>
-              <span class="text-[40px] leading-none">🦥</span>
+              <img src="" class="w-full h-full object-cover hidden" data-image-preview-target="preview">
+              <span class="text-[40px] leading-none" data-image-preview-target="placeholder">🦥</span>
             <% end %>
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium text-slate-900 dark:text-white mb-1">Profile picture</p>
             <p class="text-xs text-slate-500 mb-3">JPG or PNG. 2 MB max.</p>
             <%= f.file_field :avatar, accept: "image/jpeg,image/png",
+                data: { image_preview_target: "input", action: "change->image-preview#preview" },
                 class: "text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-slate-100 file:text-slate-700 dark:file:bg-slate-800 dark:file:text-slate-300 hover:file:bg-slate-200 dark:hover:file:bg-slate-700 file:cursor-pointer file:transition-colors" %>
           </div>
         </div>

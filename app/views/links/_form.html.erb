@@ -122,14 +122,19 @@
       <%= f.text_area :description, placeholder: "Short description for social preview",
           rows: 2, class: "input resize-none" %>
     </div>
-    <div>
+    <div data-controller="image-preview">
       <%= f.label :og_image, "Social image", class: "label" %>
-      <% if @link.og_image.attached? %>
-        <div class="mb-2 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 inline-block">
-          <%= image_tag @link.og_image.variant(resize_to_limit: [ 400, 210 ]), class: "block" %>
-        </div>
-      <% end %>
+      <div class="mb-2 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 inline-block">
+        <% if @link.og_image.attached? %>
+          <%= image_tag @link.og_image.variant(resize_to_limit: [ 400, 210 ]),
+              class: "block max-w-[400px]",
+              data: { image_preview_target: "preview" } %>
+        <% else %>
+          <img src="" class="block max-w-[400px] hidden" data-image-preview-target="preview">
+        <% end %>
+      </div>
       <%= f.file_field :og_image, accept: "image/jpeg,image/png,image/webp",
+          data: { image_preview_target: "input", action: "change->image-preview#preview" },
           class: "text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-slate-100 file:text-slate-700 dark:file:bg-slate-800 dark:file:text-slate-300 hover:file:bg-slate-200 dark:hover:file:bg-slate-700 file:cursor-pointer file:transition-colors" %>
       <p class="text-xs text-slate-400 dark:text-slate-600 mt-1">JPG, PNG or WebP. Recommended: 1200×630px</p>
     </div>
