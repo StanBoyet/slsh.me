@@ -177,8 +177,12 @@
       slsh<span class="text-violet-600 dark:text-violet-400">.</span>me
     </a>
     <div class="flex items-center gap-3">
-      <a href="<%= app_url("/session/new") %>" class="text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">Sign in</a>
-      <a href="<%= app_url("/registration/new") %>" class="px-4 py-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-sm font-semibold rounded-full hover:bg-zinc-700 dark:hover:bg-zinc-200 transition-all">Get started</a>
+      <% if authenticated? %>
+        <a href="<%= app_url("/links") %>" class="px-4 py-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-sm font-semibold rounded-full hover:bg-zinc-700 dark:hover:bg-zinc-200 transition-all">Go to the app</a>
+      <% else %>
+        <a href="<%= app_url("/session/new") %>" class="text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">Sign in</a>
+        <a href="<%= app_url("/registration/new") %>" class="px-4 py-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-sm font-semibold rounded-full hover:bg-zinc-700 dark:hover:bg-zinc-200 transition-all">Get started</a>
+      <% end %>
     </div>
   </nav>
 
@@ -447,9 +451,13 @@
     <div class="border-t border-zinc-200 dark:border-zinc-800 pt-8 text-center space-y-4">
       <p class="font-mono text-sm text-zinc-400 dark:text-zinc-600">Life's too short for long URLs.</p>
       <div class="flex items-center justify-center gap-4 text-xs">
-        <a href="<%= app_url("/registration/new") %>" class="text-violet-600 dark:text-violet-400 hover:text-violet-500 font-medium transition-colors">Get started</a>
-        <span class="text-zinc-300 dark:text-zinc-700">/</span>
-        <a href="<%= app_url("/session/new") %>" class="text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">Sign in</a>
+        <% if authenticated? %>
+          <a href="<%= app_url("/links") %>" class="text-violet-600 dark:text-violet-400 hover:text-violet-500 font-medium transition-colors">Go to the app</a>
+        <% else %>
+          <a href="<%= app_url("/registration/new") %>" class="text-violet-600 dark:text-violet-400 hover:text-violet-500 font-medium transition-colors">Get started</a>
+          <span class="text-zinc-300 dark:text-zinc-700">/</span>
+          <a href="<%= app_url("/session/new") %>" class="text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">Sign in</a>
+        <% end %>
       </div>
       <p class="text-[11px] text-zinc-300 dark:text-zinc-700">&copy; 2026 slsh.me</p>
     </div>
