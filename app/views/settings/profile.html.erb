@@ -38,7 +38,7 @@
               <input type="hidden" name="user[remove_avatar]" value="" data-image-preview-target="remove">
               <button type="button" data-action="click->image-preview#removeImage"
                       data-image-preview-target="removeBtn"
-                      class="text-xs text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors <%= 'hidden' unless Current.user.avatar.attached? %>">Remove</button>
+                      class="text-xs text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors cursor-pointer <%= 'hidden' unless Current.user.avatar.attached? %>">Remove</button>
             </div>
           </div>
         </div>
