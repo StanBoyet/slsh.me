@@ -1,22 +1,17 @@
 class CustomDomainsController < ApplicationController
-  def index
-    @custom_domains = Current.user.custom_domains.order(:domain)
-    @custom_domain = CustomDomain.new
-  end
-
   def create
     @custom_domain = Current.user.custom_domains.build(custom_domain_params)
 
     if @custom_domain.save
       result = fly_certs.add(@custom_domain.domain)
       if result.success?
-        redirect_to custom_domains_path, notice: "Domain added and certificate requested. Set a CNAME record pointing to slsh-me.fly.dev."
+        redirect_to domains_settings_path, notice: "Domain added and certificate requested. Set a CNAME record pointing to slsh-me.fly.dev."
       else
-        redirect_to custom_domains_path, notice: "Domain added. Certificate provisioning failed (#{result.error || "status #{result.status}"}) — set a CNAME to slsh-me.fly.dev and it will retry automatically."
+        redirect_to domains_settings_path, notice: "Domain added. Certificate provisioning failed (#{result.error || "status #{result.status}"}) — set a CNAME to slsh-me.fly.dev and it will retry automatically."
       end
     else
-      @custom_domains = Current.user.custom_domains.order(:domain)
-      render :index, status: :unprocessable_entity
+      @custom_domains = Current.user.custom_domains.order(created_at: :desc)
+      render "settings/domains", status: :unprocessable_entity
     end
   end
 
@@ -29,12 +24,12 @@ class CustomDomainsController < ApplicationController
       domain.update!(verified: configured) if configured == true || configured == false
 
       if configured
-        redirect_to custom_domains_path, notice: "#{domain.domain} is verified and active."
+        redirect_to domains_settings_path, notice: "#{domain.domain} is verified and active."
       else
-        redirect_to custom_domains_path, alert: "#{domain.domain} is not yet configured. Make sure your CNAME points to slsh-me.fly.dev."
+        redirect_to domains_settings_path, alert: "#{domain.domain} is not yet configured. Make sure your CNAME points to slsh-me.fly.dev."
       end
     else
-      redirect_to custom_domains_path, alert: "Could not check #{domain.domain}: #{result.error || "status #{result.status}"}."
+      redirect_to domains_settings_path, alert: "Could not check #{domain.domain}: #{result.error || "status #{result.status}"}."
     end
   end
 
@@ -46,7 +41,7 @@ class CustomDomainsController < ApplicationController
 
     fly_certs.delete(hostname)
 
-    redirect_to custom_domains_path, notice: "Domain removed. Its links have been archived."
+    redirect_to domains_settings_path, notice: "Domain removed. Its links have been archived."
   end
 
   private

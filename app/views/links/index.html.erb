@@ -4,18 +4,12 @@
 
 <div class="space-y-6">
   <%# Header %>
-  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-    <div>
-      <h1 class="text-xl font-semibold text-slate-900 dark:text-white">My links</h1>
-      <p class="text-sm text-slate-500 mt-0.5">
-        <%= @links_count %> link<%= "s" unless @links_count == 1 %> &middot;
-        <span id="total_clicks"><%= number_with_delimiter(@total_clicks) %></span> total clicks
-      </p>
-    </div>
-    <div class="flex items-center gap-2">
-      <%= link_to "Domains", custom_domains_path, class: "btn-secondary text-xs py-1.5" %>
-      <%= link_to "New link", new_link_path, class: "btn-primary text-xs py-1.5" %>
-    </div>
+  <div>
+    <h1 class="text-xl font-semibold text-slate-900 dark:text-white">My links</h1>
+    <p class="text-sm text-slate-500 mt-0.5">
+      <%= @links_count %> link<%= "s" unless @links_count == 1 %> &middot;
+      <span id="total_clicks"><%= number_with_delimiter(@total_clicks) %></span> total clicks
+    </p>
   </div>
 
   <%# Tabs: Active / Archived %>

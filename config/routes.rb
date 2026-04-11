@@ -11,7 +11,12 @@ Rails.application.routes.draw do
   resource  :registration, only: %i[new create]
 
   # Dashboard (authenticated)
-  resources :custom_domains, only: %i[index create destroy] do
+  resource :settings, only: [] do
+    get :profile, action: :profile
+    patch :profile, action: :update_profile
+    get :domains, action: :domains
+  end
+  resources :custom_domains, only: %i[create destroy] do
     member { post :check }
   end
   resources :links, except: [ :show ] do

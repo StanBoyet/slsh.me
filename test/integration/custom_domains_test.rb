@@ -5,8 +5,8 @@ class CustomDomainsTest < ActionDispatch::IntegrationTest
 
   setup { sign_in_as users(:one) }
 
-  test "index lists custom domains" do
-    get custom_domains_path
+  test "domains settings page lists custom domains" do
+    get domains_settings_path
     assert_response :ok
     assert_match "links.example.com", response.body
   end
@@ -15,7 +15,7 @@ class CustomDomainsTest < ActionDispatch::IntegrationTest
     assert_difference "CustomDomain.count" do
       post custom_domains_path, params: { custom_domain: { domain: "new.example.com" } }
     end
-    assert_redirected_to custom_domains_path
+    assert_redirected_to domains_settings_path
   end
 
   test "create with invalid domain shows errors" do
@@ -37,6 +37,6 @@ class CustomDomainsTest < ActionDispatch::IntegrationTest
     assert link.archived?
     assert_not link.active?
     assert_nil link.custom_domain_id
-    assert_redirected_to custom_domains_path
+    assert_redirected_to domains_settings_path
   end
 end
