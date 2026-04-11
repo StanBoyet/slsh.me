@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_09_142953) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_11_103139) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -85,6 +85,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_09_142953) do
     t.index ["link_id", "country_code"], name: "index_visits_on_link_id_and_country_code"
     t.index ["link_id", "created_at"], name: "index_visits_on_link_id_and_created_at"
     t.index ["link_id", "device_type"], name: "index_visits_on_link_id_and_device_type"
+    t.index ["link_id", "os"], name: "index_visits_on_link_id_and_os"
+    t.index ["link_id", "referer"], name: "index_visits_on_link_id_and_referer"
     t.index ["link_id"], name: "index_visits_on_link_id"
   end
 

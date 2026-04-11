@@ -3,7 +3,7 @@ class LinksController < ApplicationController
 
   def index
     @filter = params[:filter].to_s
-    base = Current.user.links.order(created_at: :desc).includes(:visits, :custom_domain)
+    base = Current.user.links.order(created_at: :desc).includes(:custom_domain)
 
     @links = @filter == "archived" ? base.archived : base.not_archived
 
