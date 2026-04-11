@@ -81,6 +81,14 @@ class LinksController < ApplicationController
     render json: { taken: taken }
   end
 
+  def fetch_og
+    url = params[:url].to_s.strip
+    return render(json: { error: "No URL" }, status: :unprocessable_entity) if url.blank?
+
+    data = OgFetcherService.new(url).call
+    render json: data
+  end
+
   def qr
     require "rqrcode"
     short_url = @link.short_url

@@ -26,6 +26,7 @@ Rails.application.routes.draw do
     end
     collection do
       get :check_slug
+      post :fetch_og
     end
   end
 
