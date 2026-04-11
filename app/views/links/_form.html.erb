@@ -114,12 +114,12 @@
 
     <div>
       <%= f.label :title, "Title", class: "label" %>
-      <%= f.text_field :title, placeholder: "Custom title for social share",
+      <%= f.text_field :title, placeholder: @link.persisted? ? @link.og_title : "Custom title for social share",
           class: "input" %>
     </div>
     <div>
       <%= f.label :description, "Description", class: "label" %>
-      <%= f.text_area :description, placeholder: "Short description for social preview",
+      <%= f.text_area :description, placeholder: @link.persisted? ? @link.og_description : "Short description for social preview",
           rows: 2, class: "input resize-none" %>
     </div>
     <div data-controller="image-preview">
