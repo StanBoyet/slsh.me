@@ -46,12 +46,10 @@ class Link < ApplicationRecord
     description.presence || original_url
   end
 
-  def og_image_or_url
-    if og_image.attached?
-      Rails.application.routes.url_helpers.rails_blob_url(og_image, host: ENV.fetch("APP_HOST", "localhost"))
-    elsif og_image_url.present?
-      og_image_url
-    end
+  def og_image_url
+    return unless og_image.attached?
+
+    Rails.application.routes.url_helpers.rails_blob_url(og_image, host: ENV.fetch("APP_HOST", "localhost"))
   end
 
   def domain_label
