@@ -1,18 +1,18 @@
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
   <div class="stat-card">
     <p class="section-title">Total clicks</p>
-    <p class="text-2xl font-semibold text-slate-900 dark:text-white tabular-nums"><%= number_with_delimiter(@total_visits) %></p>
+    <p class="text-2xl font-semibold text-zinc-900 dark:text-white tabular-nums"><%= number_with_delimiter(@total_visits) %></p>
   </div>
   <div class="stat-card">
     <p class="section-title">This period</p>
-    <p class="text-2xl font-semibold text-slate-900 dark:text-white tabular-nums"><%= number_with_delimiter(@period_count) %></p>
+    <p class="text-2xl font-semibold text-zinc-900 dark:text-white tabular-nums"><%= number_with_delimiter(@period_count) %></p>
   </div>
   <div class="stat-card">
     <p class="section-title">Top country</p>
-    <p class="text-lg font-semibold text-slate-900 dark:text-white truncate"><%= @top_countries&.first&.first || "—" %></p>
+    <p class="text-lg font-semibold text-zinc-900 dark:text-white truncate"><%= @top_countries&.first&.first || "—" %></p>
   </div>
   <div class="stat-card">
     <p class="section-title">Top browser</p>
-    <p class="text-lg font-semibold text-slate-900 dark:text-white truncate"><%= @top_browsers&.first&.first || "—" %></p>
+    <p class="text-lg font-semibold text-zinc-900 dark:text-white truncate"><%= @top_browsers&.first&.first || "—" %></p>
   </div>
 </div>

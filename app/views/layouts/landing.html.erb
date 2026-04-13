@@ -9,12 +9,12 @@
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
   <style>
     /* Landing page fonts */
-    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
-    .font-mono, code { font-family: 'Fira Code', monospace; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .font-mono, code { font-family: 'DM Mono', monospace; }
     code { display: inline; background: rgb(0 0 0 / 0.05); padding: 0.1em 0.35em; border-radius: 0.25em; font-size: 0.9em; }
     .dark code { background: rgb(255 255 255 / 0.08); }
 
@@ -84,7 +84,7 @@
     })();
   </script>
 </head>
-<body class="bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 antialiased overflow-x-hidden">
+<body class="bg-[#fffbf5] dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 antialiased overflow-x-hidden">
   <%= yield %>
 
   <%# Theme toggle %>

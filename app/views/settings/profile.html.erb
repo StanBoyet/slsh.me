@@ -1,8 +1,8 @@
 <%= render layout: "settings/layout" do %>
   <div class="space-y-6">
     <div>
-      <h2 class="text-lg font-semibold text-slate-900 dark:text-white">Profile</h2>
-      <p class="text-sm text-slate-500 mt-0.5">Your personal information.</p>
+      <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Profile</h2>
+      <p class="text-sm text-zinc-500 mt-0.5">Your personal information.</p>
     </div>
 
     <%= form_with model: Current.user, url: profile_settings_path, method: :patch,
@@ -18,7 +18,7 @@
       <%# Avatar %>
       <div class="card p-5" data-controller="image-preview">
         <div class="flex items-center gap-5">
-          <div class="w-16 h-16 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 flex items-center justify-center">
+          <div class="w-16 h-16 rounded-full overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0 flex items-center justify-center">
             <% if Current.user.avatar.attached? %>
               <%= image_tag Current.user.avatar.variant(resize_to_fill: [ 128, 128 ]),
                   class: "w-full h-full object-cover",
@@ -29,12 +29,12 @@
             <span class="text-[40px] leading-none <%= 'hidden' if Current.user.avatar.attached? %>" data-image-preview-target="placeholder">🦥</span>
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-medium text-slate-900 dark:text-white mb-1">Profile picture</p>
-            <p class="text-xs text-slate-500 mb-3">JPG or PNG. 2 MB max.</p>
+            <p class="text-sm font-medium text-zinc-900 dark:text-white mb-1">Profile picture</p>
+            <p class="text-xs text-zinc-500 mb-3">JPG or PNG. 2 MB max.</p>
             <div class="flex items-center gap-3">
               <%= f.file_field :avatar, accept: "image/jpeg,image/png",
                   data: { image_preview_target: "input", action: "change->image-preview#preview" },
-                  class: "text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-slate-100 file:text-slate-700 dark:file:bg-slate-800 dark:file:text-slate-300 hover:file:bg-slate-200 dark:hover:file:bg-slate-700 file:cursor-pointer file:transition-colors" %>
+                  class: "text-xs text-zinc-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-zinc-100 file:text-zinc-700 dark:file:bg-zinc-800 dark:file:text-zinc-300 hover:file:bg-zinc-200 dark:hover:file:bg-zinc-700 file:cursor-pointer file:transition-colors" %>
               <input type="hidden" name="user[remove_avatar]" value="" data-image-preview-target="remove">
               <button type="button" data-action="click->image-preview#removeImage"
                       data-image-preview-target="removeBtn"
@@ -49,7 +49,7 @@
         <div>
           <%= f.label :username, "Username", class: "label" %>
           <%= f.text_field :username, class: "input", placeholder: "Your display name", maxlength: 30 %>
-          <p class="text-xs text-slate-400 mt-1">Leave blank to use your email prefix.</p>
+          <p class="text-xs text-zinc-400 mt-1">Leave blank to use your email prefix.</p>
         </div>
 
         <div>

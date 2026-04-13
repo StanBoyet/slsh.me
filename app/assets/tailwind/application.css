@@ -3,8 +3,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Bricolage Grotesque", serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "DM Serif Display", serif;
+  --font-mono: "DM Mono", ui-monospace, monospace;
 }
 
 @layer base {
@@ -14,16 +15,16 @@
   }
 
   body {
-    @apply bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+    @apply bg-[#fffbf5] text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100;
   }
 
   *:focus-visible {
-    @apply outline-2 outline-offset-2 outline-violet-500;
+    @apply outline-2 outline-offset-2 outline-orange-500;
   }
 }
 
 @keyframes visit-flash {
-  0%   { background-color: rgb(139 92 246 / 0.15); }
+  0%   { background-color: rgb(249 115 22 / 0.15); }
   100% { background-color: transparent; }
 }
 
@@ -41,21 +42,21 @@
   .btn-primary {
     @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
            transition-all duration-150 cursor-pointer
-           bg-violet-600 hover:bg-violet-500 text-white shadow-sm;
+           bg-orange-500 hover:bg-orange-400 text-white shadow-sm;
   }
 
   .btn-secondary {
     @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
            transition-all duration-150 cursor-pointer
-           bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300
-           dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 dark:border-slate-700;
+           bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-300
+           dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200 dark:border-zinc-700;
   }
 
   .btn-ghost {
     @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
            transition-all duration-150 cursor-pointer
-           hover:bg-slate-100 text-slate-500 hover:text-slate-700
-           dark:hover:bg-slate-800 dark:text-slate-400 dark:hover:text-slate-200;
+           hover:bg-zinc-100 text-zinc-500 hover:text-zinc-700
+           dark:hover:bg-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200;
   }
 
   .btn-danger {
@@ -66,25 +67,25 @@
   }
 
   .card {
-    @apply bg-white border border-slate-200 rounded-2xl
-           dark:bg-slate-900 dark:border-slate-800;
+    @apply bg-white border border-zinc-200 rounded-2xl
+           dark:bg-zinc-900 dark:border-zinc-800;
   }
 
   .card-elevated {
-    @apply bg-slate-50 border border-slate-200 rounded-2xl shadow-sm
-           dark:bg-slate-800/50 dark:border-slate-700/60;
+    @apply bg-zinc-50 border border-zinc-200 rounded-2xl shadow-sm
+           dark:bg-zinc-800/50 dark:border-zinc-700/60;
   }
 
   .input {
-    @apply w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm
-           text-slate-900 placeholder-slate-400 transition-colors
-           dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100 dark:placeholder-slate-500;
-    @apply focus:border-violet-500 focus:ring-0 focus:outline-none;
+    @apply w-full bg-white border border-zinc-300 rounded-lg px-3 py-2 text-sm
+           text-zinc-900 placeholder-zinc-400 transition-colors
+           dark:bg-zinc-900 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder-zinc-500;
+    @apply focus:border-orange-400 focus:ring-0 focus:outline-none;
   }
 
   .label {
-    @apply block text-xs font-medium text-slate-600 mb-1.5
-           dark:text-slate-400;
+    @apply block text-xs font-medium text-zinc-600 mb-1.5
+           dark:text-zinc-400;
   }
 
   .badge {
@@ -93,34 +94,34 @@
 
   .badge-green  { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400; }
   .badge-red    { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400; }
-  .badge-slate  { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400; }
-  .badge-violet { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-violet-50 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400; }
+  .badge-slate  { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400; }
+  .badge-violet { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-orange-50 text-orange-500 dark:bg-orange-400/10 dark:text-orange-400; }
   .badge-amber  { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400; }
 
   .section-title {
-    @apply text-xs font-semibold text-slate-400 uppercase tracking-wider
-           dark:text-slate-500;
+    @apply text-xs font-semibold text-zinc-400 uppercase tracking-wider
+           dark:text-zinc-500;
   }
 
   .stat-card {
-    @apply bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-1
-           dark:bg-slate-900 dark:border-slate-800;
+    @apply bg-white border border-zinc-200 rounded-2xl p-4 flex flex-col gap-1
+           dark:bg-zinc-900 dark:border-zinc-800;
   }
 
   .divider {
-    @apply border-t border-slate-200 dark:border-slate-800;
+    @apply border-t border-zinc-200 dark:border-zinc-800;
   }
 
   /* Theme toggle */
   .theme-toggle {
     @apply fixed bottom-4 left-4 z-50 p-2 rounded-full
-           bg-white border border-slate-200 shadow-md
-           dark:bg-slate-800 dark:border-slate-700
-           hover:bg-slate-50 dark:hover:bg-slate-700
+           bg-white border border-zinc-200 shadow-md
+           dark:bg-zinc-800 dark:border-zinc-700
+           hover:bg-zinc-50 dark:hover:bg-zinc-700
            transition-colors cursor-pointer;
   }
 
-  .theme-toggle svg { @apply w-4 h-4 text-slate-500 dark:text-slate-400; }
+  .theme-toggle svg { @apply w-4 h-4 text-zinc-500 dark:text-zinc-400; }
 
   .theme-toggle [data-icon="sun"] ~ .icon-sun,
   .theme-toggle [data-icon="moon"] ~ .icon-moon,

@@ -1,14 +1,14 @@
 <%= render layout: "settings/layout" do %>
   <div class="space-y-6">
     <div>
-      <h2 class="text-lg font-semibold text-slate-900 dark:text-white">Custom domains</h2>
-      <p class="text-sm text-slate-500 mt-0.5">Manage domains for your short links.</p>
+      <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Custom domains</h2>
+      <p class="text-sm text-zinc-500 mt-0.5">Manage domains for your short links.</p>
     </div>
 
     <%# Add domain form %>
     <div class="card p-5 space-y-4">
       <h3 class="section-title">Add a domain</h3>
-      <p class="text-xs text-slate-500">Your clients' short links will be served from this domain.</p>
+      <p class="text-xs text-zinc-500">Your clients' short links will be served from this domain.</p>
 
       <%= form_with model: @custom_domain, url: custom_domains_path, class: "space-y-3" do |f| %>
         <% if @custom_domain.errors.any? %>
@@ -34,8 +34,8 @@
         <% @custom_domains.each do |domain| %>
           <div class="card p-4 flex items-center justify-between gap-4">
             <div class="min-w-0">
-              <p class="font-mono text-sm font-medium text-slate-900 dark:text-white truncate"><%= domain.domain %></p>
-              <p class="text-xs text-slate-500 mt-0.5">
+              <p class="font-mono text-sm font-medium text-zinc-900 dark:text-white truncate"><%= domain.domain %></p>
+              <p class="text-xs text-zinc-500 mt-0.5">
                 <%= domain.links.not_archived.count %> active link<%= "s" unless domain.links.not_archived.count == 1 %>
               </p>
             </div>
@@ -67,13 +67,13 @@
     <%# DNS instructions %>
     <div class="card p-5 space-y-3">
       <h3 class="section-title">DNS setup</h3>
-      <p class="text-sm text-slate-600 dark:text-slate-400">
+      <p class="text-sm text-zinc-600 dark:text-zinc-400">
         For each custom domain, create a <strong>CNAME</strong> record pointing to:
       </p>
-      <div class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg p-3">
-        <code class="text-sm font-mono text-violet-600 dark:text-violet-400">slsh-me.fly.dev</code>
+      <div class="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3">
+        <code class="text-sm font-mono text-orange-500 dark:text-orange-400">slsh-me.fly.dev</code>
       </div>
-      <p class="text-xs text-slate-500">
+      <p class="text-xs text-zinc-500">
         After adding the CNAME, TLS certificates are provisioned automatically.
         It may take a few minutes for the certificate to be issued.
       </p>
