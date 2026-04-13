@@ -134,19 +134,22 @@
       transform: translateY(-4px);
     }
 
-    /* Demo result animation */
-    @keyframes slideReveal {
-      from { opacity: 0; transform: translateY(8px); max-height: 0; }
-      to { opacity: 1; transform: translateY(0); max-height: 80px; }
+    /* Arrow pulse */
+    @keyframes arrowPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
     }
-    .demo-result {
-      animation: slideReveal 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    .arrow-pulse {
+      animation: arrowPulse 2s ease-in-out infinite;
     }
 
-    /* Dot pattern background */
-    .dot-bg {
-      background-image: radial-gradient(circle, currentColor 0.8px, transparent 0.8px);
-      background-size: 24px 24px;
+    /* Grid pattern background */
+    .grid-bg {
+      background-image:
+        linear-gradient(currentColor 0.5px, transparent 0.5px),
+        linear-gradient(90deg, currentColor 0.5px, transparent 0.5px);
+      background-size: 48px 48px;
+      background-position: -0.25px -0.25px;
     }
 
     /* Timeline connector */
@@ -159,10 +162,14 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-stone-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans antialiased overflow-x-hidden">
+<body class="bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans antialiased overflow-x-hidden">
 
-  <!-- Dot pattern overlay -->
-  <div class="fixed inset-0 dot-bg text-zinc-400/[0.07] dark:text-white/[0.03] pointer-events-none z-0"></div>
+  <!-- Grid pattern overlay with edge fade + chromatic aberration -->
+  <div class="fixed inset-0 pointer-events-none z-0" style="mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%); -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%);">
+    <div class="absolute inset-0 grid-bg text-violet-400/[0.09] dark:text-violet-400/[0.03]" style="transform: translate(-1px, -1px);"></div>
+    <div class="absolute inset-0 grid-bg text-cyan-400/[0.07] dark:text-cyan-400/[0.02]" style="transform: translate(1px, 1px);"></div>
+    <div class="absolute inset-0 grid-bg text-zinc-400/[0.12] dark:text-white/[0.03]"></div>
+  </div>
 
   <!-- Nav -->
   <nav class="fade-up fd3 relative z-20 max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
@@ -189,170 +196,248 @@
       </p>
     </div>
 
-    <!-- Demo -->
-    <div class="fade-up fd2 mt-12 max-w-xl mx-auto">
-      <div id="demo-wrap">
-        <div class="flex gap-2">
-          <input id="demo-input" type="url" placeholder="Paste a long URL..."
-                 class="flex-1 px-4 py-3 bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-mono placeholder-zinc-400 dark:placeholder-zinc-600 focus:border-violet-500 dark:focus:border-violet-400 focus:outline-none transition-colors">
-          <button id="demo-btn"
-                  class="px-5 py-3 bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold rounded-xl transition-all hover:-translate-y-0.5 active:translate-y-0 cursor-pointer shadow-lg shadow-violet-600/20">
-            Shorten
-          </button>
+    <!-- URL transformation demo -->
+    <div class="fade-up fd2 mt-14 max-w-2xl mx-auto">
+      <div class="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-0">
+        <div class="flex-1 px-4 py-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl sm:rounded-r-none font-mono text-xs sm:text-sm text-zinc-400 dark:text-zinc-600 truncate">
+          https://example.com/campaigns/2026/spring-launch
         </div>
-        <div id="demo-result" class="hidden mt-3"></div>
+        <div class="hidden sm:flex items-center justify-center w-12 border-y border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+          <svg class="w-4 h-4 text-zinc-300 dark:text-zinc-700 arrow-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </div>
+        <div class="px-4 py-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl sm:rounded-l-none font-mono text-xs sm:text-sm">
+          <span class="text-zinc-400 dark:text-zinc-600">slsh.me/</span><span class="text-violet-600 dark:text-violet-400 font-medium">spring26</span>
+        </div>
       </div>
+      <p class="mt-2 text-[10px] text-zinc-400 dark:text-zinc-600 text-right">or use your own domain &mdash; <span class="font-mono">go.yourco.com/spring26</span></p>
     </div>
   </section>
 
   <!-- Features -->
-  <section class="relative z-10 max-w-5xl mx-auto px-6 py-16 md:py-24">
-    <p class="text-center text-xs font-mono font-medium text-zinc-400 dark:text-zinc-600 uppercase tracking-widest mb-8">Everything you need</p>
+  <section class="relative z-10 max-w-5xl mx-auto px-6 py-16 md:py-24 space-y-20 md:space-y-28">
 
-    <div class="flex lg:grid lg:grid-cols-3 gap-4 overflow-x-auto no-scrollbar pb-4 lg:pb-0 snap-x snap-mandatory">
-
-      <!-- Analytics -->
-      <div class="feat-card anim-bars snap-start shrink-0 w-72 lg:w-auto p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 cursor-default">
-        <div class="w-12 h-12 rounded-xl bg-violet-50 dark:bg-violet-900/20 flex items-end justify-center gap-1 px-2 pb-2 mb-4">
-          <div class="bar bar-1 w-1.5 bg-violet-400 dark:bg-violet-500 rounded-t-sm transition-all" style="height:30%"></div>
-          <div class="bar bar-2 w-1.5 bg-violet-400 dark:bg-violet-500 rounded-t-sm transition-all" style="height:50%"></div>
-          <div class="bar bar-3 w-1.5 bg-violet-400 dark:bg-violet-500 rounded-t-sm transition-all" style="height:20%"></div>
-          <div class="bar bar-4 w-1.5 bg-violet-400 dark:bg-violet-500 rounded-t-sm transition-all" style="height:40%"></div>
-        </div>
-        <h3 class="font-display font-bold text-sm mb-1">Real-time Analytics</h3>
-        <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Clicks, countries, devices. Watch them arrive live.</p>
+    <!-- Feature 1: Analytics -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+      <div>
+        <span class="inline-block text-xs font-mono font-medium text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20 px-2.5 py-1 rounded-full mb-4">Analytics</span>
+        <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight leading-tight">Every click,<br>mapped and measured</h2>
+        <p class="mt-4 text-zinc-500 dark:text-zinc-400 leading-relaxed">Real-time dashboards with country, browser, device, OS, and referrer breakdowns. Watch visitors arrive live.</p>
       </div>
-
-      <!-- Custom Domains -->
-      <div class="feat-card anim-check snap-start shrink-0 w-72 lg:w-auto p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 cursor-default">
-        <div class="w-12 h-12 rounded-xl bg-cyan-50 dark:bg-cyan-900/20 flex items-center justify-center mb-4 relative">
-          <span class="font-mono text-[10px] text-cyan-600 dark:text-cyan-400 font-medium">go.you</span>
-          <div class="checkmark absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center">
-            <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      <div class="feat-card rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+        <!-- Stat row -->
+        <div class="grid grid-cols-3 divide-x divide-zinc-100 dark:divide-zinc-800 border-b border-zinc-100 dark:border-zinc-800">
+          <div class="p-4">
+            <p class="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">Clicks</p>
+            <p class="text-lg font-bold mt-0.5 font-mono text-zinc-900 dark:text-white">2,847</p>
+          </div>
+          <div class="p-4">
+            <p class="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">Unique</p>
+            <p class="text-lg font-bold mt-0.5 font-mono text-zinc-900 dark:text-white">1,923</p>
+          </div>
+          <div class="p-4">
+            <p class="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">Countries</p>
+            <p class="text-lg font-bold mt-0.5 font-mono text-zinc-900 dark:text-white">34</p>
           </div>
         </div>
-        <h3 class="font-display font-bold text-sm mb-1">Custom Domains</h3>
-        <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Your brand, your links. Auto TLS included.</p>
-      </div>
-
-      <!-- Password Protection -->
-      <div class="feat-card anim-lock snap-start shrink-0 w-72 lg:w-auto p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 cursor-default">
-        <div class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center mb-4">
-          <svg class="w-5 h-5 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="5" y="11" width="14" height="10" rx="2" stroke-linecap="round"/>
-            <path class="shackle" d="M8 11V7a4 4 0 018 0v4" stroke-linecap="round"/>
+        <!-- Mini area chart (CSS-only) -->
+        <div class="px-4 pt-4 pb-1">
+          <p class="text-[10px] text-zinc-400 font-medium uppercase tracking-wider mb-3">Last 7 days</p>
+          <svg viewBox="0 0 280 60" class="w-full h-auto" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" class="[stop-color:theme(colors.violet.500)] [stop-opacity:0.15]"/>
+                <stop offset="100%" class="[stop-color:theme(colors.violet.500)] [stop-opacity:0]"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,45 L40,38 L80,42 L120,25 L160,30 L200,15 L240,18 L280,8 L280,60 L0,60Z" fill="url(#chartFill)"/>
+            <polyline points="0,45 40,38 80,42 120,25 160,30 200,15 240,18 280,8" fill="none" class="stroke-violet-500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
-        <h3 class="font-display font-bold text-sm mb-1">Password Protection</h3>
-        <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Gate any link behind a password. One click.</p>
-      </div>
-
-      <!-- Social Previews -->
-      <div class="feat-card anim-flip snap-start shrink-0 w-72 lg:w-auto p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 cursor-default" style="perspective:600px">
-        <div class="flipper w-12 h-12 rounded-xl relative mb-4">
-          <div class="flip-front absolute inset-0 bg-violet-50 dark:bg-violet-900/20 rounded-xl flex items-center justify-center">
-            <svg class="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
-          </div>
-          <div class="flip-back absolute inset-0 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl flex items-center justify-center">
-            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        <!-- Top sources -->
+        <div class="px-4 pb-4 pt-2">
+          <div class="space-y-1.5 text-[11px]">
+            <div class="flex items-center justify-between"><span class="text-zinc-500 dark:text-zinc-400">France</span><span class="font-mono text-zinc-900 dark:text-white">892</span></div>
+            <div class="flex items-center justify-between"><span class="text-zinc-500 dark:text-zinc-400">United States</span><span class="font-mono text-zinc-900 dark:text-white">634</span></div>
+            <div class="flex items-center justify-between"><span class="text-zinc-500 dark:text-zinc-400">Germany</span><span class="font-mono text-zinc-900 dark:text-white">412</span></div>
+            <div class="flex items-center justify-between"><span class="text-zinc-500 dark:text-zinc-400">United Kingdom</span><span class="font-mono text-zinc-900 dark:text-white">287</span></div>
           </div>
         </div>
-        <h3 class="font-display font-bold text-sm mb-1">Social Previews</h3>
-        <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Custom OG title, description, and image.</p>
       </div>
-
-      <!-- Expiring Links -->
-      <div class="feat-card anim-clock snap-start shrink-0 w-72 lg:w-auto p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 cursor-default">
-        <div class="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center gap-px mb-4">
-          <span class="tick-digit font-mono text-sm font-bold text-rose-500">2</span>
-          <span class="tick-digit font-mono text-sm font-bold text-rose-400">3</span>
-          <span class="tick-digit font-mono text-xs text-rose-300">h</span>
-        </div>
-        <h3 class="font-display font-bold text-sm mb-1">Expiring Links</h3>
-        <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Set a date or click limit. Auto-deactivate.</p>
-      </div>
-
-      <!-- QR Codes -->
-      <div class="feat-card anim-qr snap-start shrink-0 w-72 lg:w-auto p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 cursor-default">
-        <div class="w-12 h-12 rounded-xl bg-zinc-100 dark:bg-zinc-800 grid grid-cols-3 gap-0.5 p-2 mb-4">
-          <div class="qr-cell rounded-sm bg-zinc-900 dark:bg-white"></div>
-          <div class="qr-cell rounded-sm bg-zinc-900 dark:bg-white"></div>
-          <div class="qr-cell rounded-sm bg-transparent"></div>
-          <div class="qr-cell rounded-sm bg-transparent"></div>
-          <div class="qr-cell rounded-sm bg-zinc-900 dark:bg-white"></div>
-          <div class="qr-cell rounded-sm bg-zinc-900 dark:bg-white"></div>
-          <div class="qr-cell rounded-sm bg-zinc-900 dark:bg-white"></div>
-          <div class="qr-cell rounded-sm bg-transparent"></div>
-          <div class="qr-cell rounded-sm bg-zinc-900 dark:bg-white"></div>
-        </div>
-        <h3 class="font-display font-bold text-sm mb-1">QR Codes</h3>
-        <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Generate a QR for any link, instantly.</p>
-      </div>
-
     </div>
+
+    <!-- Feature 2: Custom Domains -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+      <div class="order-2 md:order-1">
+        <div class="feat-card rounded-2xl p-6 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm space-y-3">
+          <div class="flex items-center gap-3 p-3 bg-zinc-50 dark:bg-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-700/50">
+            <div class="w-8 h-8 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
+              <span class="text-violet-600 dark:text-violet-400 text-xs font-bold">/</span>
+            </div>
+            <div>
+              <p class="text-xs font-mono text-zinc-900 dark:text-white">links.acme.co<span class="text-violet-500">/launch</span></p>
+              <p class="text-[10px] text-zinc-400">CNAME &rarr; slsh-me.fly.dev</p>
+            </div>
+            <span class="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 font-medium">verified</span>
+          </div>
+          <div class="flex items-center gap-3 p-3 bg-zinc-50 dark:bg-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-700/50">
+            <div class="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+              <span class="text-indigo-600 dark:text-indigo-400 text-xs font-bold">/</span>
+            </div>
+            <div>
+              <p class="text-xs font-mono text-zinc-900 dark:text-white">go.startup.io<span class="text-violet-500">/demo</span></p>
+              <p class="text-[10px] text-zinc-400">CNAME &rarr; slsh-me.fly.dev</p>
+            </div>
+            <span class="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 font-medium">verified</span>
+          </div>
+          <div class="flex items-center gap-3 p-3 bg-zinc-50 dark:bg-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-700/50 opacity-50">
+            <div class="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-700 flex items-center justify-center">
+              <span class="text-zinc-400 text-xs font-bold">/</span>
+            </div>
+            <div>
+              <p class="text-xs font-mono text-zinc-500">short.brand.com</p>
+              <p class="text-[10px] text-zinc-400">Awaiting DNS...</p>
+            </div>
+            <span class="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-700 text-zinc-500 font-medium">pending</span>
+          </div>
+        </div>
+      </div>
+      <div class="order-1 md:order-2">
+        <span class="inline-block text-xs font-mono font-medium text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20 px-2.5 py-1 rounded-full mb-4">Custom Domains</span>
+        <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight leading-tight">Your brand,<br>your domain</h2>
+        <p class="mt-4 text-zinc-500 dark:text-zinc-400 leading-relaxed">Serve short links from any domain you own. Auto TLS, instant propagation, no config files.</p>
+      </div>
+    </div>
+
+    <!-- Feature 3: Link Management -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+      <div>
+        <span class="inline-block text-xs font-mono font-medium text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20 px-2.5 py-1 rounded-full mb-4">Link Management</span>
+        <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight leading-tight">Every link,<br>fully loaded</h2>
+        <p class="mt-4 text-zinc-500 dark:text-zinc-400 leading-relaxed">Password protection, expiry dates, click limits, custom OG previews, QR codes. Each link is a Swiss Army knife.</p>
+      </div>
+      <div class="feat-card rounded-2xl p-6 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm space-y-2.5">
+        <div class="flex items-center gap-3 text-sm">
+          <svg class="w-4 h-4 text-violet-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+          <span class="text-zinc-600 dark:text-zinc-300">Password protection</span>
+          <span class="ml-auto font-mono text-xs text-emerald-500">enabled</span>
+        </div>
+        <div class="border-t border-zinc-100 dark:border-zinc-800"></div>
+        <div class="flex items-center gap-3 text-sm">
+          <svg class="w-4 h-4 text-violet-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="text-zinc-600 dark:text-zinc-300">Expires</span>
+          <span class="ml-auto font-mono text-xs text-zinc-400">Apr 30, 2026</span>
+        </div>
+        <div class="border-t border-zinc-100 dark:border-zinc-800"></div>
+        <div class="flex items-center gap-3 text-sm">
+          <svg class="w-4 h-4 text-violet-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59"/></svg>
+          <span class="text-zinc-600 dark:text-zinc-300">Click limit</span>
+          <span class="ml-auto font-mono text-xs text-zinc-400">1,000 max</span>
+        </div>
+        <div class="border-t border-zinc-100 dark:border-zinc-800"></div>
+        <div class="flex items-center gap-3 text-sm">
+          <svg class="w-4 h-4 text-violet-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+          <span class="text-zinc-600 dark:text-zinc-300">OG Preview</span>
+          <span class="ml-auto font-mono text-xs text-emerald-500">custom</span>
+        </div>
+        <div class="border-t border-zinc-100 dark:border-zinc-800"></div>
+        <div class="flex items-center gap-3 text-sm">
+          <svg class="w-4 h-4 text-violet-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M14.625 13.5h4.5m-4.5 3.75h4.5M14.625 20.25h4.5"/></svg>
+          <span class="text-zinc-600 dark:text-zinc-300">QR Code</span>
+          <span class="ml-auto font-mono text-xs text-emerald-500">generated</span>
+        </div>
+      </div>
+    </div>
+
   </section>
 
   <!-- How it works -->
-  <section class="relative z-10 max-w-4xl mx-auto px-6 py-16 md:py-24">
-    <p class="text-center text-xs font-mono font-medium text-zinc-400 dark:text-zinc-600 uppercase tracking-widest mb-12">How it works</p>
+  <section class="relative z-10 max-w-3xl mx-auto px-6 py-16 md:py-28">
+    <div class="text-center mb-12">
+      <h2 class="font-display text-2xl md:text-3xl font-bold tracking-tight">Three steps. That's it.</h2>
+      <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">No setup wizards, no config files, no friction.</p>
+    </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 relative">
-      <!-- Connector lines (desktop only) -->
-      <div class="hidden md:block absolute top-6 left-[calc(16.66%+12px)] right-[calc(16.66%+12px)] h-0.5 bg-gradient-to-r from-violet-300 via-cyan-300 to-amber-300 dark:from-violet-600 dark:via-cyan-600 dark:to-amber-600 rounded-full"></div>
-
-      <div class="text-center relative">
-        <div class="w-12 h-12 rounded-full bg-violet-100 dark:bg-violet-900/30 border-2 border-violet-300 dark:border-violet-600 flex items-center justify-center mx-auto mb-4 relative z-10">
-          <span class="font-display font-bold text-violet-600 dark:text-violet-400">1</span>
+    <div class="space-y-6">
+      <!-- Step 1 -->
+      <div class="flex gap-5 items-start p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+        <span class="shrink-0 w-8 h-8 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center font-display font-bold text-sm text-violet-600 dark:text-violet-400">1</span>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-display font-bold text-sm">Paste your URL</h3>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">Drop in any link. Pick a custom slug or let us generate one. Add a password, expiry, or OG preview if you want — all optional.</p>
+          <div class="mt-3 flex items-center gap-0 max-w-sm">
+            <div class="flex-1 px-3 py-1.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-l-lg font-mono text-[11px] text-zinc-400 truncate">https://example.com/very/long/path</div>
+            <div class="px-3 py-1.5 bg-violet-600 text-white text-[11px] font-semibold rounded-r-lg">Shorten</div>
+          </div>
         </div>
-        <h3 class="font-display font-bold text-sm mb-1">Create your link</h3>
-        <p class="text-xs text-zinc-500 dark:text-zinc-400">Paste a URL, pick a slug, set options.</p>
       </div>
 
-      <div class="text-center relative">
-        <div class="w-12 h-12 rounded-full bg-cyan-100 dark:bg-cyan-900/30 border-2 border-cyan-300 dark:border-cyan-600 flex items-center justify-center mx-auto mb-4 relative z-10">
-          <span class="font-display font-bold text-cyan-600 dark:text-cyan-400">2</span>
+      <!-- Step 2 -->
+      <div class="flex gap-5 items-start p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+        <span class="shrink-0 w-8 h-8 rounded-lg bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center font-display font-bold text-sm text-cyan-600 dark:text-cyan-400">2</span>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-display font-bold text-sm">Share it</h3>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">Copy your short link or download the QR code. Works everywhere — social, email, print, SMS. Your domain or ours.</p>
+          <div class="mt-3 inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg">
+            <span class="font-mono text-[11px]"><span class="text-zinc-400">slsh.me/</span><span class="text-violet-600 dark:text-violet-400 font-medium">spring26</span></span>
+            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">Copied!</span>
+          </div>
         </div>
-        <h3 class="font-display font-bold text-sm mb-1">Share it anywhere</h3>
-        <p class="text-xs text-zinc-500 dark:text-zinc-400">Copy the short URL or grab the QR code.</p>
       </div>
 
-      <div class="text-center relative">
-        <div class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 border-2 border-amber-300 dark:border-amber-600 flex items-center justify-center mx-auto mb-4 relative z-10">
-          <span class="font-display font-bold text-amber-600 dark:text-amber-400">3</span>
+      <!-- Step 3 -->
+      <div class="flex gap-5 items-start p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+        <span class="shrink-0 w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center font-display font-bold text-sm text-amber-600 dark:text-amber-400">3</span>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-display font-bold text-sm">Watch it work</h3>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">Clicks show up in real time. See where your audience is, what they use, and where they came from. No setup required.</p>
+          <div class="mt-3 flex items-center gap-3 text-[11px]">
+            <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span><span class="text-emerald-600 dark:text-emerald-400 font-medium">Live</span></span>
+            <span class="text-zinc-400 dark:text-zinc-600">142 clicks</span>
+            <span class="text-zinc-400 dark:text-zinc-600">12 countries</span>
+            <span class="text-zinc-400 dark:text-zinc-600">4 devices</span>
+          </div>
         </div>
-        <h3 class="font-display font-bold text-sm mb-1">Track every click</h3>
-        <p class="text-xs text-zinc-500 dark:text-zinc-400">Watch analytics roll in, in real time.</p>
       </div>
     </div>
   </section>
 
   <!-- Use cases -->
-  <section class="relative z-10 max-w-5xl mx-auto px-6 py-16 md:py-24">
-    <p class="text-center text-xs font-mono font-medium text-zinc-400 dark:text-zinc-600 uppercase tracking-widest mb-8">Perfect for</p>
+  <section class="relative z-10 max-w-4xl mx-auto px-6 py-16 md:py-28">
+    <p class="text-center text-xs font-mono font-medium text-zinc-400 dark:text-zinc-600 uppercase tracking-widest mb-10">Perfect for</p>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <div class="p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/30">
-        <div class="w-8 h-8 rounded-lg bg-amber-200/60 dark:bg-amber-800/30 flex items-center justify-center mb-3">
-          <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+    <div class="space-y-3">
+      <div class="flex items-center gap-5 p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+        <div class="shrink-0 w-9 h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center justify-center">
+          <svg class="w-4 h-4 text-zinc-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 01-1.44-4.282m3.102.069a18.03 18.03 0 01-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 018.835 2.535M10.34 6.66a23.847 23.847 0 008.835-2.535m0 0A23.74 23.74 0 0018.795 3m.38 1.125a23.91 23.91 0 011.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 001.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 010 3.46"/></svg>
         </div>
-        <h3 class="font-display font-bold text-sm text-amber-900 dark:text-amber-200 mb-1">Marketers</h3>
-        <p class="text-xs text-amber-700/70 dark:text-amber-300/50 leading-relaxed">Track campaigns with UTM params and custom slugs. Know what converts.</p>
+        <div class="flex-1 min-w-0">
+          <p class="font-mono text-[10px] text-zinc-400 dark:text-zinc-600 uppercase tracking-widest">Marketers</p>
+          <h3 class="font-display font-bold text-sm leading-snug mt-1">Know exactly what converts</h3>
+          <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">UTM-tagged short links with click attribution by campaign, source, and medium.</p>
+        </div>
+        <p class="font-mono text-[11px] text-zinc-300 dark:text-zinc-700 hidden md:block shrink-0">slsh.me/<span class="text-zinc-500 dark:text-zinc-400">launch?utm_source=tw</span></p>
       </div>
-
-      <div class="p-5 rounded-2xl bg-cyan-50 dark:bg-cyan-950/20 border border-cyan-200/60 dark:border-cyan-800/30">
-        <div class="w-8 h-8 rounded-lg bg-cyan-200/60 dark:bg-cyan-800/30 flex items-center justify-center mb-3">
-          <svg class="w-4 h-4 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
+      <div class="flex items-center gap-5 p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+        <div class="shrink-0 w-9 h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center justify-center">
+          <svg class="w-4 h-4 text-zinc-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
         </div>
-        <h3 class="font-display font-bold text-sm text-cyan-900 dark:text-cyan-200 mb-1">Developers</h3>
-        <p class="text-xs text-cyan-700/70 dark:text-cyan-300/50 leading-relaxed">API-first. Create links programmatically. Integrate anywhere.</p>
+        <div class="flex-1 min-w-0">
+          <p class="font-mono text-[10px] text-zinc-400 dark:text-zinc-600 uppercase tracking-widest">Developers</p>
+          <h3 class="font-display font-bold text-sm leading-snug mt-1">Integrate in one call</h3>
+          <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">REST API, webhook events, custom domains via DNS. Build it into your stack.</p>
+        </div>
+        <p class="font-mono text-[11px] text-zinc-300 dark:text-zinc-700 hidden md:block shrink-0">curl -X POST <span class="text-zinc-500 dark:text-zinc-400">/api/links</span></p>
       </div>
-
-      <div class="p-5 rounded-2xl bg-violet-50 dark:bg-violet-950/20 border border-violet-200/60 dark:border-violet-800/30">
-        <div class="w-8 h-8 rounded-lg bg-violet-200/60 dark:bg-violet-800/30 flex items-center justify-center mb-3">
-          <svg class="w-4 h-4 text-violet-600 dark:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"/></svg>
+      <div class="flex items-center gap-5 p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+        <div class="shrink-0 w-9 h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center justify-center">
+          <svg class="w-4 h-4 text-zinc-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"/></svg>
         </div>
-        <h3 class="font-display font-bold text-sm text-violet-900 dark:text-violet-200 mb-1">Creators</h3>
-        <p class="text-xs text-violet-700/70 dark:text-violet-300/50 leading-relaxed">Clean links for bios and posts. See who clicks from where.</p>
+        <div class="flex-1 min-w-0">
+          <p class="font-mono text-[10px] text-zinc-400 dark:text-zinc-600 uppercase tracking-widest">Creators</p>
+          <h3 class="font-display font-bold text-sm leading-snug mt-1">Clean links that tell a story</h3>
+          <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Custom slugs, branded domains, and social previews you control.</p>
+        </div>
+        <p class="font-mono text-[11px] text-zinc-300 dark:text-zinc-700 hidden md:block shrink-0">go.studio/<span class="text-zinc-500 dark:text-zinc-400">new-collection</span></p>
       </div>
     </div>
   </section>
@@ -393,28 +478,6 @@
       });
     })();
 
-    // Demo shortener
-    (function() {
-      const input = document.getElementById('demo-input');
-      const btn = document.getElementById('demo-btn');
-      const result = document.getElementById('demo-result');
-      const slugs = ['spring26', 'go-live', 'launch', 'promo1', 'beta', 'docs', 'signup', 'demo'];
-
-      btn.addEventListener('click', () => {
-        const url = input.value.trim();
-        if (!url) { input.focus(); return; }
-        const slug = slugs[Math.floor(Math.random() * slugs.length)];
-        const shortUrl = 'slsh.me/' + slug;
-
-        result.className = 'demo-result mt-3 flex items-center justify-between gap-3 px-4 py-3 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-800/30 rounded-xl';
-        result.innerHTML = `
-          <span class="font-mono text-sm text-emerald-700 dark:text-emerald-400 font-medium truncate">${shortUrl}</span>
-          <button onclick="navigator.clipboard.writeText('https://${shortUrl}');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)"
-                  class="shrink-0 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-800/30 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-700/30 transition-colors cursor-pointer">
-            Copy
-          </button>`;
-      });
-    })();
   </script>
 </body>
 </html>
