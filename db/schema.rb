@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_11_130202) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_16_142541) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_130202) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "campaigns", force: :cascade do |t|
+    t.string "color", default: "orange", null: false
+    t.datetime "created_at", null: false
+    t.integer "links_count", default: 0, null: false
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id", "slug"], name: "index_campaigns_on_user_id_and_slug", unique: true
+    t.index ["user_id"], name: "index_campaigns_on_user_id"
+  end
+
   create_table "custom_domains", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "domain", null: false
@@ -55,6 +67,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_130202) do
   create_table "links", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.boolean "archived", default: false, null: false
+    t.bigint "campaign_id"
     t.integer "clicks_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.bigint "custom_domain_id"
@@ -68,6 +81,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_130202) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["campaign_id"], name: "index_links_on_campaign_id"
     t.index ["custom_domain_id", "slug"], name: "index_links_on_domain_and_slug_unique", unique: true, where: "((custom_domain_id IS NOT NULL) AND (archived = false))"
     t.index ["custom_domain_id"], name: "index_links_on_custom_domain_id"
     t.index ["slug"], name: "index_links_on_slug_unique_default", unique: true, where: "((custom_domain_id IS NULL) AND (archived = false))"
@@ -121,7 +135,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_130202) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "campaigns", "users"
   add_foreign_key "custom_domains", "users"
+  add_foreign_key "links", "campaigns"
   add_foreign_key "links", "custom_domains"
   add_foreign_key "links", "users"
   add_foreign_key "sessions", "users"

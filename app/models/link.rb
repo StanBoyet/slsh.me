@@ -3,6 +3,7 @@ class Link < ApplicationRecord
 
   belongs_to :user
   belongs_to :custom_domain, optional: true
+  belongs_to :campaign, optional: true, counter_cache: true
   has_many :visits, dependent: :destroy
   has_one_attached :og_image
 

@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   resources :custom_domains, only: %i[create destroy] do
     member { post :check }
   end
+  resources :campaigns, only: %i[show create destroy]
   resources :links, except: [ :show ] do
     member do
       get  :analytics

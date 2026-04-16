@@ -3,9 +3,11 @@ class LinksController < ApplicationController
 
   def index
     @filter = params[:filter].to_s
-    base = Current.user.links.order(created_at: :desc).includes(:custom_domain)
+    @campaign_filter = params[:campaign_id].presence
+    base = Current.user.links.order(created_at: :desc).includes(:custom_domain, :campaign)
 
     @links = @filter == "archived" ? base.archived : base.not_archived
+    @links = @links.where(campaign_id: @campaign_filter) if @campaign_filter.present?
 
     if params[:q].present?
       q = "%#{params[:q].downcase}%"
@@ -20,10 +22,15 @@ class LinksController < ApplicationController
     @links_count    = counts[false]&.cnt   || 0
     @total_clicks   = counts[false]&.total || 0
     @archived_count = counts[true]&.cnt    || 0
+
+    # Campaign dropdown data — single query with aggregates
+    @campaigns = Current.user.campaigns.with_clicks_count.order(:name)
+    @active_campaign = @campaigns.find { |c| c.id.to_s == @campaign_filter.to_s } if @campaign_filter
   end
 
   def new
-    @link = Link.new
+    @link = Link.new(campaign_id: params[:campaign_id])
+    @campaigns = Current.user.campaigns.order(:name)
   end
 
   def create
@@ -32,11 +39,13 @@ class LinksController < ApplicationController
     if @link.save
       redirect_to links_path, notice: "Link created successfully."
     else
+      @campaigns = Current.user.campaigns.order(:name)
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
+    @campaigns = Current.user.campaigns.order(:name)
   end
 
   def update
@@ -45,6 +54,7 @@ class LinksController < ApplicationController
     if @link.update(link_params.except(:custom_domain_id, :slug))
       redirect_to links_path, notice: "Link updated."
     else
+      @campaigns = Current.user.campaigns.order(:name)
       render :edit, status: :unprocessable_entity
     end
   end
@@ -121,7 +131,7 @@ class LinksController < ApplicationController
       link: [
         :original_url, :slug, :title, :description, :og_image,
         :password, :password_confirmation, :expires_at, :max_clicks, :active,
-        :custom_domain_id
+        :custom_domain_id, :campaign_id
       ]
     )
   end

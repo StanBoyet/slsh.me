@@ -1,0 +1,17 @@
+q2_launch:
+  user: one
+  name: "Q2 Product Launch"
+  slug: "q2-product-launch"
+  color: "orange"
+
+newsletter:
+  user: one
+  name: "Newsletter July"
+  slug: "newsletter-july"
+  color: "blue"
+
+other_user_campaign:
+  user: two
+  name: "Other Campaign"
+  slug: "other-campaign"
+  color: "emerald"

@@ -100,6 +100,65 @@
         <p class="text-xs mt-1.5 text-zinc-400 dark:text-zinc-600">Letters, numbers, hyphens and underscores only.</p>
       </div>
     <% end %>
+
+    <%# Campaign picker %>
+    <div data-controller="campaign-picker"
+         data-campaign-picker-create-url-value="<%= campaigns_path(format: :json) %>"
+         data-campaign-picker-csrf-value="<%= form_authenticity_token %>"
+         data-campaign-picker-slugs-value="<%= @campaigns.map { |c| [c.id, c.slug] }.to_h.to_json %>">
+      <label class="label">Campaign</label>
+      <div data-campaign-picker-target="selectWrapper">
+        <%= f.select :campaign_id,
+            options_from_collection_for_select(@campaigns, :id, :name, link.campaign_id),
+            { include_blank: "No campaign" },
+            class: "input text-sm cursor-pointer appearance-none",
+            style: "padding-right: 32px;",
+            data: { campaign_picker_target: "select", action: "change->campaign-picker#syncUtm" } %>
+      </div>
+
+      <div class="flex items-center gap-2 mt-2">
+        <button type="button" data-action="click->campaign-picker#showCreate"
+                data-campaign-picker-target="createBtn"
+                class="text-xs text-orange-500 hover:text-orange-600 font-medium flex items-center gap-1 cursor-pointer">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+          New campaign
+        </button>
+      </div>
+
+      <%# Inline creation form (hidden by default) %>
+      <div data-campaign-picker-target="createForm" class="hidden mt-3 border border-orange-300 dark:border-orange-500/40 rounded-lg p-3 space-y-3 bg-orange-50/50 dark:bg-orange-500/5">
+        <div>
+          <label class="label">Campaign name</label>
+          <input type="text" placeholder="e.g. Q2 Product Launch" class="input text-sm"
+                 data-campaign-picker-target="nameInput"
+                 data-action="input->campaign-picker#generateSlug">
+        </div>
+        <div>
+          <label class="label">UTM campaign value <span class="text-zinc-400 font-normal">(auto-generated)</span></label>
+          <input type="text" class="input text-xs font-mono bg-zinc-50 dark:bg-zinc-900"
+                 data-campaign-picker-target="slugInput">
+          <p class="text-xs text-zinc-400 mt-1">Auto-fills utm_campaign on links in this campaign</p>
+        </div>
+        <div>
+          <label class="label">Color</label>
+          <div class="flex items-center gap-2" data-campaign-picker-target="colorPicker">
+            <% Campaign::COLORS.each do |color| %>
+              <button type="button"
+                      data-action="click->campaign-picker#pickColor"
+                      data-color="<%= color %>"
+                      class="w-6 h-6 rounded-full <%= campaign_bg_class(color) %> cursor-pointer transition-all
+                             <%= color == 'orange' ? "ring-2 #{campaign_ring_class(color)} ring-offset-2 dark:ring-offset-zinc-900" : '' %>">
+              </button>
+            <% end %>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 pt-1">
+          <button type="button" data-action="click->campaign-picker#submitCreate" class="btn-primary text-xs py-1.5">Create campaign</button>
+          <button type="button" data-action="click->campaign-picker#hideCreate" class="btn-ghost text-xs py-1.5">Cancel</button>
+        </div>
+        <p data-campaign-picker-target="error" class="text-xs text-red-500 hidden"></p>
+      </div>
+    </div>
   </div>
 
   </div><%# /Row 1 grid %>

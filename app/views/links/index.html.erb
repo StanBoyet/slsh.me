@@ -19,10 +19,13 @@
   </div>
 
   <%# Search + filter row %>
-  <div class="flex items-center gap-3">
-    <%= form_with url: links_path(filter: @filter.presence), method: :get, class: "relative flex-1" do |f| %>
+  <div class="flex items-center gap-3 flex-wrap">
+    <%= form_with url: links_path(filter: @filter.presence, campaign_id: @campaign_filter), method: :get, class: "relative flex-1 min-w-[200px]" do |f| %>
       <% if @filter.present? %>
         <%= f.hidden_field :filter, value: @filter %>
+      <% end %>
+      <% if @campaign_filter.present? %>
+        <%= f.hidden_field :campaign_id, value: @campaign_filter %>
       <% end %>
       <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500 pointer-events-none"
            fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,14 +35,57 @@
       <%= f.search_field :q, value: params[:q], placeholder: "Search links…",
           class: "input pl-9", data: { turbo_permanent: "" } %>
     <% end %>
+
+    <%# Campaign filter dropdown %>
+    <% if @campaigns.any? %>
+      <div class="relative" data-controller="dropdown">
+        <button data-action="click->dropdown#toggle"
+                class="btn-ghost text-xs gap-1.5 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 bg-white dark:bg-zinc-900 shrink-0
+                       <%= 'ring-2 ring-orange-200 dark:ring-orange-800 border-orange-300 dark:border-orange-700' if @active_campaign %>">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg>
+          <%= @active_campaign ? @active_campaign.name : "Campaign" %>
+          <svg class="w-3 h-3 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div data-dropdown-target="menu" class="hidden absolute right-0 top-full mt-2 w-64 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-lg py-1 z-50">
+          <%= link_to links_path(filter: @filter.presence, q: params[:q]),
+              class: "flex items-center gap-2.5 px-3 py-2 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 #{ @active_campaign ? 'text-zinc-700 dark:text-zinc-300' : 'text-orange-600 dark:text-orange-400 font-medium' }" do %>
+            <span class="flex-1">All links</span>
+            <span class="text-xs text-zinc-400 tabular-nums"><%= @links_count %></span>
+          <% end %>
+          <div class="border-t border-zinc-100 dark:border-zinc-800 my-1"></div>
+          <% @campaigns.each do |campaign| %>
+            <%= link_to links_path(campaign_id: campaign.id, filter: @filter.presence, q: params[:q]),
+                class: "flex items-center gap-2.5 px-3 py-2 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 #{ @active_campaign&.id == campaign.id ? 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-500/10 font-medium' : 'text-zinc-700 dark:text-zinc-300' }" do %>
+              <span class="w-2 h-2 rounded-full <%= campaign_bg_class(campaign.color) %> shrink-0"></span>
+              <span class="flex-1 truncate"><%= campaign.name %></span>
+              <span class="text-xs text-zinc-400 tabular-nums"><%= campaign.links_count %></span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
     <% if @archived_count > 0 %>
-      <%= link_to links_path(filter: @filter == "archived" ? nil : "archived"),
+      <%= link_to links_path(filter: @filter == "archived" ? nil : "archived", campaign_id: @campaign_filter),
           class: "btn-ghost text-xs shrink-0 #{'!bg-zinc-100 !text-zinc-800 dark:!bg-zinc-800 dark:!text-zinc-200' if @filter == 'archived'}" do %>
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/></svg>
         Archived (<%= @archived_count %>)
       <% end %>
     <% end %>
   </div>
+
+  <%# Active campaign filter banner %>
+  <% if @active_campaign %>
+    <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20">
+      <span class="w-2 h-2 rounded-full <%= campaign_bg_class(@active_campaign.color) %> shrink-0"></span>
+      <span class="text-sm font-medium text-orange-700 dark:text-orange-300"><%= @active_campaign.name %></span>
+      <span class="text-xs text-orange-500"><%= @active_campaign.links_count %> link<%= "s" unless @active_campaign.links_count == 1 %> &middot; <%= number_with_delimiter(@active_campaign.computed_clicks_count) %> clicks</span>
+      <%= link_to campaign_path(@active_campaign), class: "ml-auto text-xs text-orange-500 hover:text-orange-700 font-medium" do %>View campaign &rarr;<% end %>
+      <%= link_to links_path(filter: @filter.presence, q: params[:q]), class: "text-orange-400 hover:text-orange-600 ml-1" do %>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      <% end %>
+    </div>
+  <% end %>
 
   <%# Links list %>
   <% if @links.any? %>
@@ -59,6 +105,12 @@
             <div class="flex-1 min-w-0">
               <div class="flex items-center gap-2 flex-wrap">
                 <span class="font-mono text-base font-medium text-orange-500 dark:text-orange-400"><%= link.domain_label %>/<%= link.slug %></span>
+                <% if link.campaign %>
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-orange-50 text-orange-500 dark:bg-orange-400/10 dark:text-orange-400">
+                    <span class="w-1.5 h-1.5 rounded-full <%= campaign_bg_class(link.campaign.color) %>"></span>
+                    <%= link.campaign.name %>
+                  </span>
+                <% end %>
                 <% if link.password_protected? %>
                   <svg class="w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                 <% end %>

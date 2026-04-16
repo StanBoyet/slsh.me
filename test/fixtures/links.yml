@@ -50,3 +50,11 @@ archived_link:
   active: false
   archived: true
   clicks_count: 10
+
+campaign_link:
+  user: one
+  campaign: q2_launch
+  original_url: "https://example.com/pricing?utm_source=twitter&utm_medium=social&utm_campaign=q2-product-launch"
+  slug: "q2tweet"
+  active: true
+  clicks_count: 42
