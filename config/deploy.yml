@@ -16,11 +16,14 @@ ssh:
 # Terminate TLS at kamal-proxy with automatic Let's Encrypt.
 # Requires DNS for slsh.me to resolve to the server before `kamal setup`,
 # and ports 80 + 443 open (ufw rule in the bootstrap script).
+# Give the container 60s to become healthy — Rails + Solid Queue + Puma cluster
+# takes ~10-15s to boot on 2 vCPUs, and the 30s default leaves almost no slack.
+deploy_timeout: 60
+
 proxy:
   ssl: true
   host: slsh.me
   app_port: 3000
-  deploy_timeout: 60
   healthcheck:
     path: /up
     interval: 3
