@@ -42,7 +42,10 @@ env:
     - DATABASE_URL
   clear:
     APP_HOST: slsh.me
-    PORT: 3000
+    # Thruster listens on HTTP_PORT (kamal-proxy targets this; can't be 80 as uid 1000).
+    HTTP_PORT: 3000
+    # Thruster forwards to Puma on TARGET_PORT (sets PORT for the child process).
+    TARGET_PORT: 3100
     RAILS_LOG_TO_STDOUT: "true"
     RAILS_SERVE_STATIC_FILES: "true"
     SOLID_QUEUE_IN_PUMA: true
