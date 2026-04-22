@@ -20,6 +20,7 @@ proxy:
   ssl: true
   host: slsh.me
   app_port: 3000
+  deploy_timeout: 60
   healthcheck:
     path: /up
     interval: 3
