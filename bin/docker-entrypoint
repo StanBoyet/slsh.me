@@ -1,8 +1,10 @@
 #!/bin/bash -e
 
-# If running the rails server then create or migrate existing database
+# When starting the Rails server, run the release script so the Solid Queue/Cache/Cable
+# schemas are loaded on shared-Postgres deployments (db:prepare alone won't create them
+# when database_tasks is false in config/database.yml).
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
-  ./bin/rails db:prepare
+  ./bin/deploy
 fi
 
 exec "${@}"
