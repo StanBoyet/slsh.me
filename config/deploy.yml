@@ -15,7 +15,7 @@ ssh:
 
 # Give the container 60s to become healthy — Rails + Solid Queue + Puma cluster
 # takes ~10-15s to boot on 2 vCPUs, and the 30s default leaves almost no slack.
-deploy_timeout: 60
+deploy_timeout: 120
 
 # kamal-proxy runs on host port 8080 (HTTP only, bound to localhost) and
 # speaks to the app via the `kamal` docker network. TLS for slsh.me,
@@ -39,6 +39,7 @@ proxy:
     max_request_body: 10_000_000
   run:
     http_port: 8080
+    https_port: 8443
     bind_ips:
       - 127.0.0.1
 
