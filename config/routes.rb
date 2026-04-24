@@ -2,6 +2,10 @@ Rails.application.routes.draw do
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 
+  # Caddy on-demand TLS ask hook — returns 200 for known custom domains,
+  # 404 otherwise. Called before Caddy requests a cert from Let's Encrypt.
+  get "domain_check" => "domain_checks#show", as: :domain_check
+
   # Landing page — served on root domain (slsh.me)
   root "pages#landing"
 
@@ -16,9 +20,7 @@ Rails.application.routes.draw do
     patch :profile, action: :update_profile
     get :domains, action: :domains
   end
-  resources :custom_domains, only: %i[create destroy] do
-    member { post :check }
-  end
+  resources :custom_domains, only: %i[create destroy]
   resources :campaigns, only: %i[show create destroy]
   resources :links, except: [ :show ] do
     member do

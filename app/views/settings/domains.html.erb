@@ -41,18 +41,6 @@
             </div>
 
             <div class="flex items-center gap-2 shrink-0">
-              <% if domain.verified? %>
-                <span class="badge-green">verified</span>
-              <% else %>
-                <span class="badge-slate">pending</span>
-                <%= form_with url: check_custom_domain_path(domain), method: :post do %>
-                  <button type="submit" class="btn-secondary text-xs py-1 group disabled:opacity-50"
-                          data-turbo-submits-with='<svg class="w-3.5 h-3.5 inline animate-spin -mt-px" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Checking…'>
-                    Check now
-                  </button>
-                <% end %>
-              <% end %>
-
               <%= button_to custom_domain_path(domain), method: :delete,
                   class: "btn-danger text-xs py-1.5",
                   data: { turbo_confirm: "Remove this domain? All its links will be archived." } do %>
@@ -71,11 +59,11 @@
         For each custom domain, create a <strong>CNAME</strong> record pointing to:
       </p>
       <div class="bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3">
-        <code class="text-sm font-mono text-orange-500 dark:text-orange-400">slsh-me.fly.dev</code>
+        <code class="text-sm font-mono text-orange-500 dark:text-orange-400">slsh.me</code>
       </div>
       <p class="text-xs text-zinc-500">
-        After adding the CNAME, TLS certificates are provisioned automatically.
-        It may take a few minutes for the certificate to be issued.
+        TLS is issued automatically on the first visit — no waiting, no flipping a switch.
+        Just add the CNAME and open the domain in a browser.
       </p>
     </div>
   </div>
