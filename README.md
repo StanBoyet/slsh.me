@@ -25,30 +25,33 @@ bin/rails test:system
 
 ## Deployment
 
-The app is deployed to [Fly.io](https://fly.io). Deploys happen automatically on push to `master` after CI passes.
+Deployed to a Hetzner VPS via [Kamal](https://kamal-deploy.org). See
+`config/deploy.yml` for the topology and `script/hetzner-bootstrap.sh` for the
+one-shot server prep.
 
 ### Infrastructure
 
-- **App**: `slsh-me` (region: `cdg`)
-- **Database**: `slsh-me-db` (Fly Postgres, shared-cpu-1x, 1GB volume)
+- **App**: Rails 8 + Thruster + Puma in a Docker image on GHCR.
+- **Proxy**: `kamal-proxy` for zero-downtime deploys, behind `caddy:2-alpine`.
+- **TLS**: Caddy terminates TLS with Let's Encrypt.
+  - `slsh.me` + `app.slsh.me` get certs on `kamal setup`.
+  - Customer custom domains get on-demand certs — first HTTPS request after
+    DNS resolves triggers issuance, gated by the `/domain_check` endpoint so
+    random Host headers can't burn our ACME rate limit.
+- **Database**: Postgres 17 (Kamal accessory on the same host, bound to
+  `127.0.0.1`).
 
-### Secrets
+### Custom domains
 
-The following secrets must be set on the Fly app:
+Customers run their domain through slsh.me by:
 
-```sh
-flyctl secrets set RAILS_MASTER_KEY=<value from config/master.key> --app slsh-me
-```
-
-For CI/CD, add `FLY_API_TOKEN` to GitHub repo secrets:
-
-```sh
-flyctl tokens create deploy -a slsh-me
-# Then add the token at Settings > Secrets and variables > Actions > FLY_API_TOKEN
-```
+1. Adding the domain on `/settings/domains`.
+2. Creating a CNAME record: `their-domain.com → slsh.me`.
+3. Opening `https://their-domain.com/<slug>` — Caddy fetches an LE cert on
+   the first request and serves the redirect.
 
 ### Manual deploy
 
 ```sh
-flyctl deploy --remote-only
+bin/kamal deploy
 ```

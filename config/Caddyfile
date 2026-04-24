@@ -1,0 +1,49 @@
+# Caddy sits in front of kamal-proxy and handles all TLS.
+#
+# slsh.me + app.slsh.me certs are issued on first boot from the default ACME
+# flow. Custom customer domains (any other host) use on-demand TLS: the cert
+# is fetched from Let's Encrypt the first time the domain is visited, gated
+# by an "ask" hook that queries the Rails app (GET /domain_check?domain=...).
+# Rails returns 200 for registered CustomDomain records, 404 otherwise — so
+# a crawler hitting the box with a random Host header can't burn our ACME
+# rate limit.
+#
+# Upstream: kamal-proxy listens on port 80 inside the container on the
+# `kamal` docker network. Caddy is on the same network (it's a Kamal
+# accessory) so it can reach `kamal-proxy:80` by container name.
+#
+# The ask hook hits app.slsh.me, which has its cert issued up front during
+# cold start (it's a fixed host, not on-demand) so there's no cert loop.
+{
+	email stan+letsencrypt@boyet.me
+
+	# Caddy 2.11 removed interval/burst from on_demand_tls — rate limiting now
+	# happens on the ask endpoint (see DomainChecksController), which refuses
+	# any domain that isn't a registered CustomDomain. That alone prevents
+	# random Host headers from burning our ACME rate limit.
+	on_demand_tls {
+		ask https://app.slsh.me/domain_check
+	}
+}
+
+# Primary hosts — certs always issued (not on-demand).
+slsh.me, app.slsh.me {
+	reverse_proxy kamal-proxy:80 {
+		header_up X-Forwarded-Proto https
+	}
+}
+
+# Customer custom domains — on-demand TLS. Matches anything not handled above.
+:443 {
+	tls {
+		on_demand
+	}
+	reverse_proxy kamal-proxy:80 {
+		header_up X-Forwarded-Proto https
+	}
+}
+
+# HTTP → HTTPS redirect for every host (including custom domains).
+:80 {
+	redir https://{host}{uri} permanent
+}

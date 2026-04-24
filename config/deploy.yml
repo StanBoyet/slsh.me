@@ -13,20 +13,23 @@ servers:
 ssh:
   user: deploy
 
-# Terminate TLS at kamal-proxy with automatic Let's Encrypt.
-# Requires DNS for slsh.me to resolve to the server before `kamal setup`,
-# and ports 80 + 443 open (ufw rule in the bootstrap script).
 # Give the container 60s to become healthy — Rails + Solid Queue + Puma cluster
 # takes ~10-15s to boot on 2 vCPUs, and the 30s default leaves almost no slack.
 deploy_timeout: 60
 
+# kamal-proxy runs on host port 8080 (HTTP only, bound to localhost) and
+# speaks to the app via the `kamal` docker network. TLS for slsh.me,
+# app.slsh.me, and customer custom domains is terminated by the `caddy`
+# accessory below — kamal-proxy only handles zero-downtime rollover.
+#
+# Why Caddy in front? kamal-proxy can only issue certs for hosts listed
+# here, but customer custom domains are dynamic (users add CustomDomain
+# records at any time). Caddy's on-demand TLS fetches certs from
+# Let's Encrypt on the first request, gated by an ask hook that queries
+# /domain_check to prevent random Host headers from burning our ACME
+# rate limit. See config/Caddyfile.
 proxy:
-  ssl: true
-  # slsh.me = landing + short-link redirects; app.slsh.me = authenticated dashboard.
-  # Both need LE certs. Custom domains (CNAME by users) are not terminated here yet.
-  hosts:
-    - slsh.me
-    - app.slsh.me
+  ssl: false
   app_port: 3000
   healthcheck:
     path: /up
@@ -34,6 +37,10 @@ proxy:
     timeout: 5
   buffering:
     max_request_body: 10_000_000
+  run:
+    http_port: 8080
+    bind_ips:
+      - 127.0.0.1
 
 # GitHub Container Registry. KAMAL_REGISTRY_PASSWORD comes from gh CLI in .kamal/secrets.
 registry:
@@ -81,9 +88,11 @@ builder:
   arch: amd64
   remote: ssh://deploy@91.98.29.147
 
-# Postgres 17 accessory on the same host. DATABASE_URL (in .kamal/secrets)
-# targets the kamal-internal hostname `slsh-me-db`.
+# Accessories share the `kamal` docker network by default, so they can reach
+# each other (and kamal-proxy) by container name.
 accessories:
+  # Postgres 17 on the same host. DATABASE_URL (in .kamal/secrets) targets
+  # the kamal-internal hostname `slsh-me-db`.
   db:
     image: postgres:17
     host: 91.98.29.147
@@ -96,3 +105,20 @@ accessories:
         - POSTGRES_PASSWORD
     directories:
       - postgres-data:/var/lib/postgresql/data
+
+  # Caddy handles TLS for every host (see config/Caddyfile). It terminates
+  # 80/443 on the public interface and forwards to kamal-proxy on the
+  # internal docker network. On-demand TLS issues customer-domain certs on
+  # first request.
+  caddy:
+    image: caddy:2-alpine
+    host: 91.98.29.147
+    files:
+      - config/Caddyfile:/etc/caddy/Caddyfile
+    directories:
+      - caddy-data:/data
+      - caddy-config:/config
+    options:
+      publish:
+        - "80:80"
+        - "443:443"
