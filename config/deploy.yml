@@ -110,6 +110,13 @@ accessories:
   # 80/443 on the public interface and forwards to kamal-proxy on the
   # internal docker network. On-demand TLS issues customer-domain certs on
   # first request.
+  #
+  # FIRST-TIME BOOT (one-time): Caddy will try to fetch fresh LE certs for
+  # slsh.me + app.slsh.me. If Cloudflare is still proxying those records,
+  # the HTTP-01/TLS-ALPN-01 challenges get intercepted. Before
+  # `kamal accessory boot caddy`, gray-cloud both DNS records in CF, wait
+  # for Caddy to issue certs (watch `kamal accessory logs caddy`), then
+  # re-enable the orange cloud.
   caddy:
     image: caddy:2-alpine
     host: 91.98.29.147
