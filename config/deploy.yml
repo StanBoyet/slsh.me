@@ -85,9 +85,18 @@ asset_path: /rails/public/assets
 
 # Configure the image builder. Build on the server itself — the Mac is arm64 and
 # the server is amd64, so remote building skips cross-arch emulation.
+#
+# Cache: CI runners are fresh VMs with no Docker layer cache, so every build
+# redoes apt-get + bundle install from scratch (~75s). Registry cache stores
+# all intermediate layers as a sibling tag (ghcr.io/stanboyet/slsh-me:build-cache)
+# and is pulled on the next build. mode=max caches intermediate stages too,
+# which matters because this Dockerfile's `build` stage holds the heavy work.
 builder:
   arch: amd64
   remote: ssh://deploy@91.98.29.147
+  cache:
+    type: registry
+    options: mode=max
 
 # Accessories share the `kamal` docker network by default, so they can reach
 # each other (and kamal-proxy) by container name.
