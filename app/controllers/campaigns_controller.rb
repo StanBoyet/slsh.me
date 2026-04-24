@@ -35,6 +35,7 @@ class CampaignsController < ApplicationController
     @campaign = Current.user.campaigns.build(campaign_params)
 
     if @campaign.save
+      PostHog.capture(distinct_id: Current.user.posthog_distinct_id, event: "campaign_created", properties: { name: @campaign.name })
       render json: { id: @campaign.id, name: @campaign.name, slug: @campaign.slug, color: @campaign.color }
     else
       render json: { errors: @campaign.errors.full_messages }, status: :unprocessable_entity
@@ -42,6 +43,7 @@ class CampaignsController < ApplicationController
   end
 
   def destroy
+    PostHog.capture(distinct_id: Current.user.posthog_distinct_id, event: "campaign_deleted", properties: { name: @campaign.name })
     @campaign.links.update_all(campaign_id: nil)
     @campaign.destroy
     redirect_to links_path, notice: "Campaign deleted."

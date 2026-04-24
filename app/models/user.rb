@@ -16,4 +16,13 @@ class User < ApplicationRecord
   def display_name
     username.presence || email_address.split("@").first
   end
+
+  # Used by posthog-rails for automatic user association in error reports
+  def posthog_distinct_id
+    email_address
+  end
+
+  def posthog_properties
+    { email: email_address, username: username, created_at: created_at&.iso8601 }
+  end
 end

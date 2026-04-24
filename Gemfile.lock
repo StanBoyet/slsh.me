@@ -250,6 +250,11 @@ GEM
     pg (1.6.3-arm64-darwin)
     pg (1.6.3-x86_64-linux)
     pg (1.6.3-x86_64-linux-musl)
+    posthog-rails (3.6.5)
+      posthog-ruby (~> 3.6)
+      railties (>= 5.2.0)
+    posthog-ruby (3.6.5)
+      concurrent-ruby (~> 1)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -453,6 +458,8 @@ DEPENDENCIES
   kamal
   pagy
   pg (~> 1.1)
+  posthog-rails
+  posthog-ruby
   propshaft
   puma (>= 5.0)
   rails (~> 8.1.3)

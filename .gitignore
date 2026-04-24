@@ -39,3 +39,10 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+.env
+
+# Claude Code local state (agent worktrees, settings, skills).
+/.claude/
+
+# Transient wizard / agent reports that don't belong in the repo.
+/*-setup-report.md

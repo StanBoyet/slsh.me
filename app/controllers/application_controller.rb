@@ -8,9 +8,14 @@ class ApplicationController < ActionController::Base
 
   prepend_before_action :enforce_domain_routing
 
-  helper_method :custom_domain_request?, :app_url
+  helper_method :custom_domain_request?, :app_url, :current_user
 
   private
+
+  # Alias for posthog-rails user context detection
+  def current_user
+    Current.user
+  end
 
   def primary_host
     ENV.fetch("APP_HOST", "localhost")

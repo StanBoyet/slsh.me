@@ -37,6 +37,18 @@ class LinksController < ApplicationController
     @link = Current.user.links.build(link_params)
 
     if @link.save
+      PostHog.capture(
+        distinct_id: Current.user.posthog_distinct_id,
+        event: "link_created",
+        properties: {
+          slug: @link.slug,
+          has_custom_domain: @link.custom_domain_id.present?,
+          has_password: @link.password_digest.present?,
+          has_expiry: @link.expires_at.present?,
+          has_og_image: @link.og_image.attached?,
+          has_campaign: @link.campaign_id.present?
+        }
+      )
       redirect_to links_path, notice: "Link created successfully."
     else
       @campaigns = Current.user.campaigns.order(:name)
@@ -52,6 +64,7 @@ class LinksController < ApplicationController
     @link.og_image.purge if params.dig(:link, :remove_og_image) == "1"
 
     if @link.update(link_params.except(:custom_domain_id, :slug))
+      PostHog.capture(distinct_id: Current.user.posthog_distinct_id, event: "link_updated", properties: { slug: @link.slug })
       redirect_to links_path, notice: "Link updated."
     else
       @campaigns = Current.user.campaigns.order(:name)
@@ -60,6 +73,7 @@ class LinksController < ApplicationController
   end
 
   def destroy
+    PostHog.capture(distinct_id: Current.user.posthog_distinct_id, event: "link_deleted", properties: { slug: @link.slug })
     @link.destroy
     redirect_to links_path, notice: "Link deleted."
   end
@@ -100,6 +114,7 @@ class LinksController < ApplicationController
   end
 
   def qr
+    PostHog.capture(distinct_id: Current.user.posthog_distinct_id, event: "qr_code_downloaded", properties: { slug: @link.slug })
     require "rqrcode"
     short_url = @link.short_url
     qr = RQRCode::QRCode.new(short_url)

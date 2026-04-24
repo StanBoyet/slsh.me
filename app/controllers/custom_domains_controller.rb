@@ -7,6 +7,7 @@ class CustomDomainsController < ApplicationController
     @custom_domain = Current.user.custom_domains.build(custom_domain_params)
 
     if @custom_domain.save
+      PostHog.capture(distinct_id: Current.user.posthog_distinct_id, event: "custom_domain_added", properties: { domain: @custom_domain.domain })
       redirect_to domains_settings_path,
                   notice: "Domain added. Point a CNAME to slsh.me — the TLS certificate is issued on the first visit."
     else
@@ -17,6 +18,7 @@ class CustomDomainsController < ApplicationController
 
   def destroy
     domain = Current.user.custom_domains.find(params[:id])
+    PostHog.capture(distinct_id: Current.user.posthog_distinct_id, event: "custom_domain_removed", properties: { domain: domain.domain })
     domain.archive_links!
     domain.destroy
 

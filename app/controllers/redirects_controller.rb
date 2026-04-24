@@ -33,6 +33,11 @@ class RedirectsController < ApplicationController
 
     if @link.authenticate_password(params[:password].to_s)
       session["unlocked_link_#{@link.id}"] = true
+      PostHog.capture(
+        distinct_id: @link.user.posthog_distinct_id,
+        event: "link_password_unlocked",
+        properties: { slug: @link.slug }
+      )
       track_and_redirect!
     else
       flash.now[:alert] = "Incorrect password."
@@ -45,6 +50,11 @@ class RedirectsController < ApplicationController
   def track_and_redirect!
     real_ip = request.headers["CF-Connecting-IP"].presence || request.remote_ip
     RecordVisitJob.perform_later(@link.id, real_ip, request.user_agent.to_s, request.referer.to_s)
+    PostHog.capture(
+      distinct_id: @link.user.posthog_distinct_id,
+      event: "link_clicked",
+      properties: { slug: @link.slug, custom_domain: custom_domain_request? }
+    )
     @link.increment!(:clicks_count)
     redirect_to @link.original_url, status: :found, allow_other_host: true
   end
