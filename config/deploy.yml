@@ -56,6 +56,8 @@ env:
     - RAILS_MASTER_KEY
     - POSTGRES_PASSWORD
     - DATABASE_URL
+    - POSTHOG_API_KEY
+    - POSTHOG_HOST
   clear:
     APP_HOST: slsh.me
     # Thruster listens on HTTP_PORT (kamal-proxy targets this; can't be 80 as uid 1000).

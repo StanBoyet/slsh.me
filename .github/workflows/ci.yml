@@ -196,6 +196,8 @@ jobs:
           KAMAL_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+          POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
         run: |
           bin/kamal registry login
           bin/kamal deploy
