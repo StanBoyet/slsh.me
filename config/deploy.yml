@@ -22,7 +22,11 @@ deploy_timeout: 60
 
 proxy:
   ssl: true
-  host: slsh.me
+  # slsh.me = landing + short-link redirects; app.slsh.me = authenticated dashboard.
+  # Both need LE certs. Custom domains (CNAME by users) are not terminated here yet.
+  hosts:
+    - slsh.me
+    - app.slsh.me
   app_port: 3000
   healthcheck:
     path: /up
