@@ -1,0 +1,581 @@
+<%# Nav %>
+<nav class="relative z-20 max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
+  <a href="/" class="font-display font-bold text-lg tracking-tight">
+    slsh<span class="text-orange-500 dark:text-orange-400">.</span>me
+  </a>
+  <div class="flex items-center gap-4">
+    <a href="/session/new" class="text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">Sign in</a>
+    <a href="/registration/new" class="px-4 py-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-sm font-semibold rounded-full hover:bg-zinc-700 dark:hover:bg-zinc-200 transition-colors">Start free</a>
+  </div>
+</nav>
+
+<%# Hero %>
+<section class="relative z-10 max-w-6xl mx-auto px-6 pt-14 sm:pt-20 md:pt-28 pb-10 md:pb-16">
+  <div class="text-center max-w-4xl mx-auto">
+    <h1 class="font-display font-extrabold tracking-[-0.03em] leading-[0.92] text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem]">
+      <span class="hero-word block">Paste.</span>
+      <span class="hero-word block text-orange-500 dark:text-orange-400">Slash.</span>
+      <span class="hero-word block">Share.</span>
+    </h1>
+
+    <p class="hero-fade hero-fade-1 mt-6 md:mt-8 text-base sm:text-lg md:text-xl text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto leading-relaxed">
+      The link shortener with analytics, custom&nbsp;domains, and none of the paywall.
+    </p>
+
+    <div class="hero-fade hero-fade-2 mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="/registration/new" class="px-7 py-3 bg-orange-500 hover:bg-orange-400 text-white text-sm font-semibold rounded-full transition-colors shadow-lg shadow-orange-500/20">
+        Shorten your first link
+      </a>
+      <span class="text-xs text-zinc-400">Free forever &middot; No account needed to try</span>
+    </div>
+  </div>
+
+  <%# Product mock %>
+  <div class="hero-fade hero-fade-3 mt-16 md:mt-20 max-w-2xl mx-auto">
+    <div class="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 overflow-hidden shadow-2xl shadow-zinc-900/[0.06] dark:shadow-black/30">
+      <%# Window chrome %>
+      <div class="flex items-center gap-2 px-4 py-3 border-b border-zinc-100 dark:border-zinc-800">
+        <div class="flex gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700"></span>
+          <span class="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700"></span>
+          <span class="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700"></span>
+        </div>
+        <span class="text-[10px] text-zinc-400 font-mono ml-2">slsh.me/links/new</span>
+      </div>
+      <%# Form mock %>
+      <div class="p-5 space-y-4">
+        <div>
+          <p class="text-[10px] font-medium text-zinc-400 uppercase tracking-wider mb-1.5">Destination</p>
+          <div class="px-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 rounded-lg border border-zinc-200 dark:border-zinc-700 font-mono text-xs text-zinc-400 truncate">
+            https://example.com/campaigns/2026/spring-launch-event
+          </div>
+        </div>
+        <div>
+          <p class="text-[10px] font-medium text-zinc-400 uppercase tracking-wider mb-1.5">Short link</p>
+          <div class="flex items-center gap-2">
+            <div class="flex-1 px-3 py-2.5 bg-zinc-50 dark:bg-zinc-800/80 rounded-lg border border-zinc-200 dark:border-zinc-700 font-mono text-xs">
+              <span class="text-zinc-400">slsh.me/</span><span class="text-orange-500 dark:text-orange-400 font-medium">spring26</span>
+            </div>
+            <span class="px-3.5 py-2.5 bg-orange-500 text-white text-xs font-semibold rounded-lg cursor-default">Copy</span>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 pt-1">
+          <span class="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-medium rounded-full">Password on</span>
+          <span class="px-2.5 py-1 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-medium rounded-full">Expires Apr 30</span>
+          <span class="px-2.5 py-1 bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 text-[10px] font-medium rounded-full">UTM tagged</span>
+        </div>
+      </div>
+    </div>
+    <p class="mt-3 text-[11px] text-zinc-400 text-center">or use your own domain &mdash; <span class="font-mono">go.yourco.com/spring26</span></p>
+  </div>
+</section>
+
+<%# Trust bar %>
+<section class="relative z-10 max-w-4xl mx-auto px-6 pb-8 md:pb-12">
+  <div class="flex flex-col sm:flex-row items-center justify-center gap-x-8 gap-y-3 text-xs text-zinc-400">
+    <span class="flex items-center gap-2">
+      <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+      Free &amp; open source
+    </span>
+    <span class="hidden sm:inline text-zinc-300 dark:text-zinc-700">/</span>
+    <span class="flex items-center gap-2">
+      <svg class="w-3.5 h-3.5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+      No tracking pixels, no third-party scripts
+    </span>
+    <span class="hidden sm:inline text-zinc-300 dark:text-zinc-700">/</span>
+    <span class="flex items-center gap-2">
+      <svg class="w-3.5 h-3.5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+      GDPR-compliant by default
+    </span>
+  </div>
+</section>
+
+<%# Feature: Analytics %>
+<section class="relative z-10 max-w-6xl mx-auto px-6 py-12 md:py-20">
+  <div class="reveal grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+    <div>
+      <p class="text-xs font-semibold text-orange-500 dark:text-orange-400 uppercase tracking-wider mb-4">Analytics</p>
+      <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight leading-tight">Every click.<br>Every detail.</h2>
+      <p class="mt-4 text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-md">Country, city, device, browser, referrer. Every click lands on a live dashboard the moment it happens. No setup, no third-party scripts.</p>
+    </div>
+    <div class="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 overflow-hidden shadow-lg shadow-zinc-900/[0.04] dark:shadow-black/20">
+      <%# Stats %>
+      <div class="grid grid-cols-3 divide-x divide-zinc-100 dark:divide-zinc-800">
+        <div class="p-4 md:p-5">
+          <p class="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">Clicks</p>
+          <p class="text-xl md:text-2xl font-bold mt-1 font-mono">2,847</p>
+        </div>
+        <div class="p-4 md:p-5">
+          <p class="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">Unique</p>
+          <p class="text-xl md:text-2xl font-bold mt-1 font-mono">1,923</p>
+        </div>
+        <div class="p-4 md:p-5">
+          <p class="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">Countries</p>
+          <p class="text-xl md:text-2xl font-bold mt-1 font-mono">34</p>
+        </div>
+      </div>
+      <%# Chart %>
+      <div class="px-5 pt-4 pb-2 border-t border-zinc-100 dark:border-zinc-800">
+        <p class="text-[10px] font-medium text-zinc-400 uppercase tracking-wider mb-3">Last 7 days</p>
+        <svg viewBox="0 0 400 70" class="w-full h-auto" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f97316" stop-opacity="0.12"/>
+              <stop offset="100%" stop-color="#f97316" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,52 C30,50 60,46 100,38 S160,28 200,30 S280,16 340,14 L400,10 L400,70 L0,70Z" fill="url(#areaGrad)"/>
+          <path d="M0,52 C30,50 60,46 100,38 S160,28 200,30 S280,16 340,14 L400,10" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <%# Country breakdown %>
+      <div class="px-5 pb-5 pt-2 space-y-2.5">
+        <div class="flex items-center gap-3 text-xs">
+          <span class="w-16 text-zinc-500 dark:text-zinc-400 shrink-0">France</span>
+          <div class="flex-1 h-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden"><div class="h-full rounded-full bg-orange-500" style="width:62%"></div></div>
+          <span class="font-mono w-8 text-right text-zinc-700 dark:text-zinc-300">892</span>
+        </div>
+        <div class="flex items-center gap-3 text-xs">
+          <span class="w-16 text-zinc-500 dark:text-zinc-400 shrink-0">US</span>
+          <div class="flex-1 h-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden"><div class="h-full rounded-full bg-orange-500/70" style="width:44%"></div></div>
+          <span class="font-mono w-8 text-right text-zinc-700 dark:text-zinc-300">634</span>
+        </div>
+        <div class="flex items-center gap-3 text-xs">
+          <span class="w-16 text-zinc-500 dark:text-zinc-400 shrink-0">Germany</span>
+          <div class="flex-1 h-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden"><div class="h-full rounded-full bg-orange-500/50" style="width:29%"></div></div>
+          <span class="font-mono w-8 text-right text-zinc-700 dark:text-zinc-300">412</span>
+        </div>
+        <div class="flex items-center gap-3 text-xs">
+          <span class="w-16 text-zinc-500 dark:text-zinc-400 shrink-0">UK</span>
+          <div class="flex-1 h-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden"><div class="h-full rounded-full bg-orange-500/35" style="width:20%"></div></div>
+          <span class="font-mono w-8 text-right text-zinc-700 dark:text-zinc-300">287</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# Feature: Custom Domains %>
+<section class="relative z-10 max-w-6xl mx-auto px-6 py-12 md:py-20">
+  <div class="reveal grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+    <div class="order-2 lg:order-1">
+      <div class="rounded-2xl p-5 md:p-6 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-lg shadow-zinc-900/[0.04] dark:shadow-black/20 space-y-3">
+        <div class="flex items-center gap-3 p-3.5 bg-zinc-50 dark:bg-zinc-800/80 rounded-xl">
+          <div class="min-w-0">
+            <p class="text-xs font-mono truncate"><span class="text-zinc-700 dark:text-zinc-200">links.acme.co</span><span class="text-orange-500">/launch</span></p>
+            <p class="text-[10px] text-zinc-400 mt-0.5">CNAME &rarr; slsh.me</p>
+          </div>
+          <span class="ml-auto shrink-0 text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium">verified</span>
+        </div>
+        <div class="flex items-center gap-3 p-3.5 bg-zinc-50 dark:bg-zinc-800/80 rounded-xl">
+          <div class="min-w-0">
+            <p class="text-xs font-mono truncate"><span class="text-zinc-700 dark:text-zinc-200">go.startup.io</span><span class="text-orange-500">/demo</span></p>
+            <p class="text-[10px] text-zinc-400 mt-0.5">CNAME &rarr; slsh.me</p>
+          </div>
+          <span class="ml-auto shrink-0 text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium">verified</span>
+        </div>
+        <div class="flex items-center gap-3 p-3.5 bg-zinc-50 dark:bg-zinc-800/80 rounded-xl opacity-50">
+          <div class="min-w-0">
+            <p class="text-xs font-mono text-zinc-500 truncate">short.brand.com</p>
+            <p class="text-[10px] text-zinc-400 mt-0.5">Awaiting DNS...</p>
+          </div>
+          <span class="ml-auto shrink-0 text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-700 text-zinc-500 font-medium">pending</span>
+        </div>
+      </div>
+    </div>
+    <div class="order-1 lg:order-2">
+      <p class="text-xs font-semibold text-orange-500 dark:text-orange-400 uppercase tracking-wider mb-4">Custom Domains</p>
+      <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight leading-tight">Your domain.<br>Your links.</h2>
+      <p class="mt-4 text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-md">Point any domain at slsh.me with one CNAME record. SSL handled automatically, propagation in seconds.</p>
+    </div>
+  </div>
+</section>
+
+<%# Feature grid %>
+<section class="relative z-10 max-w-6xl mx-auto px-6 py-12 md:py-20">
+  <div class="reveal text-center mb-12 md:mb-16">
+    <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight">All the features.<br>None of the paywall.</h2>
+    <p class="mt-3 text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto">Everything other shorteners charge for comes free here.</p>
+  </div>
+  <div class="reveal-stagger grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-10 max-w-4xl mx-auto">
+    <div class="reveal">
+      <h3 class="font-display font-bold">Password protection</h3>
+      <p class="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Lock any link. Visitors authenticate before they get redirected.</p>
+    </div>
+    <div class="reveal">
+      <h3 class="font-display font-bold">Expiry dates</h3>
+      <p class="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Links that self-destruct. Set a date or let them live forever.</p>
+    </div>
+    <div class="reveal">
+      <h3 class="font-display font-bold">Click limits</h3>
+      <p class="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Cap clicks at any number. The link expires when it&rsquo;s reached.</p>
+    </div>
+    <div class="reveal">
+      <h3 class="font-display font-bold">Custom OG previews</h3>
+      <p class="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Control the title, description, and image that show in social cards.</p>
+    </div>
+    <div class="reveal">
+      <h3 class="font-display font-bold">QR codes</h3>
+      <p class="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Print-ready SVG codes generated for every link, instantly.</p>
+    </div>
+    <div class="reveal">
+      <h3 class="font-display font-bold">UTM parameters</h3>
+      <p class="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Set source, medium, and campaign at creation. Appended on redirect, invisible in the short URL.</p>
+    </div>
+  </div>
+</section>
+
+<%# Personas %>
+<section class="relative z-10 max-w-6xl mx-auto px-6 py-12 md:py-20">
+  <div class="reveal text-center mb-12 md:mb-16">
+    <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight">Sound familiar?</h2>
+  </div>
+
+  <div class="space-y-16 md:space-y-24">
+
+    <%# Marketer %>
+    <div class="reveal grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div>
+        <p class="text-xs font-semibold text-sky-600 dark:text-sky-400 uppercase tracking-wider mb-4">Marketers</p>
+        <h3 class="font-display text-2xl md:text-3xl font-bold tracking-tight leading-tight">Your Friday report,<br>already done</h3>
+        <p class="mt-4 text-zinc-500 dark:text-zinc-400 leading-relaxed">You launched on Twitter, sent the newsletter, posted on LinkedIn. Now the question is which one actually moved the needle. Each link carries its own UTM tags, so clicks sort themselves by channel. When your manager asks for the numbers, you screenshot the dashboard.</p>
+        <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">No spreadsheet merging, no guessing which link was which.</p>
+      </div>
+      <div class="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 overflow-hidden shadow-lg shadow-zinc-900/[0.04] dark:shadow-black/20">
+        <div class="px-5 pt-5 pb-2">
+          <p class="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">Spring launch &mdash; weekly report</p>
+        </div>
+        <div class="px-5 pb-5">
+          <table class="w-full text-[11px]">
+            <thead>
+              <tr class="text-left text-zinc-400">
+                <th class="pb-2 font-medium">Channel</th>
+                <th class="pb-2 font-medium text-right">Clicks</th>
+                <th class="pb-2 font-medium text-right">Uniques</th>
+                <th class="pb-2 font-medium text-right hidden sm:table-cell">Top</th>
+              </tr>
+            </thead>
+            <tbody class="text-zinc-600 dark:text-zinc-300">
+              <tr class="border-t border-zinc-100 dark:border-zinc-800">
+                <td class="py-2"><span class="inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Twitter</span></td>
+                <td class="py-2 text-right font-mono">1,204</td>
+                <td class="py-2 text-right font-mono">987</td>
+                <td class="py-2 text-right hidden sm:table-cell">US</td>
+              </tr>
+              <tr class="border-t border-zinc-100 dark:border-zinc-800">
+                <td class="py-2"><span class="inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Newsletter</span></td>
+                <td class="py-2 text-right font-mono">872</td>
+                <td class="py-2 text-right font-mono">841</td>
+                <td class="py-2 text-right hidden sm:table-cell">FR</td>
+              </tr>
+              <tr class="border-t border-zinc-100 dark:border-zinc-800">
+                <td class="py-2"><span class="inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>LinkedIn</span></td>
+                <td class="py-2 text-right font-mono">631</td>
+                <td class="py-2 text-right font-mono">598</td>
+                <td class="py-2 text-right hidden sm:table-cell">DE</td>
+              </tr>
+              <tr class="border-t border-zinc-100 dark:border-zinc-800 font-medium text-zinc-900 dark:text-white">
+                <td class="py-2">Total</td>
+                <td class="py-2 text-right font-mono">2,707</td>
+                <td class="py-2 text-right font-mono">2,426</td>
+                <td class="py-2 text-right hidden sm:table-cell"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <%# Developer %>
+    <div class="reveal grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div class="order-2 lg:order-1">
+        <div class="rounded-2xl bg-[#0f0f10] border border-zinc-800 overflow-hidden shadow-lg shadow-black/20">
+          <div class="flex items-center gap-1.5 px-4 pt-3 pb-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#ff5f57]"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-[#febc2e]"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-[#28c840]"></span>
+            <span class="ml-2 text-[10px] text-zinc-600 font-mono">terminal</span>
+          </div>
+          <div class="px-4 pb-4 font-mono text-[11px] leading-relaxed">
+            <p><span class="text-zinc-500">$</span> <span class="text-zinc-300">curl -X POST https://slsh.me/api/links \</span></p>
+            <p class="text-zinc-300 pl-4">-H "Authorization: Bearer sk_live_..." \</p>
+            <p class="text-zinc-300 pl-4">-d '{"url": "https://app.yourco.com/invite/x7f2k"}'</p>
+            <p class="mt-3"><span class="text-zinc-600">HTTP/1.1</span> <span class="text-emerald-400">201 Created</span></p>
+            <p class="mt-1 text-zinc-500">{</p>
+            <p class="text-zinc-500 pl-4">"short_url": "<span class="text-orange-400">https://slsh.me/inv-x7f</span>",</p>
+            <p class="text-zinc-500 pl-4">"slug": "<span class="text-orange-400">inv-x7f</span>",</p>
+            <p class="text-zinc-500 pl-4">"clicks": <span class="text-amber-400">0</span>,</p>
+            <p class="text-zinc-500 pl-4">"created_at": "<span class="text-zinc-600">2026-04-16T09:14:22Z</span>"</p>
+            <p class="text-zinc-500">}</p>
+          </div>
+        </div>
+      </div>
+      <div class="order-1 lg:order-2">
+        <p class="text-xs font-semibold text-emerald-500 dark:text-emerald-400 uppercase tracking-wider mb-4">Developers</p>
+        <h3 class="font-display text-2xl md:text-3xl font-bold tracking-tight leading-tight">One POST,<br>one short link</h3>
+        <p class="mt-4 text-zinc-500 dark:text-zinc-400 leading-relaxed">Your app generates invite links, share URLs, receipt pages. They&rsquo;re all ugly and long. Hit the API, get a short one back. Custom domain? Point a CNAME and every new link comes out branded.</p>
+        <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">Token auth, JSON in/out, no SDK required.</p>
+      </div>
+    </div>
+
+    <%# Creator %>
+    <div class="reveal grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div>
+        <p class="text-xs font-semibold text-rose-600 dark:text-rose-400 uppercase tracking-wider mb-4">Creators</p>
+        <h3 class="font-display text-2xl md:text-3xl font-bold tracking-tight leading-tight">Your link,<br>your brand</h3>
+        <p class="mt-4 text-zinc-500 dark:text-zinc-400 leading-relaxed">You share a link on Twitter or in a group chat and the preview card shows some random hosting page title. With slsh.me, you control the OG image, title, and description. The link looks like it came from your brand, because it did.</p>
+        <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">Works with any link, even if the original has no OG tags at all.</p>
+      </div>
+      <div class="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 overflow-hidden shadow-lg shadow-zinc-900/[0.04] dark:shadow-black/20">
+        <div class="p-4">
+          <div class="rounded-xl border border-zinc-200 dark:border-zinc-700 overflow-hidden">
+            <div class="bg-gradient-to-br from-orange-100 to-rose-50 dark:from-orange-900/30 dark:to-rose-900/20 h-32 flex items-center justify-center">
+              <div class="text-center px-4">
+                <p class="font-display font-bold text-lg text-zinc-800 dark:text-white">New Collection: Summer 26</p>
+                <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">12 new pieces, available now</p>
+              </div>
+            </div>
+            <div class="p-3 bg-zinc-50 dark:bg-zinc-800 border-t border-zinc-200 dark:border-zinc-700">
+              <p class="text-[10px] text-zinc-400 font-mono">go.studio</p>
+              <p class="text-xs font-medium text-zinc-900 dark:text-white mt-0.5">New Collection: Summer 26</p>
+              <p class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 line-clamp-2">A first look at 12 new pieces for Summer 2026. Limited colorways, open pre-order.</p>
+            </div>
+          </div>
+        </div>
+        <div class="px-4 pb-4 flex items-center gap-3 text-[11px]">
+          <span class="font-mono text-zinc-400">go.studio/<span class="text-orange-500 dark:text-orange-400">summer26</span></span>
+          <span class="text-zinc-300 dark:text-zinc-700">|</span>
+          <span class="text-zinc-400">OG title, image, description: <span class="text-emerald-500 font-medium">custom</span></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<%# FAQ %>
+<section class="relative z-10 max-w-2xl mx-auto px-6 py-12 md:py-20">
+  <div class="reveal">
+    <h2 class="font-display text-2xl md:text-3xl font-bold tracking-tight mb-8">Questions</h2>
+    <div class="divide-y divide-zinc-200 dark:divide-zinc-800 border-t border-b border-zinc-200 dark:border-zinc-800">
+      <details class="group">
+        <summary class="py-5 flex items-center justify-between gap-4 cursor-pointer text-sm font-medium select-none [&::-webkit-details-marker]:hidden list-none">
+          <span>Is slsh.me really free?</span>
+          <svg class="w-4 h-4 text-zinc-400 shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        </summary>
+        <p class="pb-5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Yes, completely. No paid tiers. Custom domains, analytics, all link features &mdash; included.</p>
+      </details>
+      <details class="group">
+        <summary class="py-5 flex items-center justify-between gap-4 cursor-pointer text-sm font-medium select-none [&::-webkit-details-marker]:hidden list-none">
+          How is this different from Bitly?
+          <svg class="w-4 h-4 text-zinc-400 shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        </summary>
+        <p class="pb-5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Bitly paywalls custom domains, expiry, and password protection. Here, all of that is free.</p>
+      </details>
+      <details class="group">
+        <summary class="py-5 flex items-center justify-between gap-4 cursor-pointer text-sm font-medium select-none [&::-webkit-details-marker]:hidden list-none">
+          What analytics do I get?
+          <svg class="w-4 h-4 text-zinc-400 shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        </summary>
+        <p class="pb-5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Clicks, uniques, country, city, browser, OS, device, and referrer. All real-time, all first-party. No cookies, no external scripts.</p>
+      </details>
+      <details class="group">
+        <summary class="py-5 flex items-center justify-between gap-4 cursor-pointer text-sm font-medium select-none [&::-webkit-details-marker]:hidden list-none">
+          Is there an API?
+          <svg class="w-4 h-4 text-zinc-400 shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        </summary>
+        <p class="pb-5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">REST API with token auth. Create, update, delete, list links. Grab your token from settings.</p>
+      </details>
+      <details class="group">
+        <summary class="py-5 flex items-center justify-between gap-4 cursor-pointer text-sm font-medium select-none [&::-webkit-details-marker]:hidden list-none">
+          <span>Will my links break if slsh.me goes down?</span>
+          <svg class="w-4 h-4 text-zinc-400 shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        </summary>
+        <p class="pb-5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Multi-region deployment, so downtime is unlikely. And it&rsquo;s open source &mdash; you can self-host anytime.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<%# Changelog / Shipping %>
+<section class="relative z-10 max-w-6xl mx-auto px-6 py-12 md:py-20">
+  <div class="reveal text-center mb-12 md:mb-16">
+    <p class="text-xs font-semibold text-orange-500 dark:text-orange-400 uppercase tracking-wider mb-4">Changelog</p>
+    <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight">Built and shipped</h2>
+    <p class="mt-3 text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto">Not a roadmap &mdash; real features, already live.</p>
+  </div>
+
+  <div class="reveal-stagger space-y-6 max-w-4xl mx-auto">
+
+    <%# Campaign Folders %>
+    <div class="reveal relative rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 overflow-hidden shadow-lg shadow-zinc-900/[0.04] dark:shadow-black/20">
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+        <div class="p-6 md:p-8 flex flex-col justify-center">
+          <div class="flex items-center gap-2">
+            <p class="text-xs text-zinc-400 font-mono">April 2026</p>
+            <span class="px-2.5 py-0.5 bg-orange-500 text-white text-[10px] font-bold uppercase tracking-wider rounded-full shadow-sm">New</span>
+          </div>
+          <h3 class="font-display text-xl md:text-2xl font-bold tracking-tight mt-2">Campaign folders</h3>
+          <p class="mt-3 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-sm">Group links by campaign, see which channel wins. Pick a campaign when you create a link and the UTM tags write themselves. One screen to report on everything.</p>
+        </div>
+        <div class="p-4 md:p-6 bg-zinc-50 dark:bg-zinc-800/40 border-t lg:border-t-0 lg:border-l border-zinc-100 dark:border-zinc-800">
+          <%# Mini campaign detail mockup %>
+          <div class="space-y-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0"></span>
+              <span class="text-sm font-semibold">Q2 Product Launch</span>
+              <span class="ml-auto text-xs text-zinc-400 font-mono tabular-nums">1,247 clicks</span>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 text-xs">
+                <span class="w-14 text-zinc-500 shrink-0 font-mono">twitter</span>
+                <div class="flex-1 h-5 bg-zinc-200/70 dark:bg-zinc-700/50 rounded overflow-hidden">
+                  <div class="h-full bg-orange-500 rounded" style="width: 39%"></div>
+                </div>
+                <span class="w-7 text-right font-mono text-zinc-500 tabular-nums">39%</span>
+              </div>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="w-14 text-zinc-500 shrink-0 font-mono">email</span>
+                <div class="flex-1 h-5 bg-zinc-200/70 dark:bg-zinc-700/50 rounded overflow-hidden">
+                  <div class="h-full bg-orange-400 rounded" style="width: 31%"></div>
+                </div>
+                <span class="w-7 text-right font-mono text-zinc-500 tabular-nums">31%</span>
+              </div>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="w-14 text-zinc-500 shrink-0 font-mono">linkedin</span>
+                <div class="flex-1 h-5 bg-zinc-200/70 dark:bg-zinc-700/50 rounded overflow-hidden">
+                  <div class="h-full bg-orange-300 rounded" style="width: 30%"></div>
+                </div>
+                <span class="w-7 text-right font-mono text-zinc-500 tabular-nums">30%</span>
+              </div>
+            </div>
+            <div class="pt-2 border-t border-zinc-200 dark:border-zinc-700 space-y-1.5">
+              <div class="flex items-center gap-2 text-[11px]">
+                <span class="font-mono text-orange-500">slsh.me/q2-twitter</span>
+                <span class="ml-auto text-zinc-400 font-mono tabular-nums">482</span>
+              </div>
+              <div class="flex items-center gap-2 text-[11px]">
+                <span class="font-mono text-orange-500">slsh.me/q2-email</span>
+                <span class="ml-auto text-zinc-400 font-mono tabular-nums">391</span>
+              </div>
+              <div class="flex items-center gap-2 text-[11px]">
+                <span class="font-mono text-orange-500">slsh.me/q2-linkedin</span>
+                <span class="ml-auto text-zinc-400 font-mono tabular-nums">374</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# UTM Builder %>
+    <div class="reveal grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div class="relative rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 overflow-hidden shadow-lg shadow-zinc-900/[0.04] dark:shadow-black/20">
+        <div class="p-6">
+          <div class="flex items-center gap-2">
+            <p class="text-xs text-zinc-400 font-mono">April 2026</p>
+            <span class="px-2.5 py-0.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-[10px] font-bold uppercase tracking-wider rounded-full">Live</span>
+          </div>
+          <h3 class="font-display text-lg font-bold tracking-tight mt-2">Built-in UTM builder</h3>
+          <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Set source, medium, and campaign right in the link form. Tags append on redirect, invisible in the short URL.</p>
+        </div>
+        <div class="px-6 pb-5">
+          <div class="rounded-lg bg-zinc-50 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 p-3 font-mono text-[10px] text-zinc-400 break-all leading-relaxed">
+            example.com/pricing<span class="text-orange-500">?utm_source=twitter&amp;utm_medium=social&amp;utm_campaign=q2-launch</span>
+          </div>
+        </div>
+      </div>
+
+      <%# QR Codes %>
+      <div class="relative rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 overflow-hidden shadow-lg shadow-zinc-900/[0.04] dark:shadow-black/20">
+        <div class="p-6">
+          <div class="flex items-center gap-2">
+            <p class="text-xs text-zinc-400 font-mono">April 2026</p>
+            <span class="px-2.5 py-0.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-[10px] font-bold uppercase tracking-wider rounded-full">Live</span>
+          </div>
+          <h3 class="font-display text-lg font-bold tracking-tight mt-2">Instant QR codes</h3>
+          <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Every link gets a print-ready SVG code. Download it, stick it on packaging, menus, slides &mdash; whatever.</p>
+        </div>
+        <div class="px-6 pb-5 flex items-center justify-center">
+          <%# Mini QR mockup via SVG pattern %>
+          <svg viewBox="0 0 80 80" class="w-20 h-20" fill="currentColor" style="color: #18181b;">
+            <rect class="dark:hidden" width="80" height="80" rx="4" fill="#fafafa"/>
+            <rect class="hidden dark:block" width="80" height="80" rx="4" fill="#27272a" opacity="0.5"/>
+            <%# Top-left finder %>
+            <rect x="8" y="8" width="20" height="20" rx="2"/>
+            <rect x="11" y="11" width="14" height="14" rx="1" fill="#fafafa" class="dark:hidden"/>
+            <rect x="11" y="11" width="14" height="14" rx="1" fill="#18181b" class="hidden dark:block"/>
+            <rect x="14" y="14" width="8" height="8" rx="1"/>
+            <%# Top-right finder %>
+            <rect x="52" y="8" width="20" height="20" rx="2"/>
+            <rect x="55" y="11" width="14" height="14" rx="1" fill="#fafafa" class="dark:hidden"/>
+            <rect x="55" y="11" width="14" height="14" rx="1" fill="#18181b" class="hidden dark:block"/>
+            <rect x="58" y="14" width="8" height="8" rx="1"/>
+            <%# Bottom-left finder %>
+            <rect x="8" y="52" width="20" height="20" rx="2"/>
+            <rect x="11" y="55" width="14" height="14" rx="1" fill="#fafafa" class="dark:hidden"/>
+            <rect x="11" y="55" width="14" height="14" rx="1" fill="#18181b" class="hidden dark:block"/>
+            <rect x="14" y="58" width="8" height="8" rx="1"/>
+            <%# Data modules %>
+            <rect x="32" y="8"  width="4" height="4" rx="0.5"/>
+            <rect x="38" y="8"  width="4" height="4" rx="0.5"/>
+            <rect x="44" y="8"  width="4" height="4" rx="0.5"/>
+            <rect x="32" y="14" width="4" height="4" rx="0.5"/>
+            <rect x="38" y="20" width="4" height="4" rx="0.5"/>
+            <rect x="32" y="26" width="4" height="4" rx="0.5"/>
+            <rect x="8"  y="32" width="4" height="4" rx="0.5"/>
+            <rect x="14" y="38" width="4" height="4" rx="0.5"/>
+            <rect x="20" y="32" width="4" height="4" rx="0.5"/>
+            <rect x="26" y="38" width="4" height="4" rx="0.5"/>
+            <rect x="38" y="32" width="4" height="4" rx="0.5"/>
+            <rect x="44" y="38" width="4" height="4" rx="0.5"/>
+            <rect x="50" y="32" width="4" height="4" rx="0.5"/>
+            <rect x="56" y="38" width="4" height="4" rx="0.5"/>
+            <rect x="62" y="32" width="4" height="4" rx="0.5"/>
+            <rect x="68" y="38" width="4" height="4" rx="0.5"/>
+            <rect x="32" y="44" width="4" height="4" rx="0.5"/>
+            <rect x="44" y="44" width="4" height="4" rx="0.5"/>
+            <rect x="38" y="50" width="4" height="4" rx="0.5"/>
+            <rect x="50" y="50" width="4" height="4" rx="0.5"/>
+            <rect x="62" y="44" width="4" height="4" rx="0.5"/>
+            <rect x="44" y="56" width="4" height="4" rx="0.5"/>
+            <rect x="56" y="56" width="4" height="4" rx="0.5"/>
+            <rect x="50" y="62" width="4" height="4" rx="0.5"/>
+            <rect x="62" y="62" width="4" height="4" rx="0.5"/>
+            <rect x="68" y="50" width="4" height="4" rx="0.5"/>
+            <rect x="44" y="68" width="4" height="4" rx="0.5"/>
+            <rect x="56" y="68" width="4" height="4" rx="0.5"/>
+            <rect x="68" y="68" width="4" height="4" rx="0.5"/>
+            <%# Center accent %>
+            <rect x="36" y="36" width="8" height="8" rx="2" fill="#f97316"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<%# Final CTA %>
+<section class="relative z-10">
+  <div class="bg-zinc-950 dark:bg-zinc-900">
+    <div class="max-w-3xl mx-auto text-center px-6 py-16 md:py-20">
+      <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight text-white">Start shortening</h2>
+      <p class="mt-3 text-zinc-400">Free forever. No credit card. No catch.</p>
+      <a href="/registration/new" class="inline-block mt-8 px-8 py-3.5 bg-orange-500 hover:bg-orange-400 text-white text-sm font-semibold rounded-full transition-colors shadow-lg shadow-orange-500/25">
+        Create your account
+      </a>
+    </div>
+  </div>
+</section>
+
+<%# Footer %>
+<footer class="relative z-10 max-w-6xl mx-auto px-6 py-10">
+  <div class="flex items-center justify-between text-xs text-zinc-400">
+    <span>&copy; 2026 slsh.me</span>
+    <div class="flex items-center gap-4">
+      <a href="/registration/new" class="text-orange-500 dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 font-medium transition-colors">Get started</a>
+      <a href="/session/new" class="hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors">Sign in</a>
+    </div>
+  </div>
+</footer>

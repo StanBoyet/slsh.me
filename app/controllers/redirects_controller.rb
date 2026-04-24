@@ -6,7 +6,7 @@ class RedirectsController < ApplicationController
                    vkShare|W3C_Validator|ia_archiver/xi.freeze
 
   def show
-    @link = Link.find_by!(slug: params[:slug])
+    @link = find_link!
 
     unless @link.active?
       return render :gone, status: :gone
@@ -25,30 +25,15 @@ class RedirectsController < ApplicationController
       return render :password, status: :ok
     end
 
-    RecordVisitJob.perform_later(
-      @link.id,
-      request.remote_ip,
-      request.user_agent.to_s,
-      request.referer.to_s
-    )
-    @link.increment!(:clicks_count)
-
-    redirect_to @link.original_url, status: :found, allow_other_host: true
+    track_and_redirect!
   end
 
   def unlock
-    @link = Link.find_by!(slug: params[:slug])
+    @link = find_link!
 
     if @link.authenticate_password(params[:password].to_s)
       session["unlocked_link_#{@link.id}"] = true
-      RecordVisitJob.perform_later(
-        @link.id,
-        request.remote_ip,
-        request.user_agent.to_s,
-        request.referer.to_s
-      )
-      @link.increment!(:clicks_count)
-      redirect_to @link.original_url, status: :found, allow_other_host: true
+      track_and_redirect!
     else
       flash.now[:alert] = "Incorrect password."
       render :password, status: :unprocessable_entity
@@ -56,6 +41,22 @@ class RedirectsController < ApplicationController
   end
 
   private
+
+  def track_and_redirect!
+    real_ip = request.headers["CF-Connecting-IP"].presence || request.remote_ip
+    RecordVisitJob.perform_later(@link.id, real_ip, request.user_agent.to_s, request.referer.to_s)
+    @link.increment!(:clicks_count)
+    redirect_to @link.original_url, status: :found, allow_other_host: true
+  end
+
+  def find_link!
+    if custom_domain_request?
+      domain = CustomDomain.find_by!(domain: request.host)
+      domain.links.find_by!(slug: params[:slug])
+    else
+      Link.where(custom_domain_id: nil).find_by!(slug: params[:slug])
+    end
+  end
 
   def social_bot?
     request.user_agent.to_s.match?(SOCIAL_BOT_UA)

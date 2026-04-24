@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+# Release command for Fly.io deployments.
+# Runs primary migrations, then ensures Solid Queue/Cache/Cable tables exist.
+
+system("bin/rails db:prepare") || exit(1)
+
+require_relative "../config/environment"
+
+connection = ActiveRecord::Base.connection
+
+{ queue: "db/queue_schema.rb", cache: "db/cache_schema.rb", cable: "db/cable_schema.rb" }.each do |name, schema|
+  # Pick a representative table to check if the schema has been loaded
+  probe_table = case name
+                when :queue then "solid_queue_jobs"
+                when :cache then "solid_cache_entries"
+                when :cable then "solid_cable_messages"
+                end
+
+  unless connection.table_exists?(probe_table)
+    puts "Loading #{name} schema (#{schema})..."
+    load(Rails.root.join(schema))
+  end
+end

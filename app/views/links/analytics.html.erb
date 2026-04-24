@@ -1,6 +1,6 @@
 <% content_for :title, "/#{@link.slug} analytics — slsh.me" %>
 
-<div class="space-y-6">
+<div class="space-y-6" data-controller="analytics-refresh" data-analytics-refresh-delay-value="300">
   <%# Header %>
   <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
     <div class="flex items-center gap-3">
@@ -11,18 +11,18 @@
       <% end %>
       <div>
         <div class="flex items-center gap-2 flex-wrap">
-          <h1 class="text-xl font-semibold text-white font-mono">/<%= @link.slug %></h1>
+          <h1 class="text-xl font-semibold font-mono"><span class="text-zinc-300 dark:text-zinc-700"><%= @link.domain_label %>/l</span><span class="text-zinc-900 dark:text-white">/<%= @link.slug %></span></h1>
           <% unless @link.active? %><span class="badge-red">inactive</span><% end %>
           <% if @link.expired? %><span class="badge-slate">expired</span><% end %>
         </div>
-        <p class="text-sm text-slate-500 truncate max-w-xs mt-0.5"><%= @link.original_url %></p>
+        <p class="text-sm text-zinc-500 truncate max-w-xs mt-0.5"><%= @link.original_url %></p>
       </div>
     </div>
 
     <div class="flex items-center gap-2 flex-wrap">
       <%# Copy button %>
       <button class="btn-secondary" data-controller="copy"
-              data-copy-text-value="<%= redirect_url(@link.slug) %>"
+              data-copy-text-value="<%= @link.short_url %>"
               data-action="click->copy#copy">
         <svg data-copy-target="icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -50,183 +50,61 @@
     </div>
   </div>
 
+  <% frame_src = analytics_link_path(@link, range: @range) %>
+
   <%# Stats row %>
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-    <div class="stat-card">
-      <p class="section-title">Total clicks</p>
-      <p class="text-2xl font-semibold text-white tabular-nums"><%= number_with_delimiter(@total_visits) %></p>
-    </div>
-    <div class="stat-card">
-      <p class="section-title">This period</p>
-      <p class="text-2xl font-semibold text-white tabular-nums"><%= number_with_delimiter(@visits.count) %></p>
-    </div>
-    <div class="stat-card">
-      <p class="section-title">Top country</p>
-      <p class="text-lg font-semibold text-white truncate"><%= @top_countries&.first&.first || "—" %></p>
-    </div>
-    <div class="stat-card">
-      <p class="section-title">Top browser</p>
-      <p class="text-lg font-semibold text-white truncate"><%= @top_browsers&.first&.first || "—" %></p>
-    </div>
-  </div>
+  <turbo-frame id="analytics-stats" class="block" data-analytics-refresh-target="frame" data-src="<%= frame_src %>">
+    <%= render "analytics_stats" %>
+  </turbo-frame>
 
   <%# Range selector %>
   <div class="flex items-center gap-2">
     <span class="section-title">Period:</span>
     <% [["7d", "7 days"], ["30d", "30 days"], ["90d", "90 days"]].each do |value, label| %>
       <%= link_to label, analytics_link_path(@link, range: value),
-          class: "text-xs px-3 py-1.5 rounded-lg transition-colors #{@range == value ? 'bg-violet-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-slate-200'}" %>
+          class: "text-xs px-3 py-1.5 rounded-lg transition-colors #{@range == value ? 'bg-orange-500 text-white' : 'bg-zinc-100 text-zinc-600 hover:text-zinc-800 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'}" %>
     <% end %>
   </div>
 
   <%# Clicks over time %>
-  <div class="card p-5">
-    <h3 class="text-sm font-medium text-slate-300 mb-4">Clicks over time</h3>
-    <% if @clicks_by_day.any? %>
-      <%= line_chart @clicks_by_day,
-          colors: ["#8b5cf6"],
-          curve: true,
-          dataset: { borderWidth: 2, fill: true, backgroundColor: "rgba(139,92,246,0.08)" },
-          library: { scales: { x: { grid: { color: "rgba(255,255,255,0.04)" }, ticks: { color: "#94a3b8" } },
-                               y: { grid: { color: "rgba(255,255,255,0.04)" }, ticks: { color: "#94a3b8" }, beginAtZero: true } },
-                     plugins: { legend: { display: false } } } %>
-    <% else %>
-      <p class="text-slate-500 text-sm text-center py-8">No data for this period</p>
-    <% end %>
-  </div>
+  <turbo-frame id="analytics-chart" class="block" data-analytics-refresh-target="frame" data-src="<%= frame_src %>">
+    <%= render "analytics_chart" %>
+  </turbo-frame>
 
   <%# Breakdown grid %>
-  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-    <%# Devices %>
-    <div class="card p-5">
-      <h3 class="text-sm font-medium text-slate-300 mb-4">Devices</h3>
-      <% if @device_breakdown.any? %>
-        <%= pie_chart @device_breakdown,
-            colors: ["#8b5cf6", "#06b6d4", "#10b981", "#f59e0b"],
-            library: { plugins: { legend: { position: "bottom", labels: { color: "#94a3b8", boxWidth: 12 } } } } %>
-      <% else %>
-        <p class="text-slate-500 text-sm text-center py-4">No data</p>
-      <% end %>
-    </div>
-
-    <%# Browsers %>
-    <div class="card p-5">
-      <h3 class="text-sm font-medium text-slate-300 mb-4">Browsers</h3>
-      <% if @top_browsers&.any? %>
-        <div class="space-y-2">
-          <% max = @top_browsers.first&.last.to_f %>
-          <% @top_browsers.each do |name, count| %>
-            <div class="flex items-center gap-3">
-              <span class="text-sm text-slate-300 w-24 truncate"><%= name.presence || "Unknown" %></span>
-              <div class="flex-1 bg-slate-800 rounded-full h-1.5">
-                <div class="bg-violet-500 h-1.5 rounded-full transition-all"
-                     style="width:<%= max > 0 ? (count / max * 100).round : 0 %>%"></div>
-              </div>
-              <span class="text-xs text-slate-500 tabular-nums w-8 text-right"><%= count %></span>
-            </div>
-          <% end %>
-        </div>
-      <% else %>
-        <p class="text-slate-500 text-sm text-center py-4">No data</p>
-      <% end %>
-    </div>
-
-    <%# Countries %>
-    <div class="card p-5">
-      <h3 class="text-sm font-medium text-slate-300 mb-4">Countries</h3>
-      <% if @top_countries&.any? %>
-        <div class="space-y-2">
-          <% max = @top_countries.first&.last.to_f %>
-          <% @top_countries.each do |name, count| %>
-            <div class="flex items-center gap-3">
-              <span class="text-sm text-slate-300 w-28 truncate"><%= name.presence || "Unknown" %></span>
-              <div class="flex-1 bg-slate-800 rounded-full h-1.5">
-                <div class="bg-cyan-500 h-1.5 rounded-full transition-all"
-                     style="width:<%= max > 0 ? (count / max * 100).round : 0 %>%"></div>
-              </div>
-              <span class="text-xs text-slate-500 tabular-nums w-8 text-right"><%= count %></span>
-            </div>
-          <% end %>
-        </div>
-      <% else %>
-        <p class="text-slate-500 text-sm text-center py-4">No data</p>
-      <% end %>
-    </div>
-
-    <%# OS %>
-    <div class="card p-5">
-      <h3 class="text-sm font-medium text-slate-300 mb-4">Operating systems</h3>
-      <% if @top_os&.any? %>
-        <div class="space-y-2">
-          <% max = @top_os.first&.last.to_f %>
-          <% @top_os.each do |name, count| %>
-            <div class="flex items-center gap-3">
-              <span class="text-sm text-slate-300 w-24 truncate"><%= name.presence || "Unknown" %></span>
-              <div class="flex-1 bg-slate-800 rounded-full h-1.5">
-                <div class="bg-emerald-500 h-1.5 rounded-full transition-all"
-                     style="width:<%= max > 0 ? (count / max * 100).round : 0 %>%"></div>
-              </div>
-              <span class="text-xs text-slate-500 tabular-nums w-8 text-right"><%= count %></span>
-            </div>
-          <% end %>
-        </div>
-      <% else %>
-        <p class="text-slate-500 text-sm text-center py-4">No data</p>
-      <% end %>
-    </div>
-
-    <%# Referrers %>
-    <div class="card p-5">
-      <h3 class="text-sm font-medium text-slate-300 mb-4">Referrers</h3>
-      <% if @top_referers&.any? %>
-        <div class="space-y-2">
-          <% max = @top_referers.first&.last.to_f %>
-          <% @top_referers.each do |name, count| %>
-            <div class="flex items-center gap-3">
-              <span class="text-sm text-slate-300 w-28 truncate"><%= name.presence || "Direct" %></span>
-              <div class="flex-1 bg-slate-800 rounded-full h-1.5">
-                <div class="bg-amber-500 h-1.5 rounded-full transition-all"
-                     style="width:<%= max > 0 ? (count / max * 100).round : 0 %>%"></div>
-              </div>
-              <span class="text-xs text-slate-500 tabular-nums w-8 text-right"><%= count %></span>
-            </div>
-          <% end %>
-        </div>
-      <% else %>
-        <p class="text-slate-500 text-sm text-center py-4">No data</p>
-      <% end %>
-    </div>
-  </div>
+  <turbo-frame id="analytics-breakdowns" class="block" data-analytics-refresh-target="frame" data-src="<%= frame_src %>">
+    <%= render "analytics_breakdowns" %>
+  </turbo-frame>
 
   <%# Recent visits table — live-updating via Turbo Streams %>
   <%= turbo_stream_from "link_#{@link.id}_visits" %>
 
   <div class="card overflow-hidden">
-    <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
-      <h3 class="text-sm font-medium text-slate-300">Recent visits</h3>
-      <span class="flex items-center gap-1.5 text-xs text-emerald-400">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+    <div class="px-5 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+      <h3 class="text-sm font-medium text-zinc-700 dark:text-zinc-300">Recent visits</h3>
+      <span class="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse"></span>
         Live
       </span>
     </div>
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
         <thead>
-          <tr class="border-b border-slate-800">
-            <th class="text-left px-5 py-3 text-xs font-medium text-slate-500">Time</th>
-            <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Location</th>
-            <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Browser</th>
-            <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">OS</th>
-            <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Device</th>
-            <th class="text-left px-4 py-3 text-xs font-medium text-slate-500">Referrer</th>
+          <tr class="border-b border-zinc-200 dark:border-zinc-800">
+            <th class="text-left px-5 py-3 text-xs font-medium text-zinc-500">Time</th>
+            <th class="text-left px-4 py-3 text-xs font-medium text-zinc-500">Location</th>
+            <th class="text-left px-4 py-3 text-xs font-medium text-zinc-500">Browser</th>
+            <th class="text-left px-4 py-3 text-xs font-medium text-zinc-500">OS</th>
+            <th class="text-left px-4 py-3 text-xs font-medium text-zinc-500">Device</th>
+            <th class="text-left px-4 py-3 text-xs font-medium text-zinc-500">Referrer</th>
           </tr>
         </thead>
-        <tbody id="visits-table-body" class="divide-y divide-slate-800/50">
+        <tbody id="visits-table-body" class="divide-y divide-zinc-100 dark:divide-zinc-800/50">
           <% if @recent_visits.any? %>
             <%= render partial: "visit_row", collection: @recent_visits, as: :visit %>
           <% else %>
             <tr id="visits-empty-state">
-              <td colspan="6" class="text-slate-500 text-sm text-center py-8">
+              <td colspan="6" class="text-zinc-500 text-sm text-center py-8">
                 No visits recorded yet for this period.
               </td>
             </tr>

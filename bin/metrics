@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Open an SSH tunnel to the Netdata dashboard on the production server.
+# Run, then open http://localhost:19999. Ctrl-C closes the tunnel.
+set -e
+echo "Netdata: http://localhost:19999  (Ctrl-C to close tunnel)"
+exec ssh -NL 19999:localhost:19999 deploy@91.98.29.147

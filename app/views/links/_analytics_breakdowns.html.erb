@@ -1,0 +1,104 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+  <%# Devices — no icons in pie chart legend %>
+  <div class="card p-5">
+    <h3 class="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-4">Devices</h3>
+    <% if @device_breakdown.any? %>
+      <%= pie_chart @device_breakdown,
+          id: "devices-chart",
+          colors: ["#f97316", "#06b6d4", "#10b981", "#f59e0b"],
+          library: { plugins: { legend: { position: "bottom", labels: { color: "#94a3b8", boxWidth: 12 } } } } %>
+    <% else %>
+      <p class="text-zinc-500 text-sm text-center py-4">No data</p>
+    <% end %>
+  </div>
+
+  <%# Browsers %>
+  <div class="card p-5">
+    <h3 class="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-4">Browsers</h3>
+    <% if @top_browsers&.any? %>
+      <div class="space-y-2">
+        <% max = @top_browsers.first&.last.to_f %>
+        <% @top_browsers.each do |name, count| %>
+          <div class="flex items-center gap-2.5">
+            <span class="text-zinc-500 dark:text-zinc-400 shrink-0"><%= browser_icon(name.presence || "Unknown") %></span>
+            <span class="text-sm text-zinc-600 dark:text-zinc-300 w-20 truncate"><%= name.presence || "Unknown" %></span>
+            <div class="flex-1 bg-zinc-100 dark:bg-zinc-800 rounded-full h-1.5">
+              <div class="bg-orange-400 h-1.5 rounded-full transition-all"
+                   style="width:<%= max > 0 ? (count / max * 100).round : 0 %>%"></div>
+            </div>
+            <span class="text-xs text-zinc-500 tabular-nums w-8 text-right"><%= count %></span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-zinc-500 text-sm text-center py-4">No data</p>
+    <% end %>
+  </div>
+
+  <%# Countries %>
+  <div class="card p-5">
+    <h3 class="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-4">Countries</h3>
+    <% if @top_countries&.any? %>
+      <div class="space-y-2">
+        <% max = @top_countries.first&.last.to_f %>
+        <% @top_countries.each do |name, count| %>
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-zinc-600 dark:text-zinc-300 w-28 truncate"><%= name.presence || "Unknown" %></span>
+            <div class="flex-1 bg-zinc-100 dark:bg-zinc-800 rounded-full h-1.5">
+              <div class="bg-cyan-500 h-1.5 rounded-full transition-all"
+                   style="width:<%= max > 0 ? (count / max * 100).round : 0 %>%"></div>
+            </div>
+            <span class="text-xs text-zinc-500 tabular-nums w-8 text-right"><%= count %></span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-zinc-500 text-sm text-center py-4">No data</p>
+    <% end %>
+  </div>
+
+  <%# OS %>
+  <div class="card p-5">
+    <h3 class="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-4">Operating systems</h3>
+    <% if @top_os&.any? %>
+      <div class="space-y-2">
+        <% max = @top_os.first&.last.to_f %>
+        <% @top_os.each do |name, count| %>
+          <div class="flex items-center gap-2.5">
+            <span class="text-zinc-500 dark:text-zinc-400 shrink-0"><%= os_icon(name.presence || "Unknown") %></span>
+            <span class="text-sm text-zinc-600 dark:text-zinc-300 w-20 truncate"><%= name.presence || "Unknown" %></span>
+            <div class="flex-1 bg-zinc-100 dark:bg-zinc-800 rounded-full h-1.5">
+              <div class="bg-emerald-500 h-1.5 rounded-full transition-all"
+                   style="width:<%= max > 0 ? (count / max * 100).round : 0 %>%"></div>
+            </div>
+            <span class="text-xs text-zinc-500 tabular-nums w-8 text-right"><%= count %></span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-zinc-500 text-sm text-center py-4">No data</p>
+    <% end %>
+  </div>
+
+  <%# Referrers %>
+  <div class="card p-5">
+    <h3 class="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-4">Referrers</h3>
+    <% if @top_referers&.any? %>
+      <div class="space-y-2">
+        <% max = @top_referers.first&.last.to_f %>
+        <% @top_referers.each do |name, count| %>
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-zinc-600 dark:text-zinc-300 w-28 truncate"><%= name.presence || "Direct" %></span>
+            <div class="flex-1 bg-zinc-100 dark:bg-zinc-800 rounded-full h-1.5">
+              <div class="bg-amber-500 h-1.5 rounded-full transition-all"
+                   style="width:<%= max > 0 ? (count / max * 100).round : 0 %>%"></div>
+            </div>
+            <span class="text-xs text-zinc-500 tabular-nums w-8 text-right"><%= count %></span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-zinc-500 text-sm text-center py-4">No data</p>
+    <% end %>
+  </div>
+</div>

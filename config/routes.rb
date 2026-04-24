@@ -2,26 +2,42 @@ Rails.application.routes.draw do
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Auth (from authentication generator)
+  # Caddy on-demand TLS ask hook — returns 200 for known custom domains,
+  # 404 otherwise. Called before Caddy requests a cert from Let's Encrypt.
+  get "domain_check" => "domain_checks#show", as: :domain_check
+
+  # Landing page — served on root domain (slsh.me)
+  root "pages#landing"
+
+  # Auth
   resource  :session
   resources :passwords, param: :token
+  resource  :registration, only: %i[new create]
 
-  # Registrations
-  resource :registration, only: %i[new create]
-
-  # Authenticated
-  root "links#index"
-  resources :links, except: [:show] do
+  # Dashboard (authenticated)
+  resource :settings, only: [] do
+    get :profile, action: :profile
+    patch :profile, action: :update_profile
+    get :domains, action: :domains
+  end
+  resources :custom_domains, only: %i[create destroy]
+  resources :campaigns, only: %i[show create destroy]
+  resources :links, except: [ :show ] do
     member do
       get  :analytics
       get  :qr
     end
     collection do
       get :check_slug
+      post :fetch_og
     end
   end
 
-  # Public redirect — must come last
-  post "/:slug/unlock", to: "redirects#unlock", as: :unlock_redirect
-  get  "/:slug",        to: "redirects#show",   as: :redirect
+  # Public redirects — /l/ prefix on primary domain
+  post "/l/:slug/unlock", to: "redirects#unlock", as: :unlock_redirect
+  get  "/l/:slug",        to: "redirects#show",   as: :redirect
+
+  # Custom domain redirects — slug at root
+  post "/:slug/unlock", to: "redirects#unlock", as: :unlock_custom_redirect
+  get  "/:slug",        to: "redirects#show",   as: :custom_redirect
 end
