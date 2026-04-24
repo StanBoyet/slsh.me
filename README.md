@@ -56,8 +56,51 @@ itself because that record is proxied by Cloudflare — CF intercepts the
 request, serves its own cert which doesn't match the customer's hostname,
 and redirects back to the customer's domain in a loop.
 
-### Manual deploy
+### Deploys
+
+Every push to `master` auto-deploys via `.github/workflows/ci.yml`'s
+`deploy` job (after lint / test / system-test / security scans pass).
+Build layers are cached to `ghcr.io/stanboyet/slsh-me:build-cache` so
+code-only changes ship in ~2 min.
+
+Manual deploy from the laptop:
 
 ```sh
 bin/kamal deploy
 ```
+
+**Caddyfile edits are a special case.** `bin/kamal deploy` only rolls
+the app container; it does not re-sync accessory `files:`. If you
+change `config/Caddyfile`, run:
+
+```sh
+bin/kamal accessory reboot caddy
+```
+
+## Observability
+
+### Analytics & error tracking
+
+PostHog (`posthog-ruby` + `posthog-rails`) captures user events and
+unhandled exceptions. Controllers emit `user_signed_up`, `user_logged_in`,
+`link_created`, `link_clicked`, `custom_domain_added`, etc. The frontend
+snippet in `app/views/layouts/application.html.erb` calls
+`posthog.identify` for authenticated users so client and server events
+share the same `distinct_id`.
+
+Driven by `POSTHOG_API_KEY` + `POSTHOG_HOST` — both come from GitHub
+repo secrets in CI, and the initializer no-ops when the key is absent
+(so test and local dev are unaffected). See
+`config/initializers/posthog.rb`.
+
+### Server metrics
+
+Netdata runs on the server, bound to `127.0.0.1:19999` (not exposed to
+the internet). To view the dashboard, open an SSH tunnel:
+
+```sh
+bin/metrics
+```
+
+Then browse `http://localhost:19999`. Charts cover the host, all
+Kamal-managed Docker containers, and the Postgres accessory.
