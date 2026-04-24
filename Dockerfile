@@ -60,6 +60,10 @@ RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 # Final stage for app image
 FROM base
 
+# Links this image to the slsh.me repo on GHCR so Actions' GITHUB_TOKEN
+# (permissions: packages: write) can push without manually linking in the UI.
+LABEL org.opencontainers.image.source="https://github.com/StanBoyet/slsh.me"
+
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash
