@@ -38,8 +38,8 @@ slsh.me, app.slsh.me {
 # This hostname is a DNS-only A record in CF pointing at 91.98.29.147, so
 # customer CNAMEs resolve straight to our origin. We don't proxy the app
 # here — visiting this URL directly just explains the purpose.
-cname.slsh.me {
-	respond "cname.slsh.me is the CNAME target for slsh.me custom domains. Point your own domain here via CNAME; don't visit this URL directly." 200
+redirect.slsh.me {
+	respond "redirect.slsh.me is the CNAME target for slsh.me custom domains. Point your own domain here via CNAME; don't visit this URL directly." 200
 }
 
 # Customer custom domains — on-demand TLS. Matches anything not handled above.

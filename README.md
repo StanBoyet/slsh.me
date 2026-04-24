@@ -46,11 +46,11 @@ one-shot server prep.
 Customers run their domain through slsh.me by:
 
 1. Adding the domain on `/settings/domains`.
-2. Creating a CNAME record: `their-domain.com → cname.slsh.me`.
+2. Creating a CNAME record: `their-domain.com → redirect.slsh.me`.
 3. Opening `https://their-domain.com/<slug>` — Caddy fetches an LE cert on
    the first request and serves the redirect.
 
-`cname.slsh.me` is a DNS-only A record in Cloudflare pointing directly at
+`redirect.slsh.me` is a DNS-only A record in Cloudflare pointing directly at
 the origin (`91.98.29.147`). Customers **cannot** CNAME to `slsh.me`
 itself because that record is proxied by Cloudflare — CF intercepts the
 request, serves its own cert which doesn't match the customer's hostname,
