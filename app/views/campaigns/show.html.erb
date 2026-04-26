@@ -1,129 +1,275 @@
 <% content_for :title, "#{@campaign.name} — slsh.me" %>
 
+<%
+  preseed = @links.empty? && @campaign.destination_url.blank?
+  rows =
+    if preseed
+      CampaignsHelper::PRESEED_CHANNELS.map do |source|
+        channel = channel_for(source)
+        {
+          id: nil,
+          utm_source: source,
+          utm_medium: channel[:medium],
+          slug: "#{@campaign.slug}-#{source}",
+          short_url: nil,
+          clicks: 0
+        }
+      end
+    else
+      @links.map do |link|
+        utm = extract_utm_display(link.original_url)
+        {
+          id: link.id,
+          utm_source: utm["source"].to_s,
+          utm_medium: utm["medium"].to_s,
+          slug: link.slug,
+          short_url: link.short_url,
+          clicks: link.clicks_count
+        }
+      end
+    end
+%>
+
 <div class="space-y-6">
-  <%# Header %>
-  <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-    <div class="flex items-center gap-3">
-      <%= link_to links_path, class: "btn-ghost p-1.5" do %>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-        </svg>
+
+  <%# ── Header ─────────────────────────────────────────────── %>
+  <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+    <div class="flex items-start gap-3">
+      <%= link_to links_path, class: "btn-ghost p-1.5 mt-0.5" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
       <% end %>
       <div>
-        <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-2.5 flex-wrap">
           <span class="w-2.5 h-2.5 rounded-full <%= campaign_bg_class(@campaign.color) %> shrink-0"></span>
-          <h1 class="text-xl font-semibold"><%= @campaign.name %></h1>
+          <h1 class="text-2xl font-semibold tracking-tight"><%= @campaign.name %></h1>
+          <% if @campaign.ends_at.present? && @campaign.ends_at > Time.current %>
+            <span class="badge-green">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              live
+            </span>
+          <% elsif @campaign.ends_at.present? %>
+            <span class="badge-slate">ended</span>
+          <% end %>
         </div>
-        <p class="text-sm text-zinc-500 mt-0.5">
-          <code class="text-xs"><%= @campaign.slug %></code>
-          &middot; <%= @total_links %> link<%= "s" unless @total_links == 1 %>
-          &middot; Created <%= @campaign.created_at.strftime("%b %d, %Y") %>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1.5 flex items-center gap-2 flex-wrap">
+          <span class="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">utm_campaign=<%= @campaign.slug %></span>
+          <% if @campaign.starts_at.present? || @campaign.ends_at.present? %>
+            <span>·</span>
+            <span><%= [ @campaign.effective_starts_at&.strftime("%b %-d"), @campaign.ends_at&.strftime("%b %-d") ].compact.join(" → ") %></span>
+          <% end %>
         </p>
       </div>
     </div>
-    <div class="flex items-center gap-2">
-      <%= link_to new_link_path(campaign_id: @campaign.id), class: "btn-primary text-xs" do %>
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-        Add link
+    <div class="flex items-center gap-2 shrink-0">
+      <%= link_to edit_campaign_path(@campaign), class: "btn-secondary" do %>
+        Edit settings
       <% end %>
     </div>
   </div>
 
-  <%# Range selector %>
-  <div class="flex items-center gap-2">
-    <span class="section-title">Period:</span>
-    <% [["7d", "7 days"], ["30d", "30 days"], ["90d", "90 days"]].each do |value, label| %>
-      <%= link_to label, campaign_path(@campaign, range: value),
-          class: "text-xs px-3 py-1.5 rounded-lg transition-colors #{@range == value ? 'bg-orange-500 text-white' : 'bg-zinc-100 text-zinc-600 hover:text-zinc-800 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'}" %>
-    <% end %>
-  </div>
+  <%# ── Hero stats: Goal · Pace · Top channel ──────────────── %>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-  <%# Rollup stats %>
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-    <div class="stat-card">
-      <p class="text-xs text-zinc-500">Total clicks</p>
-      <p class="text-2xl font-semibold tabular-nums"><%= number_with_delimiter(@total_clicks) %></p>
-    </div>
-    <div class="stat-card">
-      <p class="text-xs text-zinc-500">Period clicks</p>
-      <p class="text-2xl font-semibold tabular-nums"><%= number_with_delimiter(@period_clicks) %></p>
-    </div>
-    <div class="stat-card">
-      <p class="text-xs text-zinc-500">Links</p>
-      <p class="text-2xl font-semibold tabular-nums"><%= @total_links %></p>
-    </div>
-    <div class="stat-card">
-      <p class="text-xs text-zinc-500">Top country</p>
-      <% if @top_country %>
-        <p class="text-2xl font-semibold"><%= @top_country[0] || "—" %></p>
-        <p class="text-xs text-zinc-400"><%= number_with_delimiter(@top_country[1]) %> clicks</p>
-      <% else %>
-        <p class="text-2xl font-semibold text-zinc-300 dark:text-zinc-700">—</p>
-      <% end %>
-    </div>
-  </div>
-
-  <%# Source breakdown %>
-  <% if @by_source.any? %>
+    <%# Goal donut %>
     <div class="card p-5">
-      <h3 class="section-title mb-4">Clicks by source</h3>
-      <% max_clicks = @by_source.map(&:last).max %>
-      <div class="space-y-3">
-        <% @by_source.each do |source, count| %>
-          <% pct = @period_clicks > 0 ? (count * 100.0 / @period_clicks).round : 0 %>
-          <div class="flex items-center gap-3">
-            <span class="text-sm font-medium w-24 truncate font-mono"><%= source %></span>
-            <div class="flex-1 h-7 bg-zinc-100 dark:bg-zinc-800 rounded-lg overflow-hidden relative">
-              <div class="h-full bg-orange-500 rounded-lg transition-all" style="width: <%= max_clicks > 0 ? (count * 100.0 / max_clicks).round : 0 %>%"></div>
-              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium tabular-nums text-zinc-600 dark:text-zinc-400"><%= number_with_delimiter(count) %></span>
-            </div>
-            <span class="text-xs text-zinc-400 w-10 text-right tabular-nums"><%= pct %>%</span>
-          </div>
+      <div class="flex items-start justify-between mb-3">
+        <div>
+          <p class="section-title">Goal progress</p>
+          <p class="text-xs text-zinc-500 mt-0.5">
+            <% if @goal %>
+              Target: <%= number_with_delimiter(@goal[:target]) %> clicks<% if @campaign.ends_at %> by <%= @campaign.ends_at.strftime("%b %-d") %><% end %>
+            <% else %>
+              No goal set — <%= link_to "add one", edit_campaign_path(@campaign), class: "underline" %>
+            <% end %>
+          </p>
+        </div>
+        <% if @goal %>
+          <span class="badge-violet"><%= @goal[:percent] %>%</span>
         <% end %>
       </div>
+      <div class="flex items-center gap-4">
+        <% pct = @goal&.dig(:percent) || 0 %>
+        <% circumference = 201 %>
+        <% offset = circumference - (circumference * pct / 100.0) %>
+        <svg viewBox="0 0 80 80" class="w-20 h-20 -rotate-90 shrink-0">
+          <circle cx="40" cy="40" r="32" fill="none" stroke="#f4f4f5" stroke-width="10" class="dark:stroke-zinc-800"/>
+          <% if @goal %>
+            <circle cx="40" cy="40" r="32" fill="none" stroke="#f97316" stroke-width="10"
+                    stroke-dasharray="<%= circumference %>" stroke-dashoffset="<%= offset %>" stroke-linecap="round"/>
+          <% end %>
+        </svg>
+        <div>
+          <p id="campaign_<%= @campaign.id %>_total_clicks" class="text-3xl font-semibold tabular-nums leading-none"><%= number_with_delimiter(@total_clicks) %></p>
+          <p class="text-xs text-zinc-500 mt-1">
+            <% if @goal %>of <%= number_with_delimiter(@goal[:target]) %> clicks<% else %>total clicks<% end %>
+          </p>
+        </div>
+      </div>
     </div>
-  <% end %>
 
-  <%# Campaign links %>
-  <div>
-    <h3 class="section-title mb-3">Campaign links</h3>
-    <% if @links.any? %>
-      <div class="space-y-2">
-        <% @links.each do |link| %>
-          <% utm_params = extract_utm_display(link.original_url) %>
-          <%= link_to analytics_link_path(link), class: "card block hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors" do %>
-            <div class="flex items-center gap-4 p-4">
-              <div class="w-9 h-9 rounded-xl bg-zinc-100 border border-zinc-200 dark:bg-zinc-800 dark:border-zinc-700 flex items-center justify-center shrink-0 overflow-hidden">
-                <img src="https://www.google.com/s2/favicons?domain=<%= URI.parse(link.original_url).host rescue '' %>&sz=32"
-                     class="w-5 h-5" alt="" onerror="this.style.display='none'">
-              </div>
-              <div class="flex-1 min-w-0">
-                <span class="font-mono text-sm font-medium text-orange-500 dark:text-orange-400"><%= link.domain_label %>/<%= link.slug %></span>
-                <% if utm_params.any? %>
-                  <div class="flex items-center gap-2 mt-0.5 text-xs text-zinc-400 flex-wrap">
-                    <% utm_params.each_with_index do |(key, val), i| %>
-                      <% if i > 0 %><span>&middot;</span><% end %>
-                      <span class="font-mono"><%= key %>=<%= val %></span>
-                    <% end %>
-                  </div>
-                <% end %>
-              </div>
-              <div class="text-right shrink-0">
-                <p class="text-lg font-semibold tabular-nums"><%= number_with_delimiter(link.clicks_count) %></p>
-                <p class="text-xs text-zinc-400">clicks</p>
-              </div>
-            </div>
+    <%# Pace %>
+    <div class="card p-5">
+      <div class="flex items-start justify-between mb-3">
+        <div>
+          <p class="section-title">Pace</p>
+          <p class="text-xs text-zinc-500 mt-0.5">vs straight-line target</p>
+        </div>
+        <% if @pace_delta %>
+          <% if @pace_delta >= 0 %>
+            <span class="badge-green">Ahead</span>
+          <% else %>
+            <span class="badge-red">Behind</span>
           <% end %>
         <% end %>
       </div>
-    <% else %>
-      <div class="card p-12 text-center">
-        <p class="text-zinc-500 dark:text-zinc-400">No links in this campaign yet.</p>
-        <%= link_to new_link_path(campaign_id: @campaign.id), class: "btn-primary mt-4 inline-flex" do %>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-          Create a link
+      <% if @pace_delta %>
+        <p class="text-3xl font-semibold tabular-nums leading-none <%= @pace_delta >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500' %>">
+          <%= @pace_delta >= 0 ? "+" : "" %><%= number_with_delimiter(@pace_delta) %>
+        </p>
+        <p class="text-xs text-zinc-500 mt-1">clicks <%= @pace_delta >= 0 ? "above" : "below" %> projected line</p>
+        <%= render "campaigns/sparkline", actual: @clicks_by_day, target: @target_by_day %>
+      <% else %>
+        <p class="text-sm text-zinc-400 italic mt-2">Set a goal &amp; end date to see pace.</p>
+      <% end %>
+    </div>
+
+    <%# Top channel %>
+    <div class="card p-5">
+      <div class="flex items-start justify-between mb-3">
+        <div>
+          <p class="section-title">Top channel</p>
+          <p class="text-xs text-zinc-500 mt-0.5">all time</p>
+        </div>
+        <% if @campaign.ends_at && @campaign.ends_at > Time.current %>
+          <span class="badge-slate"><%= ((@campaign.ends_at - Time.current) / 1.day).ceil %>d left</span>
         <% end %>
       </div>
-    <% end %>
+      <% top = @by_source.first %>
+      <% if top %>
+        <div class="flex items-baseline gap-2">
+          <p class="text-2xl font-semibold leading-none font-mono"><%= top[0] %></p>
+          <p class="text-xs text-zinc-500"><%= @total_clicks > 0 ? ((top[1] * 100.0 / @total_clicks).round) : 0 %>%</p>
+        </div>
+        <% max = @by_source.first[1].to_f %>
+        <div class="space-y-1.5 mt-4">
+          <% @by_source.first(4).each do |source, count| %>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="w-20 text-zinc-500 font-mono truncate"><%= source %></span>
+              <div class="flex-1 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden"><div class="h-full bg-orange-500" style="width: <%= max > 0 ? (count * 100.0 / max).round : 0 %>%"></div></div>
+              <span class="w-12 text-right tabular-nums text-zinc-700 dark:text-zinc-300"><%= number_with_delimiter(count) %></span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-zinc-400 italic">No clicks yet.</p>
+      <% end %>
+    </div>
   </div>
+
+  <%# ── Channel matrix ─────────────────────────────────────── %>
+  <div data-controller="channel-matrix"
+       data-channel-matrix-update-url-value="<%= update_channels_campaign_path(@campaign) %>"
+       data-channel-matrix-csrf-value="<%= form_authenticity_token %>"
+       data-channel-matrix-registry-value="<%= channel_registry_json %>"
+       data-channel-matrix-campaign-slug-value="<%= @campaign.slug %>">
+
+    <div class="card overflow-hidden">
+      <div class="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between gap-4 flex-wrap">
+        <div>
+          <h3 class="text-sm font-semibold">Channel matrix</h3>
+          <p class="text-xs text-zinc-500 mt-0.5">One destination URL → one pre-tagged short link per channel. Add or remove rows; UTMs apply automatically.</p>
+        </div>
+      </div>
+
+      <%# Destination URL bar %>
+      <div class="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800 bg-orange-50/30 dark:bg-orange-500/5">
+        <label class="label">Destination URL <span class="text-zinc-400 font-normal">(used by every row)</span></label>
+        <input type="url" data-channel-matrix-target="destinationUrl"
+               value="<%= @campaign.destination_url %>"
+               placeholder="https://example.com/your-landing-page"
+               class="input font-mono text-xs">
+      </div>
+
+      <%# Matrix table %>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-[11px] uppercase tracking-wider text-zinc-400 border-b border-zinc-100 dark:border-zinc-800">
+              <th class="font-semibold py-2.5 pl-5 pr-3 w-[180px]">Channel</th>
+              <th class="font-semibold py-2.5 px-3 w-[140px]">utm_source</th>
+              <th class="font-semibold py-2.5 px-3 w-[120px]">utm_medium</th>
+              <th class="font-semibold py-2.5 px-3 w-[200px]">Slug</th>
+              <th class="font-semibold py-2.5 px-3">Short URL</th>
+              <th class="font-semibold py-2.5 px-3 w-[110px] text-right">Clicks</th>
+              <th class="w-[40px]"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-zinc-100 dark:divide-zinc-800" data-channel-matrix-target="rowsBody">
+            <% rows.each do |row| %>
+              <%= render "channel_row", row: row %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <%# Hidden template for adding new rows %>
+      <template data-channel-matrix-target="rowTemplate">
+        <%= render "channel_row", row: { id: nil, utm_source: "", utm_medium: "", slug: "", short_url: nil, clicks: 0 } %>
+      </template>
+
+      <div class="px-5 py-3 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between gap-3 flex-wrap">
+        <button type="button" class="btn-ghost text-xs" data-action="click->channel-matrix#addRow">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+          Add channel
+        </button>
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-zinc-400" data-channel-matrix-target="status"></span>
+          <span class="text-xs text-zinc-400" data-channel-matrix-target="rowCount"></span>
+          <button type="button" class="btn-primary text-xs"
+                  data-channel-matrix-target="saveButton"
+                  data-action="click->channel-matrix#save">
+            Generate &amp; save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Live activity ──────────────────────────────────────── %>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <div class="card p-5 lg:col-span-2">
+      <h3 class="section-title mb-3">Clicks by source</h3>
+      <% if @by_source.any? %>
+        <% max_clicks = @by_source.map(&:last).max %>
+        <div class="space-y-3">
+          <% @by_source.each do |source, count| %>
+            <% pct = @total_clicks > 0 ? (count * 100.0 / @total_clicks).round : 0 %>
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium w-24 truncate font-mono"><%= source %></span>
+              <div class="flex-1 h-7 bg-zinc-100 dark:bg-zinc-800 rounded-lg overflow-hidden relative">
+                <div class="h-full bg-orange-500 rounded-lg transition-all" style="width: <%= max_clicks > 0 ? (count * 100.0 / max_clicks).round : 0 %>%"></div>
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium tabular-nums text-zinc-600 dark:text-zinc-400"><%= number_with_delimiter(count) %></span>
+              </div>
+              <span class="text-xs text-zinc-400 w-10 text-right tabular-nums"><%= pct %>%</span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-zinc-400 italic">No clicks yet.</p>
+      <% end %>
+    </div>
+
+    <div class="card p-5">
+      <div class="flex items-center justify-between mb-3">
+        <p class="section-title">Activity</p>
+        <span class="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          live
+        </span>
+      </div>
+      <%= turbo_stream_from "campaign_#{@campaign.id}_visits" %>
+      <%= render "campaigns/recent_visits", visits: @recent_visits %>
+    </div>
+  </div>
+
 </div>

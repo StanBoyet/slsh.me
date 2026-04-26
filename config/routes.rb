@@ -21,7 +21,10 @@ Rails.application.routes.draw do
     get :domains, action: :domains
   end
   resources :custom_domains, only: %i[create destroy]
-  resources :campaigns, only: %i[show create destroy]
+  resources :campaigns, only: %i[new show create edit update destroy] do
+    member { post :update_channels }
+    collection { post :fetch_og }
+  end
   resources :links, except: [ :show ] do
     member do
       get  :analytics

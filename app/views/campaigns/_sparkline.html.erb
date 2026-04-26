@@ -1,0 +1,29 @@
+<%# Locals: actual (Hash<Date, Int>), target (Hash<Date, Int>) %>
+<%
+  days = (actual.keys + target.keys).uniq.sort
+  series_actual = days.map { |d| actual[d].to_i }
+  series_target = days.map { |d| target[d].to_i }
+  max_y = ([ series_actual.max || 0, series_target.max || 0, 1 ].max).to_f
+  width   = 200.0
+  height  = 40.0
+  step    = days.size > 1 ? width / (days.size - 1) : 0
+  to_xy   = ->(value, idx) { [ (idx * step).round(1), (height - (value / max_y * height)).round(1) ] }
+  actual_points = series_actual.each_with_index.map { |v, i| to_xy.call(v, i) }
+  target_points = series_target.each_with_index.map { |v, i| to_xy.call(v, i) }
+  actual_path = "M" + actual_points.map { |x, y| "#{x},#{y}" }.join(" L")
+  target_path = "M" + target_points.map { |x, y| "#{x},#{y}" }.join(" L")
+  fill_path   = actual_path + " L#{width},#{height} L0,#{height} Z"
+%>
+<% if days.any? %>
+  <svg viewBox="0 0 <%= width %> <%= height %>" class="w-full h-10 mt-3" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="paceFill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#10b981" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <path d="<%= fill_path %>" fill="url(#paceFill)"/>
+    <path d="<%= actual_path %>" stroke="#10b981" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="<%= target_path %>" stroke="#a1a1aa" stroke-width="1" stroke-dasharray="3 3" fill="none" opacity="0.6"/>
+  </svg>
+<% end %>

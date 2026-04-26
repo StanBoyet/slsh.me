@@ -2,11 +2,12 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["button", "spinner"]
-  static values = { url: String }
+  static values  = { url: String, prefix: { type: String, default: "link" } }
 
   async fetch() {
-    const urlField = document.querySelector("[name='link[original_url]']")
-    const url = urlField?.value?.trim()
+    const p = this.prefixValue
+    const sourceField = document.querySelector(`[name='${p}[original_url]'], [name='${p}[destination_url]']`)
+    const url = sourceField?.value?.trim()
     if (!url) return
 
     this.buttonTarget.disabled = true
@@ -22,11 +23,11 @@ export default class extends Controller {
       const data = await res.json()
 
       if (data.title) {
-        const titleField = document.querySelector("[name='link[title]']")
+        const titleField = document.querySelector(`[name='${p}[title]']`)
         if (titleField) titleField.value = data.title
       }
       if (data.description) {
-        const descField = document.querySelector("[name='link[description]']")
+        const descField = document.querySelector(`[name='${p}[description]']`)
         if (descField) descField.value = data.description
       }
     } catch { /* ignore */ } finally {

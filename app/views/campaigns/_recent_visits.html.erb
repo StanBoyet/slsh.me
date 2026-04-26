@@ -1,0 +1,9 @@
+<ul id="campaign-live-feed" class="space-y-2.5 text-xs">
+  <% if visits.any? %>
+    <%= render partial: "campaigns/live_visit", collection: visits, as: :visit %>
+  <% else %>
+    <li id="campaign-live-empty" class="text-zinc-400 italic py-2">
+      No clicks yet — share a short link to see traffic light up here.
+    </li>
+  <% end %>
+</ul>

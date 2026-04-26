@@ -1,0 +1,134 @@
+<% content_for :title, "Edit #{@campaign.name} — slsh.me" %>
+
+<div class="max-w-3xl mx-auto space-y-6">
+  <div>
+    <%= link_to campaign_path(@campaign), class: "text-xs text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200" do %>← Back to campaign<% end %>
+    <h1 class="text-2xl font-semibold tracking-tight mt-2">Campaign settings</h1>
+  </div>
+
+  <%= form_with model: @campaign, class: "space-y-6" do |f| %>
+    <% if @campaign.errors.any? %>
+      <div class="bg-red-50 border border-red-200 dark:bg-red-500/10 dark:border-red-500/20 rounded-xl px-4 py-3 text-sm text-red-700 dark:text-red-300 space-y-1">
+        <% @campaign.errors.full_messages.each do |msg| %>
+          <p>• <%= msg %></p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%# ── Basics ─────────────────────────────── %>
+    <div class="card-elevated p-5 space-y-4">
+      <h2 class="section-title">Basics</h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :name, "Name", class: "label" %>
+          <%= f.text_field :name, required: true, class: "input" %>
+        </div>
+        <div>
+          <%= f.label :slug, "Slug", class: "label" %>
+          <%= f.text_field :slug, class: "input font-mono text-sm" %>
+        </div>
+      </div>
+
+      <div>
+        <span class="label">Color</span>
+        <div class="flex items-center gap-2">
+          <% Campaign::COLORS.each do |color| %>
+            <label class="cursor-pointer">
+              <%= f.radio_button :color, color, class: "sr-only peer" %>
+              <span class="block w-7 h-7 rounded-full <%= campaign_bg_class(color) %> peer-checked:ring-2 <%= campaign_ring_class(color) %> ring-offset-2 dark:ring-offset-zinc-900 transition-all"></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :destination_url, "Destination URL", class: "label" %>
+        <%= f.url_field :destination_url, placeholder: "https://example.com/your-landing-page", class: "input font-mono text-xs" %>
+        <p class="text-xs text-zinc-400 mt-1">All channel links in this campaign point here. Update one place, every link follows.</p>
+      </div>
+    </div>
+
+    <%# ── Goal ──────────────────────────────── %>
+    <div class="card-elevated p-5 space-y-4">
+      <h2 class="section-title">Goal</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <%= f.label :goal_clicks, "Click target", class: "label" %>
+          <%= f.number_field :goal_clicks, min: 1, placeholder: "e.g. 20000", class: "input" %>
+        </div>
+        <div>
+          <%= f.label :starts_at, "Starts", class: "label" %>
+          <%= f.datetime_local_field :starts_at, value: @campaign.starts_at&.strftime("%Y-%m-%dT%H:%M"), class: "input text-sm" %>
+        </div>
+        <div>
+          <%= f.label :ends_at, "Ends", class: "label" %>
+          <%= f.datetime_local_field :ends_at, value: @campaign.ends_at&.strftime("%Y-%m-%dT%H:%M"), class: "input text-sm" %>
+        </div>
+      </div>
+      <p class="text-xs text-zinc-400">Set both target + end date to see goal donut and pace projection on the campaign page.</p>
+    </div>
+
+    <%# ── Social preview ────────────────────── %>
+    <div class="card-elevated p-5 space-y-4">
+      <div>
+        <h2 class="section-title">Social preview (OpenGraph)</h2>
+        <p class="text-xs text-zinc-500 mt-0.5">Used by every link in this campaign — unless a link sets its own.</p>
+      </div>
+
+      <div>
+        <%= f.label :title, "Title", class: "label" %>
+        <%= f.text_field :title, placeholder: @campaign.name, class: "input" %>
+      </div>
+
+      <div>
+        <%= f.label :description, "Description", class: "label" %>
+        <%= f.text_area :description, rows: 2, placeholder: "Short description for social preview", class: "input resize-none" %>
+      </div>
+
+      <div data-controller="image-preview">
+        <%= f.label :og_image, "Social image", class: "label" %>
+        <div class="mb-2 rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-800 inline-block">
+          <% if @campaign.og_image.attached? %>
+            <%= image_tag @campaign.og_image.variant(resize_to_limit: [ 400, 210 ]),
+                class: "block max-w-[400px]",
+                data: { image_preview_target: "preview" } %>
+          <% else %>
+            <img src="" class="block max-w-[400px] hidden" data-image-preview-target="preview">
+          <% end %>
+        </div>
+        <div class="flex items-center gap-3">
+          <%= f.file_field :og_image, accept: "image/jpeg,image/png,image/webp",
+              data: { image_preview_target: "input", action: "change->image-preview#preview" },
+              class: "text-xs text-zinc-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-zinc-100 file:text-zinc-700 dark:file:bg-zinc-800 dark:file:text-zinc-300 hover:file:bg-zinc-200 dark:hover:file:bg-zinc-700 file:cursor-pointer file:transition-colors" %>
+          <input type="hidden" name="campaign[remove_og_image]" value="" data-image-preview-target="remove">
+          <button type="button" data-action="click->image-preview#removeImage"
+                  data-image-preview-target="removeBtn"
+                  class="text-xs text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors cursor-pointer <%= 'hidden' unless @campaign.og_image.attached? %>">Remove</button>
+        </div>
+        <p class="text-xs text-zinc-400 mt-1">JPG, PNG or WebP. Recommended: 1200×630px</p>
+      </div>
+
+      <% if @campaign.destination_url.present? %>
+        <div class="-mb-1 pt-1 border-t border-zinc-100 dark:border-zinc-800" data-controller="og-fetch" data-og-fetch-url-value="<%= fetch_og_campaigns_path %>" data-og-fetch-prefix-value="campaign">
+          <button type="button" data-action="click->og-fetch#fetch" data-og-fetch-target="button"
+                  class="btn-ghost text-xs py-1.5 w-full justify-center gap-1.5 disabled:opacity-50">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span>Auto-fill from destination URL</span>
+            <svg class="w-3.5 h-3.5 animate-spin hidden" data-og-fetch-target="spinner" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+          </button>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="flex items-center justify-between gap-3 pt-2">
+      <%= button_to "Delete campaign", campaign_path(@campaign), method: :delete,
+          form: { data: { turbo_confirm: "Delete this campaign? Links will be unlinked but kept." } },
+          class: "btn-danger" %>
+      <div class="flex items-center gap-3">
+        <%= link_to "Cancel", campaign_path(@campaign), class: "btn-secondary" %>
+        <%= f.submit "Save changes", class: "btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>

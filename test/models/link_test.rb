@@ -124,4 +124,45 @@ class LinkTest < ActiveSupport::TestCase
     link = links(:custom_domain_link)
     assert_equal "https://links.example.com/#{link.slug}", link.short_url
   end
+
+  test "og_title falls back to campaign title when link title blank" do
+    campaign = campaigns(:q2_launch)
+    campaign.update!(title: "Q2 Launch — Be there")
+
+    link = links(:campaign_link)
+    link.update!(title: nil)
+
+    assert_equal "Q2 Launch — Be there", link.og_title
+  end
+
+  test "og_title prefers link title over campaign title (override)" do
+    campaign = campaigns(:q2_launch)
+    campaign.update!(title: "Campaign default")
+
+    link = links(:campaign_link)
+    link.update!(title: "Link override")
+
+    assert_equal "Link override", link.og_title
+  end
+
+  test "og_description falls through link to campaign to original_url" do
+    campaign = campaigns(:q2_launch)
+    link     = links(:campaign_link)
+
+    campaign.update!(description: nil)
+    link.update!(description: nil)
+    assert_equal link.original_url, link.og_description
+
+    campaign.update!(description: "Campaign desc")
+    assert_equal "Campaign desc", link.reload.og_description
+
+    link.update!(description: "Link desc")
+    assert_equal "Link desc", link.og_description
+  end
+
+  test "standalone link OG falls back to defaults without a campaign" do
+    link = @user.links.create!(original_url: "https://example.com/x")
+    assert_equal "Shared link", link.og_title
+    assert_equal "https://example.com/x", link.og_description
+  end
 end

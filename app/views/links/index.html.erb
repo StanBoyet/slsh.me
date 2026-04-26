@@ -61,8 +61,19 @@
               <span class="text-xs text-zinc-400 tabular-nums"><%= campaign.links_count %></span>
             <% end %>
           <% end %>
+          <div class="border-t border-zinc-100 dark:border-zinc-800 my-1"></div>
+          <%= link_to new_campaign_path,
+              class: "flex items-center gap-2.5 px-3 py-2 text-sm text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-500/10 font-medium" do %>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            <span>New campaign</span>
+          <% end %>
         </div>
       </div>
+    <% else %>
+      <%= link_to new_campaign_path, class: "btn-ghost text-xs shrink-0" do %>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        New campaign
+      <% end %>
     <% end %>
 
     <% if @archived_count > 0 %>
@@ -106,10 +117,13 @@
               <div class="flex items-center gap-2 flex-wrap">
                 <span class="font-mono text-base font-medium text-orange-500 dark:text-orange-400"><%= link.domain_label %>/<%= link.slug %></span>
                 <% if link.campaign %>
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-orange-50 text-orange-500 dark:bg-orange-400/10 dark:text-orange-400">
+                  <%= link_to campaign_path(link.campaign),
+                      class: "relative z-10 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700 transition-colors",
+                      title: "View campaign: #{link.campaign.name}" do %>
                     <span class="w-1.5 h-1.5 rounded-full <%= campaign_bg_class(link.campaign.color) %>"></span>
                     <%= link.campaign.name %>
-                  </span>
+                    <svg class="w-2.5 h-2.5 text-zinc-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                  <% end %>
                 <% end %>
                 <% if link.password_protected? %>
                   <svg class="w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>

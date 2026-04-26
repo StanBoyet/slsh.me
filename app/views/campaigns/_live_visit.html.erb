@@ -1,0 +1,18 @@
+<li id="<%= dom_id(visit, :live) %>"
+    class="flex items-start gap-2.5<%= " new-visit-row" if local_assigns[:animate] %>">
+  <span class="w-1.5 h-1.5 rounded-full bg-orange-500 mt-1.5 shrink-0"></span>
+  <div class="flex-1 min-w-0">
+    <p>
+      <span class="font-mono text-orange-500">/<%= visit.link.slug %></span>
+      <% if visit.country.present? %>
+        from <%= visit.country %>
+      <% end %>
+    </p>
+    <p class="text-zinc-400 text-xs">
+      <%= time_ago_in_words(visit.created_at) %> ago
+      <% if visit.referer.present? %>
+        · <%= URI.parse(visit.referer).host rescue visit.referer.truncate(24) %>
+      <% end %>
+    </p>
+  </div>
+</li>

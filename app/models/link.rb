@@ -44,17 +44,18 @@ class Link < ApplicationRecord
   end
 
   def og_title
-    title.presence || "Shared link"
+    title.presence || campaign&.title.presence || "Shared link"
   end
 
   def og_description
-    description.presence || original_url
+    description.presence || campaign&.description.presence || original_url
   end
 
   def og_image_url
-    return unless og_image.attached?
+    blob = og_image.attached? ? og_image : campaign&.og_image
+    return unless blob&.attached?
 
-    Rails.application.routes.url_helpers.rails_blob_url(og_image, host: ENV.fetch("APP_HOST", "localhost"))
+    Rails.application.routes.url_helpers.rails_blob_url(blob, host: ENV.fetch("APP_HOST", "localhost"))
   end
 
   def domain_label

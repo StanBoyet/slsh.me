@@ -65,4 +65,82 @@ class CampaignTest < ActiveSupport::TestCase
     link.reload
     assert_nil link.campaign_id
   end
+
+  test "destination_url validates as HTTP/HTTPS URL" do
+    campaign = @user.campaigns.build(name: "URL", destination_url: "not a url")
+    assert_not campaign.valid?
+    assert campaign.errors[:destination_url].any?
+
+    campaign.destination_url = "https://example.com/launch"
+    assert campaign.valid?, campaign.errors.full_messages.inspect
+  end
+
+  test "destination_url is optional" do
+    campaign = @user.campaigns.build(name: "URL")
+    assert campaign.valid?
+  end
+
+  test "ends_at must come after starts_at" do
+    campaign = @user.campaigns.build(name: "Range",
+      starts_at: 1.day.from_now, ends_at: 1.day.ago)
+    assert_not campaign.valid?
+    assert campaign.errors[:ends_at].any?
+  end
+
+  test "og_title falls back to name" do
+    campaign = @user.campaigns.create!(name: "Launch")
+    assert_equal "Launch", campaign.og_title
+
+    campaign.update!(title: "Custom OG title")
+    assert_equal "Custom OG title", campaign.og_title
+  end
+
+  test "goal_progress returns nil without a goal" do
+    campaign = @user.campaigns.create!(name: "No goal")
+    assert_nil campaign.goal_progress(100)
+  end
+
+  test "goal_progress reports clicks, target, percent" do
+    campaign = @user.campaigns.create!(name: "Goal", goal_clicks: 1000)
+    progress = campaign.goal_progress(250)
+    assert_equal 250,  progress[:clicks]
+    assert_equal 1000, progress[:target]
+    assert_equal 25,   progress[:percent]
+  end
+
+  test "goal_progress percent clamps to 100" do
+    campaign = @user.campaigns.create!(name: "Over", goal_clicks: 100)
+    assert_equal 100, campaign.goal_progress(500)[:percent]
+  end
+
+  test "pace_delta returns nil without goal or end date" do
+    campaign = @user.campaigns.create!(name: "Pace")
+    assert_nil campaign.pace_delta(100)
+
+    campaign.update!(goal_clicks: 1000)
+    assert_nil campaign.pace_delta(100)
+  end
+
+  test "pace_delta is positive when ahead of straight-line target" do
+    campaign = @user.campaigns.create!(
+      name: "Ahead",
+      goal_clicks: 1000,
+      starts_at: 10.days.ago,
+      ends_at: 10.days.from_now
+    )
+    # Halfway through, expected ≈ 500. Actual = 700 → ~+200.
+    delta = campaign.pace_delta(700)
+    assert delta > 100, "expected delta > 100, got #{delta}"
+  end
+
+  test "pace_delta is negative when behind" do
+    campaign = @user.campaigns.create!(
+      name: "Behind",
+      goal_clicks: 1000,
+      starts_at: 10.days.ago,
+      ends_at: 10.days.from_now
+    )
+    delta = campaign.pace_delta(100)
+    assert delta < 0
+  end
 end

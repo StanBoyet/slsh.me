@@ -170,17 +170,26 @@
   <div class="card-elevated p-5 space-y-4">
     <div>
       <h2 class="section-title">Social preview (OpenGraph)</h2>
-      <p class="text-xs text-zinc-500 mt-0.5">Override how this link appears when shared on social media.</p>
+      <% if link.campaign_id.present? && link.campaign %>
+        <p class="text-xs text-zinc-500 mt-0.5">
+          Inherits from <%= link_to link.campaign.name, campaign_path(link.campaign), class: "underline hover:text-orange-500" %>.
+          Fill in any field below to override just for this link.
+        </p>
+      <% else %>
+        <p class="text-xs text-zinc-500 mt-0.5">Override how this link appears when shared on social media.</p>
+      <% end %>
     </div>
 
     <div>
       <%= f.label :title, "Title", class: "label" %>
-      <%= f.text_field :title, placeholder: @link.persisted? ? @link.og_title : "Custom title for social share",
+      <%= f.text_field :title,
+          placeholder: link.campaign&.title.presence || (@link.persisted? ? @link.og_title : "Custom title for social share"),
           class: "input" %>
     </div>
     <div>
       <%= f.label :description, "Description", class: "label" %>
-      <%= f.text_area :description, placeholder: @link.persisted? ? @link.og_description : "Short description for social preview",
+      <%= f.text_area :description,
+          placeholder: link.campaign&.description.presence || (@link.persisted? ? @link.og_description : "Short description for social preview"),
           rows: 2, class: "input resize-none" %>
     </div>
     <div data-controller="image-preview">
