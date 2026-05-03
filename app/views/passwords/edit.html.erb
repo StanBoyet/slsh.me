@@ -2,13 +2,8 @@
 <div class="min-h-screen flex items-center justify-center px-4 py-12">
   <div class="w-full max-w-sm">
     <div class="text-center mb-8">
-      <%= link_to root_path, class: "brand inline-flex items-center gap-2.5 mb-5" do %>
-        <span class="brand-mark"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2.6" d="M17 4 7 20"/></svg></span>
-        <span class="brand-word">slsh<span class="dot">.</span>me</span>
-      <% end %>
-      <h1 style="font-family: var(--display); font-size: 34px; font-weight: 600; letter-spacing: -0.035em; line-height: 1; margin: 0;" class="hero">
-        Set a new <span class="marker">password</span>.
-      </h1>
+      <%= render "shared/brand", class: "mb-5" %>
+      <h1 class="hero-mini sm">Set a new <span class="marker">password</span>.</h1>
     </div>
 
     <%= form_with url: password_path(params[:token]), method: :put, class: "card-popped p-6 space-y-5" do |f| %>
@@ -22,7 +17,7 @@
         <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password",
             maxlength: 72, class: "input", placeholder: "••••••••" %>
       </div>
-      <%= f.submit "Update password", class: "btn-tangerine w-full justify-center", style: "padding: 11px 22px; font-size: 14px;" %>
+      <%= f.submit "Update password", class: "btn-tangerine w-full justify-center" %>
     <% end %>
   </div>
 </div>

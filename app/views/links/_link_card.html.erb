@@ -1,39 +1,23 @@
-<%# Link card — design-system .link-card pattern.
-   Composed from: .link-row (top), .link-foot (bottom with action icons).
-   Action icons live bottom-right via .actions { margin-left: auto } %>
-<div class="link-card row-emphasis <%= 'opacity-60' if link.archived? %>"
-     style="background: var(--paper); border: 1.25px solid var(--rule); border-radius: 14px; padding: 14px 16px; transition: all 0.12s ease; position: relative;"
-     onmouseover="this.style.borderColor='var(--ink)'; this.style.transform='translate(-1px,-1px)'; this.style.boxShadow='3px 3px 0 var(--ink)';"
-     onmouseout="this.style.borderColor='var(--rule)'; this.style.transform='none'; this.style.boxShadow='none';">
-
-  <%# Cover-link for analytics %>
-  <%= link_to analytics_link_path(link), class: "absolute inset-0",
-      style: "border-radius: 14px; z-index: 0;",
+<div class="link-card<%= ' archived' if link.archived? %>">
+  <%= link_to analytics_link_path(link), class: "link-cover",
       "aria-label": "View analytics for /#{link.slug}" do %><% end %>
 
-  <div class="flex items-center gap-4" style="position: relative; z-index: 1; pointer-events: none;">
-    <%# Favicon %>
-    <div style="width: 38px; height: 38px; border-radius: 10px; background: var(--canvas); border: 1px solid var(--rule-soft); flex-shrink: 0; display: grid; place-items: center; overflow: hidden;">
+  <div class="link-row">
+    <div class="favicon">
       <% host = (URI.parse(link.original_url).host rescue nil) %>
       <% if host %>
         <img src="https://www.google.com/s2/favicons?domain=<%= host %>&sz=32"
-             style="width: 18px; height: 18px;" alt="" onerror="this.style.display='none'">
+             alt="" onerror="this.style.display='none'">
       <% end %>
     </div>
 
-    <%# Link info %>
-    <div class="flex-1 min-w-0">
+    <div class="link-info">
       <div class="flex items-center gap-2 flex-wrap">
-        <span style="font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--ink);">
-          <%= link.domain_label %><span style="color: var(--tangerine);">/</span><%= link.slug %>
-        </span>
+        <span class="short-url"><%= link.domain_label %><span class="slash">/</span><%= link.slug %></span>
         <% if link.campaign %>
-          <%= link_to campaign_path(link.campaign),
+          <%= link_to link.campaign.name, campaign_path(link.campaign),
               class: "sticker #{campaign_sticker_class(link.campaign.color)}",
-              style: "pointer-events: auto; position: relative; z-index: 2;",
-              title: "View campaign: #{link.campaign.name}" do %>
-            <%= link.campaign.name %>
-          <% end %>
+              title: "View campaign: #{link.campaign.name}" %>
         <% end %>
         <% if link.password_protected? %>
           <span class="badge badge-rose">
@@ -56,30 +40,25 @@
         <% end %>
       </div>
       <% url_base, url_query = link.original_url.split("?", 2) %>
-      <p style="font-family: var(--mono); font-size: 12px; color: var(--ink-mid); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-        <%= url_base %><% if url_query.present? %><span style="color: var(--ink-faint);">?<%= url_query %></span><% end %>
+      <p class="link-dest">
+        <%= url_base %><% if url_query.present? %><span class="qs">?<%= url_query %></span><% end %>
       </p>
     </div>
 
-    <%# Click count %>
     <div class="clicks-block hidden sm:block">
       <p id="link_<%= link.id %>_clicks" class="clicks-num"><%= number_with_delimiter(link.clicks_count) %></p>
       <p class="clicks-label">click<%= "s" unless link.clicks_count == 1 %></p>
     </div>
   </div>
 
-  <%# Foot row: timestamp + actions (always visible, right-aligned) %>
-  <div class="mt-3 flex items-center gap-2.5 flex-wrap text-xs"
-       style="position: relative; z-index: 1; color: var(--ink-faint); font-weight: 500;">
-    <span><strong style="color: var(--ink-soft); font-weight: 600;"><%= time_ago_in_words(link.created_at) %> ago</strong></span>
-    <% if link.original_url.include?("utm_source") %>
-      <% utm = extract_utm_display(link.original_url) %>
-      <% if utm["source"] %>
-        <span>·</span>
-        <span>via <strong style="color: var(--ink-soft); font-weight: 600;"><%= utm["source"] %></strong></span>
-      <% end %>
+  <div class="link-foot">
+    <span><strong><%= time_ago_in_words(link.created_at) %> ago</strong></span>
+    <% utm_source = extract_utm_display(link.original_url)["source"] %>
+    <% if utm_source %>
+      <span>·</span>
+      <span>via <strong><%= utm_source %></strong></span>
     <% end %>
-    <div class="flex gap-1" style="margin-left: auto; pointer-events: auto;">
+    <div class="actions">
       <button class="icon-btn" data-controller="copy"
               data-copy-text-value="<%= link.short_url %>"
               data-action="click->copy#copy" title="Copy short URL">

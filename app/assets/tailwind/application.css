@@ -554,6 +554,126 @@
   .sparkline.down path.line { stroke: var(--color-warn); }
   .sparkline.down path.area { fill: var(--color-pink); opacity: 0.30; }
 
+  /* ── Link card (links index pattern) ─────────────────── */
+  .link-card {
+    background: var(--color-paper);
+    border: 1.25px solid var(--rule);
+    border-radius: 14px;
+    padding: 14px 16px;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+    position: relative;
+  }
+  .link-card:hover {
+    border-color: var(--color-ink);
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 var(--color-ink);
+  }
+  .link-card .link-cover {
+    position: absolute; inset: 0;
+    border-radius: 14px;
+    z-index: 0;
+  }
+  .link-card .link-row {
+    display: flex; align-items: center; gap: 14px;
+    position: relative; z-index: 1;
+    pointer-events: none;
+  }
+  .link-card .favicon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: var(--color-canvas);
+    border: 1px solid var(--rule-soft);
+    flex-shrink: 0;
+    display: grid; place-items: center;
+    overflow: hidden;
+    color: var(--color-ink);
+  }
+  .link-card .favicon img { width: 18px; height: 18px; }
+  .link-card .link-info { flex: 1; min-width: 0; }
+  .link-card .short-url {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+  .link-card .short-url .slash { color: var(--color-tangerine); }
+  .link-card .link-dest {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-ink-mid);
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .link-card .link-dest .qs { color: var(--color-ink-faint); }
+  .link-card .link-foot {
+    margin-top: 10px;
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    color: var(--color-ink-faint);
+    font-weight: 500;
+    position: relative; z-index: 1;
+  }
+  .link-card .link-foot strong { color: var(--color-ink-soft); font-weight: 600; }
+  .link-card .link-foot .actions {
+    margin-left: auto;
+    display: flex; gap: 4px;
+    pointer-events: auto;
+  }
+  /* Interactive children (sticker → campaign, action icons) need pointer events
+     restored above the .link-cover overlay. */
+  .link-card .sticker,
+  .link-card a.sticker { pointer-events: auto; position: relative; z-index: 2; }
+  .link-card.archived { opacity: 0.6; }
+  .link-card:hover .icon-btn { color: var(--color-ink-soft); }
+
+  /* ── Auth-hero (Migra small hero on sessions/registrations/passwords) ── */
+  .hero-mini {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    margin: 0;
+    font-size: 38px;
+  }
+  .hero-mini.sm { font-size: 34px; }
+  .auth-link {
+    color: var(--color-tangerine);
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .auth-link:hover { color: var(--color-ink); }
+  .auth-footer {
+    text-align: center;
+    font-size: 13px;
+    color: var(--color-ink-mid);
+    margin-top: 24px;
+  }
+  .auth-footer .auth-link { font-size: 13px; }
+
+  /* ── Flash message cards ─────────────────────────────── */
+  .flash-card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1.25px solid var(--color-ink);
+    box-shadow: 3px 3px 0 var(--color-ink);
+    font-size: 13px;
+    backdrop-filter: blur(6px);
+  }
+  .flash-card svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .flash-card.flash-success {
+    background: var(--color-lime-soft);
+    color: var(--color-lime-deep);
+  }
+  .flash-card.flash-error {
+    background: var(--color-warn-soft);
+    color: var(--color-warn);
+  }
+
   /* ── Click count display ─────────────────────────────── */
   .clicks-block { text-align: right; flex-shrink: 0; min-width: 76px; }
   .clicks-num {

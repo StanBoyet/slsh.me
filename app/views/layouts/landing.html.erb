@@ -31,49 +31,51 @@
   <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=migra@400,500,600,700&display=swap" rel="stylesheet">
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= yield :head %>
+  <%# Set .js on <html> as early as possible so animation styles only hide content when JS is available. %>
+  <script>document.documentElement.classList.add('js');</script>
   <style>
-    /* Hero entrance */
+    /* Hero entrance — only hide if JS is enabled (fail-open if JS fails or is off) */
     @keyframes hero-reveal {
       0%   { opacity: 0; transform: translateY(28px); filter: blur(4px); }
       100% { opacity: 1; transform: translateY(0);    filter: blur(0); }
     }
-    .hero-word {
+    .js .hero-word {
       opacity: 0;
       animation: hero-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    .hero-word:nth-child(1) { animation-delay: 0.1s; }
-    .hero-word:nth-child(2) { animation-delay: 0.28s; }
-    .hero-word:nth-child(3) { animation-delay: 0.46s; }
+    .js .hero-word:nth-child(1) { animation-delay: 0.1s; }
+    .js .hero-word:nth-child(2) { animation-delay: 0.28s; }
+    .js .hero-word:nth-child(3) { animation-delay: 0.46s; }
 
     @keyframes fade-up {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    .hero-fade {
+    .js .hero-fade {
       opacity: 0;
       animation: fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    .hero-fade-1 { animation-delay: 0.65s; }
-    .hero-fade-2 { animation-delay: 0.8s; }
-    .hero-fade-3 { animation-delay: 0.95s; }
+    .js .hero-fade-1 { animation-delay: 0.65s; }
+    .js .hero-fade-2 { animation-delay: 0.8s; }
+    .js .hero-fade-3 { animation-delay: 0.95s; }
 
     /* Scroll reveal */
-    .reveal {
+    .js .reveal {
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
                   transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .reveal.is-visible {
+    .js .reveal.is-visible {
       opacity: 1;
       transform: none;
     }
-    .reveal-stagger > .reveal:nth-child(1) { transition-delay: 0s; }
-    .reveal-stagger > .reveal:nth-child(2) { transition-delay: 0.06s; }
-    .reveal-stagger > .reveal:nth-child(3) { transition-delay: 0.12s; }
-    .reveal-stagger > .reveal:nth-child(4) { transition-delay: 0.18s; }
-    .reveal-stagger > .reveal:nth-child(5) { transition-delay: 0.24s; }
-    .reveal-stagger > .reveal:nth-child(6) { transition-delay: 0.30s; }
+    .js .reveal-stagger > .reveal:nth-child(1) { transition-delay: 0s; }
+    .js .reveal-stagger > .reveal:nth-child(2) { transition-delay: 0.06s; }
+    .js .reveal-stagger > .reveal:nth-child(3) { transition-delay: 0.12s; }
+    .js .reveal-stagger > .reveal:nth-child(4) { transition-delay: 0.18s; }
+    .js .reveal-stagger > .reveal:nth-child(5) { transition-delay: 0.24s; }
+    .js .reveal-stagger > .reveal:nth-child(6) { transition-delay: 0.30s; }
   </style>
 </head>
 <body>
