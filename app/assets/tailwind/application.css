@@ -1,134 +1,764 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
+/* ──────────────────────────────────────────────────────────
+   slsh.me — Splash × Beam design system
+   See public/brand/design-system.html for the full spec.
+   ────────────────────────────────────────────────────────── */
 
 @theme {
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "DM Serif Display", serif;
-  --font-mono: "DM Mono", ui-monospace, monospace;
+  --font-sans: "General Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Migra", "Instrument Serif", serif;
+  --font-serif: "Instrument Serif", "Georgia", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Surfaces */
+  --color-paper: #FFFCF5;
+  --color-canvas: #FFF8E7;
+
+  /* Ink scale */
+  --color-ink: #131210;
+  --color-ink-soft: #44403C;
+  --color-ink-mid: #6B6660;
+  --color-ink-faint: #9A9389;
+
+  /* Brand + campaign accents */
+  --color-tangerine: #FB8B3C;
+  --color-tangerine-soft: #FFE7D4;
+  --color-lime: #B6DE5B;
+  --color-lime-soft: #ECF5D2;
+  --color-lime-deep: #65A30D;
+  --color-sky: #6FC4EE;
+  --color-sky-soft: #DCEFF9;
+  --color-pink: #F49AC0;
+  --color-pink-soft: #FCE3EE;
+  --color-pink-deep: #BE185D;
+  --color-violet: #B5A0FB;
+  --color-violet-soft: #EAE2FE;
+  --color-sun: #FBDF6E;
+  --color-sun-soft: #FEF6CC;
+
+  /* Semantic */
+  --color-good: #65A30D;
+  --color-good-soft: #ECF5D2;
+  --color-warn-amber: #B45309;
+  --color-warn-amber-soft: #FEF6CC;
+  --color-warn: #B91C1C;
+  --color-warn-soft: #FECACA;
 }
 
 @layer base {
+  :root {
+    --rule: rgba(19, 18, 16, 0.65);
+    --rule-soft: rgba(19, 18, 16, 0.18);
+
+    /* Short aliases — match the static mockups in public/brand/ */
+    --paper: var(--color-paper);
+    --canvas: var(--color-canvas);
+    --ink: var(--color-ink);
+    --ink-soft: var(--color-ink-soft);
+    --ink-mid: var(--color-ink-mid);
+    --ink-faint: var(--color-ink-faint);
+    --tangerine: var(--color-tangerine);
+    --tangerine-soft: var(--color-tangerine-soft);
+    --lime: var(--color-lime);
+    --lime-soft: var(--color-lime-soft);
+    --lime-deep: var(--color-lime-deep);
+    --sky: var(--color-sky);
+    --sky-soft: var(--color-sky-soft);
+    --pink: var(--color-pink);
+    --pink-soft: var(--color-pink-soft);
+    --violet: var(--color-violet);
+    --violet-soft: var(--color-violet-soft);
+    --sun: var(--color-sun);
+    --sun-soft: var(--color-sun-soft);
+    --red-deep: var(--color-warn);
+    --emerald: var(--color-good);
+
+    --grad-tangerine: linear-gradient(135deg, #FB8B3C, #F49AC0);
+    --grad-sky: linear-gradient(135deg, #6FC4EE, #B5A0FB);
+    --grad-pink: linear-gradient(135deg, #F49AC0, #B5A0FB);
+    --grad-lime: linear-gradient(135deg, #B6DE5B, #6FC4EE);
+    --grad-sun: linear-gradient(135deg, #FBDF6E, #FB8B3C);
+    --grad-violet: linear-gradient(135deg, #B5A0FB, #F49AC0);
+
+    --sans: var(--font-sans);
+    --display: var(--font-display);
+    --serif: var(--font-serif);
+    --mono: var(--font-mono);
+  }
+
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
-    @apply bg-[#fffbf5] text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100;
+    @apply bg-paper text-ink antialiased;
+    font-family: var(--font-sans);
+    font-size: 14.5px;
+    line-height: 1.55;
+    background-image:
+      radial-gradient(ellipse 50% 30% at 90% 0%, var(--color-pink-soft), transparent 70%),
+      radial-gradient(ellipse 40% 25% at 5% 30%, var(--color-lime-soft), transparent 70%);
+    background-attachment: fixed;
   }
+
+  /* Typography rule: Migra carries only the page hero (h1 with .hero class).
+     Every other H1/H2/H3 uses General Sans. */
+  h1, h2, h3 { font-family: var(--font-sans); }
+  h1.hero { font-family: var(--font-display); }
 
   *:focus-visible {
-    @apply outline-2 outline-offset-2 outline-orange-500;
+    @apply outline-2 outline-offset-2;
+    outline-color: var(--color-ink);
+  }
+
+  ::selection {
+    background: var(--color-lime);
+    color: var(--color-ink);
   }
 }
 
-@keyframes visit-flash {
-  0%   { background-color: rgb(249 115 22 / 0.15); }
-  100% { background-color: transparent; }
-}
-
-.new-visit-row {
-  animation: visit-flash 2s ease-out forwards;
-}
+/* ──────────────────────────────────────────────────────────
+   Component layer
+   Class names mirror public/brand/design-system.html.
+   ────────────────────────────────────────────────────────── */
 
 @layer components {
+
+  /* ── Brand mark ──────────────────────────────────────── */
+  .brand-mark {
+    @apply inline-grid place-items-center;
+    width: 32px; height: 32px;
+    border-radius: 11px;
+    background: var(--color-tangerine);
+    color: var(--color-ink);
+    border: 1.25px solid var(--color-ink);
+    transform: rotate(-4deg);
+    transition: transform 0.2s ease;
+  }
+  .brand:hover .brand-mark { transform: rotate(2deg); }
+  .brand-mark svg { width: 14px; height: 14px; stroke-width: 2.4; }
+
+  .brand-word {
+    font-family: var(--font-display);
+    font-size: 22px; font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+  }
+  .brand-word .dot { color: var(--color-tangerine); }
+
+  /* ── Buttons ─────────────────────────────────────────── */
   .btn {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
-           transition-all duration-150 cursor-pointer;
-    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer
+           transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-ink);
+    border: 1px solid transparent;
+    line-height: 1.4;
+    text-decoration: none;
   }
-
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
-           transition-all duration-150 cursor-pointer
-           bg-orange-500 hover:bg-orange-400 text-white shadow-sm;
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer
+           transition-all duration-150;
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    border: 1px solid var(--color-ink);
+    text-decoration: none;
+    line-height: 1.4;
   }
-
+  .btn-primary:hover {
+    background: var(--color-tangerine);
+    color: var(--color-ink);
+  }
   .btn-secondary {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
-           transition-all duration-150 cursor-pointer
-           bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-300
-           dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200 dark:border-zinc-700;
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer
+           transition-all duration-150;
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    border: 1px solid var(--rule);
+    text-decoration: none;
+    line-height: 1.4;
   }
-
+  .btn-secondary:hover {
+    background: var(--color-canvas);
+    border-color: var(--color-ink);
+  }
   .btn-ghost {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
-           transition-all duration-150 cursor-pointer
-           hover:bg-zinc-100 text-zinc-500 hover:text-zinc-700
-           dark:hover:bg-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200;
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer
+           transition-all duration-150;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-ink-mid);
+    text-decoration: none;
+    background: transparent;
+    border: 1px solid transparent;
+    line-height: 1.4;
   }
-
+  .btn-ghost:hover { background: var(--rule-soft); color: var(--color-ink); }
   .btn-danger {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
-           transition-all duration-150 cursor-pointer
-           bg-red-50 hover:bg-red-100 text-red-600 border border-red-200
-           dark:bg-red-600/10 dark:hover:bg-red-600/20 dark:text-red-400 dark:border-red-600/20;
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer
+           transition-all duration-150;
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--color-warn-soft);
+    color: var(--color-warn);
+    border: 1px solid var(--color-warn-soft);
+    text-decoration: none;
+    line-height: 1.4;
   }
+  .btn-danger:hover {
+    background: var(--color-warn);
+    color: var(--color-paper);
+    border-color: var(--color-warn);
+  }
+  .btn-tangerine {
+    @apply inline-flex items-center gap-2 cursor-pointer;
+    padding: 10px 18px;
+    font-size: 13.5px;
+    font-weight: 600;
+    background: var(--color-tangerine);
+    color: var(--color-ink);
+    border: 1.25px solid var(--color-ink);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    line-height: 1.4;
+  }
+  .btn-tangerine:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 var(--color-ink);
+  }
+  .btn-tangerine svg { width: 14px; height: 14px; }
 
+  /* ── Cards ───────────────────────────────────────────── */
   .card {
-    @apply bg-white border border-zinc-200 rounded-2xl
-           dark:bg-zinc-900 dark:border-zinc-800;
+    background: var(--color-paper);
+    border: 1.25px solid var(--rule);
+    border-radius: 14px;
   }
-
+  .card-popped {
+    background: var(--color-paper);
+    border: 1.25px solid var(--color-ink);
+    border-radius: 16px;
+    box-shadow: 4px 4px 0 var(--color-ink);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .card-popped:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--color-ink);
+  }
   .card-elevated {
-    @apply bg-zinc-50 border border-zinc-200 rounded-2xl shadow-sm
-           dark:bg-zinc-800/50 dark:border-zinc-700/60;
+    background: var(--color-canvas);
+    border: 1px solid var(--rule-soft);
+    border-radius: 14px;
+  }
+  .pcard {
+    background: var(--color-paper);
+    border: 1.25px solid var(--color-ink);
+    border-radius: 16px;
+    box-shadow: 4px 4px 0 var(--color-ink);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    padding: 18px 20px;
+  }
+  .pcard:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--color-ink);
+  }
+  .pcard.tilt-l { transform: rotate(-0.6deg); }
+  .pcard.tilt-l:hover { transform: rotate(0deg) translate(-1px, -1px); }
+  .pcard.tilt-r { transform: rotate(0.6deg); }
+  .pcard.tilt-r:hover { transform: rotate(0deg) translate(-1px, -1px); }
+
+  /* ── Stat tile (KPI with gradient corner orb) ─────────── */
+  .stat-tile {
+    background: var(--color-paper);
+    border: 1.25px solid var(--rule);
+    border-radius: 14px;
+    padding: 18px 20px 16px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    min-height: 122px;
+  }
+  .stat-tile::before {
+    content: ""; position: absolute;
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    right: -22px; top: -22px;
+    opacity: 0.78;
+    pointer-events: none;
+  }
+  .stat-tile.t-1::before { background: var(--grad-tangerine); }
+  .stat-tile.t-2::before { background: var(--grad-sky); }
+  .stat-tile.t-3::before { background: var(--grad-pink); }
+  .stat-tile.t-4::before { background: var(--grad-lime); }
+  .stat-tile.t-5::before { background: var(--grad-sun); }
+  .stat-tile.t-6::before { background: var(--grad-violet); }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-feature-settings: "tnum";
+    position: relative;
+    color: var(--color-ink);
+  }
+  .stat-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px;
+    position: relative;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--color-ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+  }
+  .stat-delta {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 2px 8px;
+    background: var(--color-good-soft);
+    color: var(--color-good);
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+    font-feature-settings: "tnum";
+  }
+  .stat-delta svg { width: 10px; height: 10px; }
+
+  /* ── Feature card (gradient corner orb scales on hover) ── */
+  .feat-card {
+    background: var(--color-paper);
+    border: 1.25px solid var(--color-ink);
+    border-radius: 16px;
+    padding: 20px 22px 22px;
+    box-shadow: 3px 3px 0 var(--color-ink);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .feat-card:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--color-ink);
+  }
+  .feat-card::after {
+    content: ""; position: absolute;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    right: -28px; top: -28px;
+    opacity: 0.55;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    background: var(--grad-tangerine);
+  }
+  .feat-card:hover::after { transform: scale(1.15); opacity: 0.78; }
+  .feat-card.fc-1::after { background: var(--grad-tangerine); }
+  .feat-card.fc-2::after { background: var(--grad-lime); }
+  .feat-card.fc-3::after { background: var(--grad-pink); }
+  .feat-card.fc-4::after { background: var(--grad-sky); }
+  .feat-card.fc-5::after { background: var(--grad-violet); }
+  .feat-card.fc-6::after { background: var(--grad-sun); }
+  .feat-card .feat-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    border: 1px solid var(--color-ink);
+    display: grid; place-items: center;
+    color: var(--color-ink);
+    transform: rotate(-3deg);
+    margin-bottom: 14px;
+    background: var(--color-tangerine);
+    position: relative;
+  }
+  .feat-card .feat-icon svg { width: 18px; height: 18px; stroke-width: 2; }
+  .feat-card.fc-2 .feat-icon { background: var(--color-lime); }
+  .feat-card.fc-3 .feat-icon { background: var(--color-pink); }
+  .feat-card.fc-4 .feat-icon { background: var(--color-sky); }
+  .feat-card.fc-5 .feat-icon { background: var(--color-violet); }
+  .feat-card.fc-6 .feat-icon { background: var(--color-sun); }
+  .feat-card h3 {
+    font-family: var(--font-sans);
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    position: relative;
+  }
+  .feat-card p {
+    color: var(--color-ink-soft);
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 0;
+    position: relative;
   }
 
+  /* ── Badges & stickers ───────────────────────────────── */
+  .sticker {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--color-ink);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-ink);
+    background: var(--color-paper);
+    line-height: 1.5;
+  }
+  .sticker svg { width: 11px; height: 11px; stroke-width: 2; }
+  .sticker.s-tangerine { background: var(--color-tangerine); }
+  .sticker.s-lime      { background: var(--color-lime); }
+  .sticker.s-sky       { background: var(--color-sky); }
+  .sticker.s-pink      { background: var(--color-pink); }
+  .sticker.s-violet    { background: var(--color-violet); }
+  .sticker.s-sun       { background: var(--color-sun); }
+
+  /* Soft state badges */
+  .badge {
+    @apply inline-flex items-center gap-1;
+    padding: 3px 10px;
+    border-radius: 99px;
+    border: 1px solid transparent;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-ink-soft);
+    background: var(--color-paper);
+    line-height: 1.5;
+  }
+  .badge svg { width: 11px; height: 11px; stroke-width: 2; }
+  .badge-green  { background: var(--color-lime-soft);     color: var(--color-lime-deep); }
+  .badge-amber  { background: var(--color-warn-amber-soft); color: var(--color-warn-amber); }
+  .badge-red    { background: var(--color-warn-soft);     color: var(--color-warn); }
+  .badge-rose   { background: var(--color-pink-soft);     color: var(--color-pink-deep); }
+  .badge-slate  { background: #F1F5F9;                    color: #475569; }
+  .badge-violet { background: var(--color-violet-soft);   color: #6D28D9; }
+
+  /* ── Filter chips ────────────────────────────────────── */
+  .chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 7px 12px;
+    background: var(--color-paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 10px;
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--color-ink);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.12s;
+    line-height: 1.4;
+  }
+  .chip:hover { background: var(--color-canvas); border-color: var(--color-ink); }
+  .chip svg { width: 12px; height: 12px; stroke-width: 1.8; }
+  .chip-active {
+    background: var(--color-tangerine);
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+  .chip-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: 1px solid var(--color-ink);
+    flex-shrink: 0;
+  }
+
+  /* ── Form controls ───────────────────────────────────── */
   .input {
-    @apply w-full bg-white border border-zinc-300 rounded-lg px-3 py-2 text-sm
-           text-zinc-900 placeholder-zinc-400 transition-colors
-           dark:bg-zinc-900 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder-zinc-500;
-    @apply focus:border-orange-400 focus:ring-0 focus:outline-none;
+    @apply block w-full;
+    padding: 9px 12px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    background: var(--color-paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 10px;
+    color: var(--color-ink);
+    outline: none;
+    transition: all 0.12s;
+  }
+  .input:focus { background: var(--color-canvas); border-color: var(--color-ink); }
+  .input::placeholder { color: var(--color-ink-faint); }
+  textarea.input { line-height: 1.55; }
+  select.input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236B6660'><path d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 32px;
   }
 
   .label {
-    @apply block text-xs font-medium text-zinc-600 mb-1.5
-           dark:text-zinc-400;
+    @apply block;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 7px;
   }
 
-  .badge {
-    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  /* Search input variant */
+  .search { position: relative; display: block; }
+  .search input { padding-left: 34px; }
+  .search-icon {
+    position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+    width: 14px; height: 14px;
+    color: var(--color-ink-soft);
+    stroke-width: 2;
+    pointer-events: none;
   }
 
-  .badge-green  { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400; }
-  .badge-red    { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400; }
-  .badge-slate  { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400; }
-  .badge-violet { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-orange-50 text-orange-500 dark:bg-orange-400/10 dark:text-orange-400; }
-  .badge-amber  { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400; }
+  /* ── Action icon button ──────────────────────────────── */
+  .icon-btn {
+    @apply inline-grid place-items-center cursor-pointer;
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--color-ink-faint);
+    transition: color 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+  }
+  .icon-btn svg { width: 13px; height: 13px; stroke-width: 1.8; }
+  .icon-btn:hover {
+    background: var(--color-lime);
+    border-color: var(--color-ink);
+    color: var(--color-ink);
+  }
+  .icon-btn:focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 1px;
+    color: var(--color-ink);
+  }
+  .row-emphasis:hover .icon-btn { color: var(--color-ink-soft); }
 
+  /* ── Sparkline ───────────────────────────────────────── */
+  .sparkline { width: 60px; height: 22px; flex-shrink: 0; }
+  .sparkline path.line { stroke: var(--color-lime-deep); stroke-width: 1.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .sparkline path.area { fill: var(--color-lime); opacity: 0.30; }
+  .sparkline.flat path.line { stroke: var(--color-ink-faint); }
+  .sparkline.flat path.area { fill: var(--color-ink-faint); opacity: 0.10; }
+  .sparkline.down path.line { stroke: var(--color-warn); }
+  .sparkline.down path.area { fill: var(--color-pink); opacity: 0.30; }
+
+  /* ── Click count display ─────────────────────────────── */
+  .clicks-block { text-align: right; flex-shrink: 0; min-width: 76px; }
+  .clicks-num {
+    font-family: var(--font-sans);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-ink);
+    font-feature-settings: "tnum";
+    letter-spacing: -0.025em;
+  }
+  .clicks-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-ink-faint);
+    margin-top: 4px;
+    font-weight: 700;
+  }
+
+  /* ── Marker highlight ────────────────────────────────── */
+  .marker {
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+  }
+  .marker::before {
+    content: "";
+    position: absolute;
+    inset: 25% -3% 8% -3%;
+    z-index: -1;
+    border-radius: 5px;
+    transform: rotate(-1deg);
+    border: 1px solid var(--color-ink);
+    background: var(--color-lime);
+  }
+  .marker.m-tangerine::before { background: var(--color-tangerine); }
+  .marker.m-pink::before      { background: var(--color-pink); }
+  .marker.m-sky::before       { background: var(--color-sky); }
+  .marker.m-sun::before       { background: var(--color-sun); }
+  .marker.m-violet::before    { background: var(--color-violet); }
+
+  /* ── Code chip (HTTP method) ─────────────────────────── */
+  code.method {
+    font-family: var(--font-mono);
+    font-size: 0.62em;
+    font-weight: 500;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    padding: 2px 7px;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+    vertical-align: 0.32em;
+    margin-right: 4px;
+  }
+
+  /* ── Avatar ──────────────────────────────────────────── */
+  .avatar {
+    @apply inline-grid place-items-center;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--color-sun);
+    border: 1.25px solid var(--color-ink);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--color-ink);
+    overflow: hidden;
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* ── Empty state mark ───────────────────────────────── */
+  .empty-mark {
+    @apply inline-grid place-items-center;
+    width: 96px; height: 96px;
+    background: var(--color-tangerine);
+    border: 1.25px solid var(--color-ink);
+    border-radius: 24px;
+    transform: rotate(-3deg);
+    transition: transform 0.25s ease;
+    color: var(--color-ink);
+  }
+  .empty-mark:hover { transform: rotate(2deg); }
+  .empty-mark svg { width: 44px; height: 44px; stroke-width: 2.2; }
+
+  .empty-headline {
+    font-family: var(--font-sans);
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: var(--color-ink);
+    margin: 0 0 12px;
+  }
+
+  /* ── Campaign banner ─────────────────────────────────── */
+  .camp-banner {
+    padding: 14px 18px;
+    background: var(--color-tangerine);
+    border: 1.25px solid var(--color-ink);
+    border-radius: 12px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .camp-banner .emblem {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    background: var(--color-paper);
+    border: 1.25px solid var(--color-ink);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    color: var(--color-ink);
+  }
+  .camp-banner .emblem svg { width: 16px; height: 16px; stroke-width: 2; }
+  .camp-banner .title {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-ink);
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+  }
+  .camp-banner .meta {
+    font-size: 12px;
+    color: var(--color-ink);
+    opacity: 0.78;
+    font-weight: 500;
+    margin-top: 3px;
+  }
+  .camp-banner .pace {
+    margin-left: auto;
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 9px;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    border: 1px solid var(--color-ink);
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .camp-banner .pace svg { width: 11px; height: 11px; stroke-width: 2.2; }
+
+  /* ── Section title (small caps kicker) ──────────────── */
   .section-title {
-    @apply text-xs font-semibold text-zinc-400 uppercase tracking-wider
-           dark:text-zinc-500;
+    @apply block;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+  .small-caps {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
   }
 
+  /* ── Stat card (legacy compat — used in analytics) ──── */
   .stat-card {
-    @apply bg-white border border-zinc-200 rounded-2xl p-4 flex flex-col gap-1
-           dark:bg-zinc-900 dark:border-zinc-800;
+    background: var(--color-paper);
+    border: 1.25px solid var(--rule);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
 
+  /* ── Divider ─────────────────────────────────────────── */
   .divider {
-    @apply border-t border-zinc-200 dark:border-zinc-800;
+    border-top: 1px dashed var(--rule-soft);
   }
 
-  /* Theme toggle */
-  .theme-toggle {
-    @apply fixed bottom-4 left-4 z-50 p-2 rounded-full
-           bg-white border border-zinc-200 shadow-md
-           dark:bg-zinc-800 dark:border-zinc-700
-           hover:bg-zinc-50 dark:hover:bg-zinc-700
-           transition-colors cursor-pointer;
+  /* ── Code chip (inline mono in headlines) ──── */
+  /* defined above as code.method */
+
+  /* ── Dropdown panel ─────────────────────────────────── */
+  .dropdown-panel {
+    background: var(--color-paper);
+    border: 1.25px solid var(--color-ink);
+    border-radius: 14px;
+    box-shadow: 4px 4px 0 var(--color-ink);
+    padding: 6px;
   }
+  .dropdown-item {
+    @apply flex items-center gap-2;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--color-ink);
+    text-decoration: none;
+    cursor: pointer;
+    line-height: 1.4;
+  }
+  .dropdown-item:hover { background: var(--color-canvas); }
+  .dropdown-item svg { width: 14px; height: 14px; color: var(--color-ink-mid); stroke-width: 1.8; }
 
-  .theme-toggle svg { @apply w-4 h-4 text-zinc-500 dark:text-zinc-400; }
-
-  .theme-toggle [data-icon="sun"] ~ .icon-sun,
-  .theme-toggle [data-icon="moon"] ~ .icon-moon,
-  .theme-toggle [data-icon="computer"] ~ .icon-computer { @apply block; }
-
-  .theme-toggle .icon-sun,
-  .theme-toggle .icon-moon,
-  .theme-toggle .icon-computer { @apply hidden; }
+  /* Visit-flash animation (analytics live row) */
+  @keyframes visit-flash {
+    0%   { background-color: rgb(251 139 60 / 0.20); }
+    100% { background-color: transparent; }
+  }
+  .new-visit-row { animation: visit-flash 2s ease-out forwards; }
 }

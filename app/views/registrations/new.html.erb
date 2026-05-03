@@ -1,14 +1,19 @@
 <% content_for :title, "Create account — slsh.me" %>
-<div class="min-h-screen flex items-center justify-center px-4">
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
   <div class="w-full max-w-sm">
     <div class="text-center mb-8">
-      <h1 class="text-2xl font-semibold text-zinc-900 dark:text-white">slsh.me</h1>
-      <p class="text-zinc-500 dark:text-zinc-400 mt-1 text-sm">Create your account</p>
+      <%= link_to root_path, class: "brand inline-flex items-center gap-2.5 mb-5" do %>
+        <span class="brand-mark"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2.6" d="M17 4 7 20"/></svg></span>
+        <span class="brand-word">slsh<span class="dot">.</span>me</span>
+      <% end %>
+      <h1 style="font-family: var(--display); font-size: 38px; font-weight: 600; letter-spacing: -0.035em; line-height: 1; margin: 0;" class="hero">
+        Start <span class="marker">slashing</span>.
+      </h1>
     </div>
 
-    <%= form_with model: @user, url: registration_path, class: "card p-6 space-y-4" do |f| %>
+    <%= form_with model: @user, url: registration_path, class: "card-popped p-6 space-y-5" do |f| %>
       <% if @user.errors.any? %>
-        <div class="bg-red-50 border border-red-200 dark:bg-red-500/10 dark:border-red-500/20 rounded-lg px-4 py-3 text-sm text-red-700 dark:text-red-300">
+        <div class="badge badge-red w-full" style="display: block; padding: 12px 14px; font-size: 13px; line-height: 1.5;">
           <% @user.errors.full_messages.each do |msg| %>
             <p><%= msg %></p>
           <% end %>
@@ -39,12 +44,12 @@
             class: "input", placeholder: "••••••••" %>
       </div>
 
-      <%= f.submit "Create account", class: "btn-primary w-full justify-center py-2.5" %>
+      <%= f.submit "Create account", class: "btn-tangerine w-full justify-center", style: "padding: 11px 22px; font-size: 14px;" %>
     <% end %>
 
-    <p class="text-center text-sm text-zinc-500 mt-6">
+    <p class="text-center text-sm mt-6" style="color: var(--ink-mid);">
       Already have an account?
-      <%= link_to "Sign in", new_session_path, class: "text-orange-500 hover:text-orange-400 dark:text-orange-400 dark:hover:text-orange-300" %>
+      <%= link_to "Sign in", new_session_path, style: "color: var(--tangerine); font-weight: 600;" %>
     </p>
   </div>
 </div>

@@ -7,8 +7,14 @@
     </div>
   <% end %>
 
-  <%# Row 1: Destination + Short link %>
+  <%# Two-column form. Left column: Destination + Social preview.
+     Right column: Short link + Advanced. Each column is its own flex stack
+     so they grow independently — the Social preview card sits flush below
+     the Destination card regardless of how tall Short link is. %>
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+
+  <%# ── Left column ──────────────────────────────────────── %>
+  <div class="space-y-4 min-w-0">
 
   <%# Section: Destination %>
   <div class="card-elevated p-5 space-y-4">
@@ -60,6 +66,68 @@
     </div>
   </div>
 
+  <%# Section: Social preview — sits directly under Destination %>
+  <div class="card-elevated p-5 space-y-4">
+    <div>
+      <h2 class="section-title">Social preview (OpenGraph)</h2>
+      <% if link.campaign_id.present? && link.campaign %>
+        <p class="text-xs text-zinc-500 mt-0.5">
+          Inherits from <%= link_to link.campaign.name, campaign_path(link.campaign), class: "underline hover:text-orange-500" %>.
+          Fill in any field below to override just for this link.
+        </p>
+      <% else %>
+        <p class="text-xs text-zinc-500 mt-0.5">Override how this link appears when shared on social media.</p>
+      <% end %>
+    </div>
+
+    <div>
+      <%= f.label :title, "Title", class: "label" %>
+      <%= f.text_field :title,
+          placeholder: link.campaign&.title.presence || (@link.persisted? ? @link.og_title : "Custom title for social share"),
+          class: "input" %>
+    </div>
+    <div>
+      <%= f.label :description, "Description", class: "label" %>
+      <%= f.text_area :description,
+          placeholder: link.campaign&.description.presence || (@link.persisted? ? @link.og_description : "Short description for social preview"),
+          rows: 2, class: "input resize-none" %>
+    </div>
+    <div data-controller="image-preview">
+      <%= f.label :og_image, "Social image", class: "label" %>
+      <div class="mb-2 rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-800 inline-block">
+        <% if @link.og_image.attached? %>
+          <%= image_tag @link.og_image.variant(resize_to_limit: [ 400, 210 ]),
+              class: "block max-w-[400px]",
+              data: { image_preview_target: "preview" } %>
+        <% else %>
+          <img src="" class="block max-w-[400px] hidden" data-image-preview-target="preview">
+        <% end %>
+      </div>
+      <div class="flex items-center gap-3">
+        <%= f.file_field :og_image, accept: "image/jpeg,image/png,image/webp",
+            data: { image_preview_target: "input", action: "change->image-preview#preview" },
+            class: "text-xs text-zinc-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-zinc-100 file:text-zinc-700 dark:file:bg-zinc-800 dark:file:text-zinc-300 hover:file:bg-zinc-200 dark:hover:file:bg-zinc-700 file:cursor-pointer file:transition-colors" %>
+        <input type="hidden" name="link[remove_og_image]" value="" data-image-preview-target="remove">
+        <button type="button" data-action="click->image-preview#removeImage"
+                data-image-preview-target="removeBtn"
+                class="text-xs text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors cursor-pointer <%= 'hidden' unless @link.og_image.attached? %>">Remove</button>
+      </div>
+      <p class="text-xs text-zinc-400 dark:text-zinc-600 mt-1">JPG, PNG or WebP. Recommended: 1200×630px</p>
+    </div>
+
+    <div class="-mb-1 pt-1 border-t border-zinc-100 dark:border-zinc-800" data-controller="og-fetch" data-og-fetch-url-value="<%= fetch_og_links_path %>">
+      <button type="button" data-action="click->og-fetch#fetch" data-og-fetch-target="button"
+              class="btn-ghost text-xs py-1.5 w-full justify-center gap-1.5 disabled:opacity-50">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        <span>Auto-fill from destination URL</span>
+        <svg class="w-3.5 h-3.5 animate-spin hidden" data-og-fetch-target="spinner" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+      </button>
+    </div>
+  </div>
+  </div>
+
+  <%# ── Right column ─────────────────────────────────────── %>
+  <div class="space-y-4 min-w-0">
   <%# Section: Short link %>
   <div class="card-elevated p-5 space-y-4">
     <h2 class="section-title">Short link</h2>
@@ -161,71 +229,7 @@
     </div>
   </div>
 
-  </div><%# /Row 1 grid %>
-
-  <%# Row 2: Social preview + Advanced %>
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-
-  <%# Section: Social preview %>
-  <div class="card-elevated p-5 space-y-4">
-    <div>
-      <h2 class="section-title">Social preview (OpenGraph)</h2>
-      <% if link.campaign_id.present? && link.campaign %>
-        <p class="text-xs text-zinc-500 mt-0.5">
-          Inherits from <%= link_to link.campaign.name, campaign_path(link.campaign), class: "underline hover:text-orange-500" %>.
-          Fill in any field below to override just for this link.
-        </p>
-      <% else %>
-        <p class="text-xs text-zinc-500 mt-0.5">Override how this link appears when shared on social media.</p>
-      <% end %>
-    </div>
-
-    <div>
-      <%= f.label :title, "Title", class: "label" %>
-      <%= f.text_field :title,
-          placeholder: link.campaign&.title.presence || (@link.persisted? ? @link.og_title : "Custom title for social share"),
-          class: "input" %>
-    </div>
-    <div>
-      <%= f.label :description, "Description", class: "label" %>
-      <%= f.text_area :description,
-          placeholder: link.campaign&.description.presence || (@link.persisted? ? @link.og_description : "Short description for social preview"),
-          rows: 2, class: "input resize-none" %>
-    </div>
-    <div data-controller="image-preview">
-      <%= f.label :og_image, "Social image", class: "label" %>
-      <div class="mb-2 rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-800 inline-block">
-        <% if @link.og_image.attached? %>
-          <%= image_tag @link.og_image.variant(resize_to_limit: [ 400, 210 ]),
-              class: "block max-w-[400px]",
-              data: { image_preview_target: "preview" } %>
-        <% else %>
-          <img src="" class="block max-w-[400px] hidden" data-image-preview-target="preview">
-        <% end %>
-      </div>
-      <div class="flex items-center gap-3">
-        <%= f.file_field :og_image, accept: "image/jpeg,image/png,image/webp",
-            data: { image_preview_target: "input", action: "change->image-preview#preview" },
-            class: "text-xs text-zinc-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-zinc-100 file:text-zinc-700 dark:file:bg-zinc-800 dark:file:text-zinc-300 hover:file:bg-zinc-200 dark:hover:file:bg-zinc-700 file:cursor-pointer file:transition-colors" %>
-        <input type="hidden" name="link[remove_og_image]" value="" data-image-preview-target="remove">
-        <button type="button" data-action="click->image-preview#removeImage"
-                data-image-preview-target="removeBtn"
-                class="text-xs text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors cursor-pointer <%= 'hidden' unless @link.og_image.attached? %>">Remove</button>
-      </div>
-      <p class="text-xs text-zinc-400 dark:text-zinc-600 mt-1">JPG, PNG or WebP. Recommended: 1200×630px</p>
-    </div>
-
-    <div class="-mb-1 pt-1 border-t border-zinc-100 dark:border-zinc-800" data-controller="og-fetch" data-og-fetch-url-value="<%= fetch_og_links_path %>">
-      <button type="button" data-action="click->og-fetch#fetch" data-og-fetch-target="button"
-              class="btn-ghost text-xs py-1.5 w-full justify-center gap-1.5 disabled:opacity-50">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-        <span>Auto-fill from destination URL</span>
-        <svg class="w-3.5 h-3.5 animate-spin hidden" data-og-fetch-target="spinner" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
-      </button>
-    </div>
-  </div>
-
-  <%# Section: Advanced %>
+  <%# Section: Advanced — sits directly under Short link %>
   <div class="card-elevated p-5 space-y-4">
     <h2 class="section-title">Advanced</h2>
 
@@ -260,8 +264,9 @@
       </div>
     <% end %>
   </div>
+  </div>
 
-  </div><%# /Row 2 grid %>
+  </div><%# /Two-column grid %>
 
   <div class="flex gap-3 justify-end">
     <%= link_to "Cancel", links_path, class: "btn-secondary" %>

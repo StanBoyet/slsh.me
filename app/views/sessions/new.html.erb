@@ -1,12 +1,17 @@
 <% content_for :title, "Sign in — slsh.me" %>
-<div class="min-h-screen flex items-center justify-center px-4">
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
   <div class="w-full max-w-sm">
     <div class="text-center mb-8">
-      <h1 class="text-2xl font-semibold text-zinc-900 dark:text-white">slsh.me</h1>
-      <p class="text-zinc-500 dark:text-zinc-400 mt-1 text-sm">Sign in to your account</p>
+      <%= link_to root_path, class: "brand inline-flex items-center gap-2.5 mb-5" do %>
+        <span class="brand-mark"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2.6" d="M17 4 7 20"/></svg></span>
+        <span class="brand-word">slsh<span class="dot">.</span>me</span>
+      <% end %>
+      <h1 style="font-family: var(--display); font-size: 38px; font-weight: 600; letter-spacing: -0.035em; line-height: 1; margin: 0;" class="hero">
+        Welcome <span class="marker">back</span>.
+      </h1>
     </div>
 
-    <%= form_with url: session_path, class: "card p-6 space-y-4" do |f| %>
+    <%= form_with url: session_path, class: "card-popped p-6 space-y-5" do |f| %>
       <div>
         <%= f.label :email_address, "Email", class: "label" %>
         <%= f.email_field :email_address, required: true, autofocus: true, autocomplete: "email",
@@ -15,19 +20,19 @@
 
       <div>
         <div class="flex items-center justify-between mb-1.5">
-          <%= f.label :password, "Password", class: "label mb-0" %>
-          <%= link_to "Forgot?", new_password_path, class: "text-xs text-orange-500 hover:text-orange-400 dark:text-orange-400 dark:hover:text-orange-300" %>
+          <%= f.label :password, "Password", class: "label", style: "margin-bottom: 0;" %>
+          <%= link_to "Forgot?", new_password_path, style: "color: var(--tangerine); font-size: 11px; font-weight: 600; text-decoration: none;" %>
         </div>
         <%= f.password_field :password, required: true, autocomplete: "current-password",
             maxlength: 72, class: "input", placeholder: "••••••••" %>
       </div>
 
-      <%= f.submit "Sign in", class: "btn-primary w-full justify-center py-2.5" %>
+      <%= f.submit "Sign in", class: "btn-tangerine w-full justify-center", style: "padding: 11px 22px; font-size: 14px;" %>
     <% end %>
 
-    <p class="text-center text-sm text-zinc-500 mt-6">
+    <p class="text-center text-sm mt-6" style="color: var(--ink-mid);">
       No account?
-      <%= link_to "Create one", new_registration_path, class: "text-orange-500 hover:text-orange-400 dark:text-orange-400 dark:hover:text-orange-300" %>
+      <%= link_to "Create one", new_registration_path, style: "color: var(--tangerine); font-weight: 600;" %>
     </p>
   </div>
 </div>

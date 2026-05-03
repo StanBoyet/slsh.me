@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>slsh.me — Design System</title>
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g transform='rotate(-4 50 50)'><circle cx='50' cy='50' r='42' fill='%23FB8B3C' stroke='%23131210' stroke-width='4'/><path d='M65 28 L35 72' stroke='%23131210' stroke-width='10' stroke-linecap='round' fill='none'/></g></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=migra@400,500,600,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ── Foundations ────────────────────── */
+    --paper: #FFFCF5;
+    --canvas: #FFF8E7;
+    --ink: #131210;
+    --ink-soft: #44403C;
+    --ink-mid: #6B6660;
+    --ink-faint: #9A9389;
+    --rule: rgba(19, 18, 16, 0.65);
+    --rule-soft: rgba(19, 18, 16, 0.18);
+
+    --tangerine: #FB8B3C;
+    --tangerine-soft: #FFE7D4;
+    --lime: #B6DE5B;
+    --lime-soft: #ECF5D2;
+    --lime-deep: #65A30D;
+    --sky: #6FC4EE;
+    --sky-soft: #DCEFF9;
+    --pink: #F49AC0;
+    --pink-soft: #FCE3EE;
+    --violet: #B5A0FB;
+    --violet-soft: #EAE2FE;
+    --sun: #FBDF6E;
+    --sun-soft: #FEF6CC;
+    --red-deep: #DC2626;
+
+    /* Gradient pairs (Beam injection) */
+    --grad-tangerine: linear-gradient(135deg, #FB8B3C, #F49AC0);
+    --grad-sky: linear-gradient(135deg, #6FC4EE, #B5A0FB);
+    --grad-pink: linear-gradient(135deg, #F49AC0, #B5A0FB);
+    --grad-lime: linear-gradient(135deg, #B6DE5B, #6FC4EE);
+    --grad-sun: linear-gradient(135deg, #FBDF6E, #FB8B3C);
+    --grad-violet: linear-gradient(135deg, #B5A0FB, #F49AC0);
+
+    --sans: "General Sans", system-ui, sans-serif;
+    --display: "Migra", "Instrument Serif", serif;
+    --serif: "Instrument Serif", "Georgia", serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+
+    --radius-sm: 7px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 22px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse 50% 30% at 90% 0%, var(--pink-soft), transparent 70%),
+      radial-gradient(ellipse 40% 25% at 5% 30%, var(--lime-soft), transparent 70%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ── Base typography ───────────────── */
+  .h-display {
+    font-family: var(--display);
+    font-weight: 600;
+    letter-spacing: -0.045em;
+    line-height: 0.92;
+  }
+  h1.page-title {
+    font-family: var(--display);
+    font-size: clamp(56px, 7vw, 88px);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 0.92;
+    margin: 0;
+  }
+  h2.section {
+    font-family: var(--sans);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 0 0 4px;
+  }
+  h3.subsection {
+    font-family: var(--sans);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin: 0 0 6px;
+  }
+  .small-caps {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .lede {
+    font-size: 16px;
+    color: var(--ink-soft);
+    max-width: 680px;
+    line-height: 1.6;
+    margin: 14px 0 0;
+  }
+  .icon { width: 1em; height: 1em; flex-shrink: 0; vertical-align: -0.15em; }
+
+  .shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ── Top nav ───────────────────────── */
+  nav.topbar {
+    position: sticky; top: 0; z-index: 40;
+    backdrop-filter: blur(12px);
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .brand-mark {
+    width: 32px; height: 32px;
+    border-radius: 11px;
+    background: var(--tangerine);
+    display: grid; place-items: center;
+    color: var(--ink);
+    border: 1.25px solid var(--ink);
+    transform: rotate(-4deg);
+    transition: transform 0.2s;
+  }
+  .brand:hover .brand-mark { transform: rotate(2deg); }
+  .brand-mark svg { width: 14px; height: 14px; stroke-width: 2.4; }
+  .brand-word {
+    font-family: var(--display);
+    font-size: 22px; font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+  .brand-word .dot { color: var(--tangerine); }
+  .nav-tag {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-faint);
+  }
+  .nav-tag b { color: var(--ink); font-weight: 600; }
+
+  /* ── Page intro + section anchors ─── */
+  .page-intro { padding: 68px 0 36px; }
+  .anchor-row {
+    margin-top: 28px;
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .anchor-link {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-mid);
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid var(--rule-soft);
+    border-radius: 99px;
+    background: var(--paper);
+    transition: all 0.12s ease;
+  }
+  .anchor-link:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+    background: var(--canvas);
+  }
+
+  /* ── Section ───────────────────────── */
+  section.ds {
+    padding: 56px 0 28px;
+    border-top: 1px dashed var(--rule-soft);
+  }
+  section.ds:first-of-type { border-top: none; }
+  .ds-head { margin-bottom: 32px; }
+  .ds-head .small-caps { display: block; margin-bottom: 10px; }
+  .ds-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 800px) { .ds-grid { grid-template-columns: 1fr; } }
+  .ds-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 1000px) { .ds-grid.cols-3 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .ds-grid.cols-3 { grid-template-columns: 1fr; } }
+
+  .ds-card {
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .ds-card .ds-card-head {
+    padding: 14px 18px 10px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .ds-card .ds-card-head h3 { margin: 0; }
+  .ds-card .ds-card-head p {
+    margin: 4px 0 0;
+    font-size: 12.5px;
+    color: var(--ink-mid);
+    line-height: 1.45;
+  }
+  .ds-card .ds-card-body {
+    padding: 22px;
+    background: color-mix(in srgb, var(--canvas) 60%, var(--paper));
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    min-height: 86px;
+  }
+  .ds-card .ds-card-body.dense { padding: 14px 18px; }
+  .ds-card .ds-card-foot {
+    padding: 10px 18px;
+    border-top: 1px solid var(--rule-soft);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-faint);
+    background: var(--paper);
+    line-height: 1.5;
+  }
+  .ds-card .ds-card-foot code {
+    color: var(--ink-mid);
+  }
+
+  /* ── Foundations: color swatches ──── */
+  .swatch-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  @media (max-width: 700px) { .swatch-row { grid-template-columns: repeat(2, 1fr); } }
+  .swatch {
+    border: 1px solid var(--rule-soft);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .swatch .chip {
+    height: 60px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .swatch .meta {
+    padding: 8px 10px;
+    font-size: 11.5px;
+  }
+  .swatch .meta .name { font-weight: 600; }
+  .swatch .meta .hex {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-faint);
+  }
+
+  /* Typography specimens */
+  .type-spec {
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 16px;
+    padding: 28px;
+  }
+  .type-spec + .type-spec { margin-top: 12px; }
+  .type-spec .role {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+  .type-spec .sample-migra {
+    font-family: var(--display);
+    font-size: 56px;
+    font-weight: 600;
+    letter-spacing: -0.045em;
+    line-height: 0.92;
+    margin: 0;
+  }
+  .type-spec .sample-h2 {
+    font-family: var(--sans);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 0;
+  }
+  .type-spec .sample-h3 {
+    font-family: var(--sans);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+  .type-spec .sample-body {
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 540px;
+    color: var(--ink-soft);
+  }
+  .type-spec .sample-mono {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--ink);
+    margin: 0;
+  }
+  .type-spec .sample-mono .slash { color: var(--tangerine); }
+  .type-spec .meta {
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+
+  /* Radii / spacing specimen */
+  .radii-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .radii-tile {
+    width: 80px; height: 80px;
+    background: var(--paper);
+    border: 1.25px solid var(--ink);
+    display: grid; place-items: center;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-mid);
+  }
+
+  /* ── Components ─────────────────────── */
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 14px;
+    font-family: var(--sans);
+    font-weight: 500; font-size: 13px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .btn-primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .btn-primary:hover { background: var(--tangerine); color: var(--ink); }
+  .btn-ghost { background: transparent; }
+  .btn-ghost:hover { background: var(--rule-soft); }
+  .btn-outline { border-color: var(--rule); background: var(--paper); }
+  .btn-outline:hover { background: var(--canvas); border-color: var(--ink); }
+  .btn-tangerine {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--tangerine); color: var(--ink);
+    border: 1.25px solid var(--ink);
+    text-decoration: none;
+    font-weight: 600; padding: 10px 18px;
+    font-size: 13.5px; border-radius: 12px;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .btn-tangerine .icon { width: 14px; height: 14px; vertical-align: 0; }
+  .btn-tangerine:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--ink); }
+
+  /* Sticker badges */
+  .sticker {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--ink);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--paper);
+  }
+  .sticker .icon { width: 11px; height: 11px; stroke-width: 2; }
+  .sticker.s-tangerine { background: var(--tangerine); }
+  .sticker.s-lime { background: var(--lime); }
+  .sticker.s-sky { background: var(--sky); }
+  .sticker.s-pink { background: var(--pink); }
+  .sticker.s-violet { background: var(--violet); }
+  .sticker.s-sun { background: var(--sun); }
+
+  /* Soft badges (status) */
+  .badge-soft {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px;
+    border-radius: 99px;
+    border: 1px solid transparent;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: var(--paper);
+  }
+  .badge-soft .icon { width: 11px; height: 11px; stroke-width: 2; }
+  .badge-soft.b-amber { background: var(--sun-soft); color: #B45309; }
+  .badge-soft.b-emerald { background: var(--lime-soft); color: var(--lime-deep); }
+  .badge-soft.b-rose { background: var(--pink-soft); color: #BE185D; }
+  .badge-soft.b-slate { background: #F1F5F9; color: #475569; }
+
+  /* Filter chip */
+  .chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 7px 12px;
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 10px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.12s;
+  }
+  .chip:hover { background: var(--canvas); border-color: var(--ink); }
+  .chip .icon { width: 12px; height: 12px; stroke-width: 1.8; }
+  .chip-active {
+    background: var(--tangerine);
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+  .chip-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: 1px solid var(--ink);
+  }
+
+  /* Search input */
+  .search { position: relative; display: inline-block; min-width: 260px; }
+  .search input {
+    width: 100%;
+    padding: 9px 12px 9px 34px;
+    font-family: var(--sans); font-size: 13px;
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 10px;
+    color: var(--ink);
+    outline: none;
+    transition: all 0.12s;
+  }
+  .search input:focus { background: var(--canvas); border-color: var(--ink); }
+  .search input::placeholder { color: var(--ink-faint); }
+  .search-icon {
+    position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+    width: 14px; height: 14px; color: var(--ink-soft);
+    stroke-width: 2;
+  }
+
+  /* Stat tile (Beam injection — gradient corner orb) */
+  .stat-tile {
+    background: var(--paper);
+    border: 1.25px solid var(--rule);
+    border-radius: 14px;
+    padding: 18px 20px 16px;
+    position: relative;
+    overflow: hidden;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 122px;
+    justify-content: space-between;
+  }
+  .stat-tile::before {
+    content: ""; position: absolute;
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    right: -22px; top: -22px;
+    opacity: 0.78;
+    pointer-events: none;
+  }
+  .stat-tile.t-1::before { background: var(--grad-tangerine); }
+  .stat-tile.t-2::before { background: var(--grad-sky); }
+  .stat-tile.t-3::before { background: var(--grad-pink); }
+  .stat-tile .stat-num {
+    font-family: var(--display);
+    font-size: 36px; font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-feature-settings: "tnum";
+    position: relative;
+  }
+  .stat-tile .stat-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px;
+    position: relative;
+  }
+  .stat-tile .stat-label {
+    font-size: 11px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+  }
+  .stat-tile .stat-delta {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 2px 8px;
+    background: var(--lime-soft);
+    color: var(--lime-deep);
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+    font-feature-settings: "tnum";
+  }
+
+  /* Feature card (Beam corner orb scale + Splash flat icon) */
+  .feat-card {
+    background: var(--paper);
+    border: 1.25px solid var(--ink);
+    border-radius: 16px;
+    padding: 20px 22px 22px;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .feat-card:hover {
+    transform: translate(-1px,-1px);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .feat-card::after {
+    content: ""; position: absolute;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    right: -28px; top: -28px;
+    opacity: 0.55;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    background: var(--grad-tangerine);
+  }
+  .feat-card:hover::after { transform: scale(1.15); opacity: 0.78; }
+  .feat-card .feat-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    border: 1px solid var(--ink);
+    display: grid; place-items: center;
+    color: var(--ink);
+    transform: rotate(-3deg);
+    margin-bottom: 14px;
+    background: var(--tangerine);
+    position: relative;
+  }
+  .feat-card .feat-icon .icon { width: 18px; height: 18px; stroke-width: 2; }
+  .feat-card h3 {
+    font-family: var(--sans);
+    font-size: 17px; font-weight: 700;
+    margin: 0 0 8px; letter-spacing: -0.02em;
+    line-height: 1.2;
+    position: relative;
+  }
+  .feat-card p {
+    color: var(--ink-soft);
+    font-size: 14px; line-height: 1.55;
+    margin: 0;
+    position: relative;
+  }
+
+  /* Card with hard shadow */
+  .pcard {
+    background: var(--paper);
+    border: 1.25px solid var(--ink);
+    border-radius: 16px;
+    box-shadow: 4px 4px 0 var(--ink);
+    padding: 18px 20px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .pcard:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--ink); }
+  .pcard.tilt-l { transform: rotate(-0.6deg); }
+  .pcard.tilt-l:hover { transform: rotate(0deg) translate(-1px,-1px); }
+  .pcard.tilt-r { transform: rotate(0.6deg); }
+  .pcard.tilt-r:hover { transform: rotate(0deg) translate(-1px,-1px); }
+
+  /* Icon button (action button in link foot) */
+  .icon-btn {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    border: 1px solid transparent;
+    background: transparent;
+    display: grid; place-items: center;
+    cursor: pointer;
+    color: var(--ink-faint);
+    transition: color 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+  }
+  .icon-btn .icon { width: 13px; height: 13px; stroke-width: 1.8; }
+  .icon-btn:hover {
+    background: var(--lime);
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .icon-btn:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 1px;
+    color: var(--ink);
+  }
+  .row-emphasis-demo:hover .icon-btn { color: var(--ink-soft); }
+
+  /* Sparkline */
+  .sparkline { width: 64px; height: 22px; flex-shrink: 0; }
+  .sparkline path.line { stroke: var(--lime-deep); stroke-width: 1.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .sparkline path.area { fill: var(--lime); opacity: 0.30; }
+  .sparkline.flat path.line { stroke: var(--ink-faint); }
+  .sparkline.flat path.area { fill: var(--ink-faint); opacity: 0.10; }
+  .sparkline.down path.line { stroke: var(--red-deep); }
+  .sparkline.down path.area { fill: var(--pink); opacity: 0.30; }
+
+  /* Code chip */
+  code.method {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2px 7px;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+    vertical-align: 1px;
+  }
+
+  /* Marker highlight */
+  .marker {
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+  }
+  .marker::before {
+    content: "";
+    position: absolute;
+    inset: 25% -3% 8% -3%;
+    z-index: -1;
+    border-radius: 5px;
+    transform: rotate(-1deg);
+    border: 1px solid var(--ink);
+    background: var(--lime);
+  }
+  .marker.m-tangerine::before { background: var(--tangerine); }
+  .marker.m-pink::before { background: var(--pink); }
+  .marker.m-sky::before { background: var(--sky); }
+  .marker.m-sun::before { background: var(--sun); }
+
+  /* Avatar */
+  .avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--sun);
+    display: grid; place-items: center;
+    border: 1.25px solid var(--ink);
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  /* Empty mark */
+  .empty-mark {
+    width: 64px; height: 64px;
+    display: grid; place-items: center;
+    background: var(--tangerine);
+    border: 1.25px solid var(--ink);
+    border-radius: 18px;
+    transform: rotate(-3deg);
+    transition: transform 0.25s ease;
+  }
+  .empty-mark:hover { transform: rotate(2deg); }
+  .empty-mark .icon { width: 28px; height: 28px; stroke: var(--ink); stroke-width: 2.2; }
+
+  /* Campaign banner */
+  .camp-banner {
+    margin: 0;
+    padding: 14px 18px;
+    background: var(--tangerine);
+    border: 1.25px solid var(--ink);
+    border-radius: 12px;
+    display: flex; align-items: center; gap: 14px;
+    width: 100%;
+  }
+  .camp-banner .emblem {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    background: var(--paper);
+    border: 1.25px solid var(--ink);
+    display: grid; place-items: center;
+  }
+  .camp-banner .emblem .icon { width: 16px; height: 16px; stroke-width: 2; }
+  .camp-banner .title {
+    font-family: var(--sans); font-size: 16px;
+    font-weight: 700; color: var(--ink);
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+  }
+  .camp-banner .meta {
+    font-size: 12px; color: var(--ink); opacity: 0.78;
+    font-weight: 500;
+    margin-top: 3px;
+  }
+  .camp-banner .pace {
+    margin-left: auto;
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 9px;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    border-radius: 99px;
+    font-size: 11px; font-weight: 600;
+  }
+
+  /* Link row (full pattern composition) */
+  .link-card {
+    background: var(--paper);
+    border: 1.25px solid var(--rule);
+    border-radius: 14px;
+    padding: 14px 16px;
+    transition: all 0.12s ease;
+  }
+  .link-card:hover {
+    border-color: var(--ink);
+    transform: translate(-1px,-1px);
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .link-row {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .favicon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: var(--tangerine-soft);
+    border: 1px solid var(--rule);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    color: var(--ink);
+  }
+  .favicon .icon { width: 18px; height: 18px; stroke-width: 1.8; }
+  .link-info { flex: 1; min-width: 0; }
+  .link-top {
+    display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
+  }
+  .short-url { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--ink); }
+  .short-url .slash { color: var(--tangerine); }
+  .link-dest {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-mid);
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .link-dest .qs { color: var(--ink-faint); }
+  .clicks-trend {
+    display: flex; align-items: center; gap: 7px;
+    font-family: var(--mono); font-size: 11px;
+  }
+  .clicks-block { text-align: right; flex-shrink: 0; min-width: 76px; }
+  .clicks-num {
+    font-family: var(--sans);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ink);
+    font-feature-settings: "tnum";
+    letter-spacing: -0.025em;
+  }
+  .clicks-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    margin-top: 4px;
+    font-weight: 700;
+  }
+  .link-foot {
+    margin-top: 10px;
+    display: flex; align-items: center; gap: 9px;
+    font-size: 11px;
+    color: var(--ink-faint);
+    flex-wrap: wrap;
+    font-weight: 500;
+  }
+  .link-foot strong { color: var(--ink-soft); font-weight: 600; }
+  .link-foot .actions {
+    display: flex; gap: 4px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* Final CTA card */
+  .final-cta {
+    max-width: 580px; margin: 0 auto;
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 22px;
+    padding: 44px 32px 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border: 1.25px solid var(--ink);
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+  .final-cta-blob { position: absolute; border-radius: 50%; border: 1.25px solid var(--ink); }
+  .final-cta-blob.b1 { width: 130px; height: 130px; background: var(--tangerine); top: -40px; right: -30px; opacity: 0.85; }
+  .final-cta-blob.b2 { width: 80px; height: 80px; background: var(--lime); bottom: -25px; left: -22px; opacity: 0.78; }
+  .final-cta-content { position: relative; }
+  .final-cta-content h2 {
+    font-family: var(--sans);
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    margin: 0 0 10px;
+    line-height: 1;
+  }
+  .final-cta-content p { color: var(--ink-soft); font-size: 14px; margin: 0; }
+  .final-cta-content .btn-tangerine { margin-top: 22px; }
+
+  /* Surfaces (links to demo pages) */
+  .surface-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 700px) { .surface-grid { grid-template-columns: 1fr; } }
+  .surface-link {
+    display: block;
+    padding: 22px 24px;
+    background: var(--paper);
+    border: 1.25px solid var(--ink);
+    border-radius: 16px;
+    text-decoration: none;
+    color: var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .surface-link:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--ink); }
+  .surface-link .small-caps { display: block; margin-bottom: 6px; }
+  .surface-link .name {
+    font-family: var(--sans);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .surface-link .desc { color: var(--ink-soft); font-size: 13px; margin-top: 6px; }
+  .surface-link .arrow {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--tangerine);
+    font-weight: 600;
+  }
+
+  footer {
+    margin-top: 64px;
+    padding: 24px 0 64px;
+    border-top: 1px dashed var(--rule-soft);
+    font-size: 12px;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  footer a { color: var(--tangerine); text-decoration: none; font-weight: 600; }
+  footer a:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- Icon defs -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <defs>
+    <symbol id="i-slash" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="M17 4 7 20"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></g></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M5 12h14M12 5v14"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M6 18L18 6"/></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="5" rx="1.5"/><path d="M4 9v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9M10 13h4"/></g></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></g></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+    <symbol id="i-trending-up" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 17l6-6 4 4 8-8M14 7h7v7"/></symbol>
+    <symbol id="i-rocket" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></g></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.4"/></g></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></g></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="11" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></g></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="1.5"/><path d="m21 15-5-5L5 21"/></g></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M13 2 3 14h8l-1 8 10-12h-8l1-8z"/></symbol>
+    <symbol id="i-qr" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v3M14 21h7"/></g></symbol>
+  </defs>
+</svg>
+
+<nav class="topbar">
+  <div class="shell nav-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-mark"><svg><use href="#i-slash"/></svg></span>
+      <span class="brand-word">slsh<span class="dot">.</span>me</span>
+    </a>
+    <span class="nav-tag"><b>Design System</b> · v1 · 2026-05-01</span>
+  </div>
+</nav>
+
+<main>
+
+  <section class="page-intro shell">
+    <p class="small-caps" style="margin-bottom:14px;">Splash × Beam — the chosen direction</p>
+    <h1 class="page-title">Design <span class="marker">system</span>.</h1>
+    <p class="lede">
+      The component vocabulary for slsh.me. Splash baseline (sticker energy, ink borders, marker highlights, hard-shadow card pops) with surgical Beam injections (gradient corner orbs on KPI tiles + feature cards). Migra carries the hero only — General Sans handles every other H2 / H3 / body. JetBrains Mono for slugs and code chips.
+    </p>
+    <div class="anchor-row">
+      <a href="#brand" class="anchor-link">brand</a>
+      <a href="#colors" class="anchor-link">colors</a>
+      <a href="#type" class="anchor-link">typography</a>
+      <a href="#shape" class="anchor-link">shape</a>
+      <a href="#buttons" class="anchor-link">buttons</a>
+      <a href="#badges" class="anchor-link">badges</a>
+      <a href="#chips" class="anchor-link">chips · inputs</a>
+      <a href="#tiles" class="anchor-link">stat tiles</a>
+      <a href="#features" class="anchor-link">feature cards</a>
+      <a href="#cards" class="anchor-link">cards</a>
+      <a href="#actions" class="anchor-link">action icons</a>
+      <a href="#data" class="anchor-link">data accents</a>
+      <a href="#text" class="anchor-link">text accents</a>
+      <a href="#patterns" class="anchor-link">patterns</a>
+      <a href="#surfaces" class="anchor-link">surfaces</a>
+    </div>
+  </section>
+
+  <!-- BRAND -->
+  <section class="ds shell" id="brand">
+    <div class="ds-head">
+      <span class="small-caps">01 · Brand</span>
+      <h2 class="section">Logo, mark, voice.</h2>
+    </div>
+    <div class="ds-grid cols-3">
+      <div class="ds-card">
+        <div class="ds-card-head">
+          <h3>Brand mark</h3>
+          <p>Tilted -4°, rotates to +2° on hover. 11px radius, 1.25px ink border.</p>
+        </div>
+        <div class="ds-card-body">
+          <a href="#" class="brand">
+            <span class="brand-mark"><svg><use href="#i-slash"/></svg></span>
+            <span class="brand-word">slsh<span class="dot">.</span>me</span>
+          </a>
+        </div>
+        <div class="ds-card-foot"><code>.brand-mark</code> · <code>.brand-word</code></div>
+      </div>
+
+      <div class="ds-card">
+        <div class="ds-card-head">
+          <h3>Avatar</h3>
+          <p>Sun-yellow circle with ink border. Initial in Migra 600.</p>
+        </div>
+        <div class="ds-card-body">
+          <span class="avatar">S</span>
+          <span class="avatar" style="background:var(--lime);">A</span>
+          <span class="avatar" style="background:var(--pink);">M</span>
+        </div>
+        <div class="ds-card-foot"><code>.avatar</code></div>
+      </div>
+
+      <div class="ds-card">
+        <div class="ds-card-head">
+          <h3>Voice</h3>
+          <p>Quirky-confident. Marketers' best friend, devs' favorite tool.</p>
+        </div>
+        <div class="ds-card-body" style="padding: 22px; align-items: flex-start; flex-direction: column;">
+          <p style="font-family:var(--sans);font-size:18px;font-weight:700;letter-spacing:-0.02em;line-height:1.2;margin:0;">
+            Splash energy, with <span class="marker">polish</span> where it counts.
+          </p>
+          <p style="font-size:13px;color:var(--ink-soft);margin:10px 0 0;line-height:1.55;">
+            Stickers, ink borders, marker highlights — every page. Gradient corner orbs only on the data surfaces (KPI tiles, feature cards). Migra reserved for the page hero.
+          </p>
+        </div>
+        <div class="ds-card-foot">tone reference</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLORS -->
+  <section class="ds shell" id="colors">
+    <div class="ds-head">
+      <span class="small-caps">02 · Foundations · Color</span>
+      <h2 class="section">Palette &amp; gradients.</h2>
+      <p class="lede">Tangerine is the brand. Lime, sky, pink, violet, sun are campaign accents — assigned per campaign, never decorative. Gradient pairs are reserved for KPI tiles + feature cards (Beam injection).</p>
+    </div>
+    <h3 class="subsection" style="margin-bottom:12px;">Core</h3>
+    <div class="swatch-row" style="margin-bottom:24px;">
+      <div class="swatch"><div class="chip" style="background:var(--paper);border-bottom-color:var(--rule-soft);"></div><div class="meta"><div class="name">paper</div><div class="hex">#FFFCF5</div></div></div>
+      <div class="swatch"><div class="chip" style="background:var(--canvas);"></div><div class="meta"><div class="name">canvas</div><div class="hex">#FFF8E7</div></div></div>
+      <div class="swatch"><div class="chip" style="background:var(--ink);"></div><div class="meta"><div class="name">ink</div><div class="hex">#131210</div></div></div>
+      <div class="swatch"><div class="chip" style="background:var(--ink-soft);"></div><div class="meta"><div class="name">ink-soft</div><div class="hex">#44403C</div></div></div>
+    </div>
+    <h3 class="subsection" style="margin-bottom:12px;">Brand &amp; campaign accents</h3>
+    <div class="swatch-row" style="margin-bottom:24px;">
+      <div class="swatch"><div class="chip" style="background:var(--tangerine);"></div><div class="meta"><div class="name">tangerine</div><div class="hex">#FB8B3C</div></div></div>
+      <div class="swatch"><div class="chip" style="background:var(--lime);"></div><div class="meta"><div class="name">lime</div><div class="hex">#B6DE5B</div></div></div>
+      <div class="swatch"><div class="chip" style="background:var(--sky);"></div><div class="meta"><div class="name">sky</div><div class="hex">#6FC4EE</div></div></div>
+      <div class="swatch"><div class="chip" style="background:var(--pink);"></div><div class="meta"><div class="name">pink</div><div class="hex">#F49AC0</div></div></div>
+      <div class="swatch"><div class="chip" style="background:var(--violet);"></div><div class="meta"><div class="name">violet</div><div class="hex">#B5A0FB</div></div></div>
+      <div class="swatch"><div class="chip" style="background:var(--sun);"></div><div class="meta"><div class="name">sun</div><div class="hex">#FBDF6E</div></div></div>
+    </div>
+    <h3 class="subsection" style="margin-bottom:12px;">Gradient pairs <span style="font-weight:500;color:var(--ink-faint);font-size:12px;">— Beam injection, KPI tiles + feature card orbs only</span></h3>
+    <div class="swatch-row">
+      <div class="swatch"><div class="chip" style="background:var(--grad-tangerine);"></div><div class="meta"><div class="name">tangerine → pink</div><div class="hex">stat-tile.t-1 / fc-1</div></div></div>
+      <div class="swatch"><div class="chip" style="background:var(--grad-sky);"></div><div class="meta"><div class="name">sky → violet</div><div class="hex">stat-tile.t-2 / fc-4</div></div></div>
+      <div class="swatch"><div class="chip" style="background:var(--grad-pink);"></div><div class="meta"><div class="name">pink → violet</div><div class="hex">stat-tile.t-3 / fc-3</div></div></div>
+      <div class="swatch"><div class="chip" style="background:var(--grad-lime);"></div><div class="meta"><div class="name">lime → sky</div><div class="hex">fc-2</div></div></div>
+      <div class="swatch"><div class="chip" style="background:var(--grad-sun);"></div><div class="meta"><div class="name">sun → tangerine</div><div class="hex">fc-6</div></div></div>
+      <div class="swatch"><div class="chip" style="background:var(--grad-violet);"></div><div class="meta"><div class="name">violet → pink</div><div class="hex">fc-5</div></div></div>
+    </div>
+  </section>
+
+  <!-- TYPE -->
+  <section class="ds shell" id="type">
+    <div class="ds-head">
+      <span class="small-caps">03 · Foundations · Typography</span>
+      <h2 class="section">Three families, one rule.</h2>
+      <p class="lede">Migra carries only the page hero h1. General Sans handles every H2, H3, body, button, label. JetBrains Mono for slugs, code, and meta. Italic Instrument Serif is permitted as a small accent on captions only.</p>
+    </div>
+
+    <div class="type-spec">
+      <p class="role">Page hero · h1 · Migra 600</p>
+      <p class="sample-migra">Paste. <span style="color:var(--tangerine);">Slash.</span> Share.</p>
+      <p class="meta">font: var(--display) · size: clamp(64px, 11vw, 124px) · weight: 600 · letter-spacing: -0.045em · line-height: 0.88</p>
+    </div>
+
+    <div class="type-spec">
+      <p class="role">Section · h2 · General Sans 700</p>
+      <p class="sample-h2">Every click, every detail.</p>
+      <p class="meta">font: var(--sans) · size: clamp(34px, 4.4vw, 52px) · weight: 700 · letter-spacing: -0.035em</p>
+    </div>
+
+    <div class="type-spec">
+      <p class="role">Subsection · h3 · General Sans 700</p>
+      <p class="sample-h3">Your Friday report, already done</p>
+      <p class="meta">font: var(--sans) · size: 26–38px · weight: 700 · letter-spacing: -0.03em</p>
+    </div>
+
+    <div class="type-spec">
+      <p class="role">Body · General Sans 400/500</p>
+      <p class="sample-body">The link shortener with analytics, custom domains, and none of the paywall. Country, city, device, browser, referrer — every click lands on a live dashboard the moment it happens.</p>
+      <p class="meta">font: var(--sans) · size: 14–16px · weight: 400 (body) · 500 (UI labels) · 700 (h2/h3)</p>
+    </div>
+
+    <div class="type-spec">
+      <p class="role">Mono · slugs &amp; code · JetBrains Mono</p>
+      <p class="sample-mono">slsh.me<span class="slash">/</span>q2-launch ← <code class="method">POST</code> /api/v1/links</p>
+      <p class="meta">font: var(--mono) · slug: slash always tangerine · method chip: ink bg, paper text</p>
+    </div>
+  </section>
+
+  <!-- SHAPE / RADII / BORDERS -->
+  <section class="ds shell" id="shape">
+    <div class="ds-head">
+      <span class="small-caps">04 · Foundations · Shape</span>
+      <h2 class="section">Borders, corners, motion.</h2>
+      <p class="lede">All shapes use ink for definition. Cards: 1.25px solid ink border + 3-4px hard-shadow offset (no soft drops). Tiles &amp; chips: 1px translucent rule. Tilted elements straighten on hover (logo, hero mock, terminal, tilted cards). The empty state mark and brand mark share the same playful tilt vocabulary.</p>
+    </div>
+    <h3 class="subsection" style="margin-bottom:12px;">Radii</h3>
+    <div class="radii-row" style="margin-bottom:28px;">
+      <div class="radii-tile" style="border-radius:7px;">7px</div>
+      <div class="radii-tile" style="border-radius:10px;">10px</div>
+      <div class="radii-tile" style="border-radius:12px;">12px</div>
+      <div class="radii-tile" style="border-radius:16px;">16px</div>
+      <div class="radii-tile" style="border-radius:22px;">22px</div>
+      <div class="radii-tile" style="border-radius:99px;">99px</div>
+    </div>
+    <h3 class="subsection" style="margin-bottom:12px;">Border weights</h3>
+    <div class="ds-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="ds-card">
+        <div class="ds-card-body" style="background:var(--paper);">
+          <div style="width:120px;height:60px;border-radius:10px;border:1px solid var(--rule-soft);background:var(--paper);"></div>
+        </div>
+        <div class="ds-card-foot"><code>1px var(--rule-soft)</code> — chips, tiles, inputs</div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-body" style="background:var(--paper);">
+          <div style="width:120px;height:60px;border-radius:10px;border:1.25px solid var(--ink);background:var(--paper);"></div>
+        </div>
+        <div class="ds-card-foot"><code>1.25px var(--ink)</code> — cards, stickers, marks</div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-body" style="background:var(--paper);">
+          <div style="width:120px;height:60px;border-radius:10px;border:1.25px solid var(--ink);box-shadow:3px 3px 0 var(--ink);background:var(--paper);"></div>
+        </div>
+        <div class="ds-card-foot"><code>+ 3px 3px 0 var(--ink)</code> — feat-cards, hover state</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUTTONS -->
+  <section class="ds shell" id="buttons">
+    <div class="ds-head">
+      <span class="small-caps">05 · Components · Buttons</span>
+      <h2 class="section">Buttons.</h2>
+    </div>
+    <div class="ds-grid">
+      <div class="ds-card">
+        <div class="ds-card-head">
+          <h3>Primary (ink)</h3>
+          <p>Default sign-up / commit action. Hover swaps to tangerine.</p>
+        </div>
+        <div class="ds-card-body">
+          <a href="#" class="btn btn-primary">Start free</a>
+          <a href="#" class="btn btn-primary"><svg class="icon"><use href="#i-plus"/></svg> New link</a>
+        </div>
+        <div class="ds-card-foot"><code>.btn.btn-primary</code></div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-head">
+          <h3>Tangerine CTA</h3>
+          <p>The single hero CTA on every surface. Hard-shadow pop on hover.</p>
+        </div>
+        <div class="ds-card-body">
+          <a href="#" class="btn-tangerine">Shorten your first link</a>
+          <a href="#" class="btn-tangerine">Create your account <svg class="icon"><use href="#i-arrow-right"/></svg></a>
+        </div>
+        <div class="ds-card-foot"><code>.btn-tangerine</code></div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-head">
+          <h3>Ghost</h3>
+          <p>Tertiary nav (Sign in, Docs).</p>
+        </div>
+        <div class="ds-card-body">
+          <a href="#" class="btn btn-ghost">Sign in</a>
+          <a href="#" class="btn btn-ghost">Docs</a>
+        </div>
+        <div class="ds-card-foot"><code>.btn.btn-ghost</code></div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-head">
+          <h3>Outline</h3>
+          <p>Secondary action paired with a Primary or Tangerine CTA.</p>
+        </div>
+        <div class="ds-card-body">
+          <a href="#" class="btn btn-outline">Read API docs <svg class="icon"><use href="#i-arrow-right"/></svg></a>
+        </div>
+        <div class="ds-card-foot"><code>.btn.btn-outline</code></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BADGES -->
+  <section class="ds shell" id="badges">
+    <div class="ds-head">
+      <span class="small-caps">06 · Components · Badges</span>
+      <h2 class="section">Stickers (campaigns) &amp; soft (status).</h2>
+      <p class="lede">Stickers carry campaign identity — solid color + ink border, always. Soft badges carry transient status (expires, archived, custom OG) — soft tint, no border.</p>
+    </div>
+    <div class="ds-grid">
+      <div class="ds-card">
+        <div class="ds-card-head">
+          <h3>Sticker (campaign)</h3>
+          <p>One per campaign color. Always paired with the campaign name.</p>
+        </div>
+        <div class="ds-card-body">
+          <span class="sticker s-tangerine">Q2 launch</span>
+          <span class="sticker s-lime">Spring sale</span>
+          <span class="sticker s-sky">Podcast tour</span>
+          <span class="sticker s-pink">Brand</span>
+          <span class="sticker s-violet">Internal</span>
+          <span class="sticker s-sun">Newsletter</span>
+        </div>
+        <div class="ds-card-foot"><code>.sticker.s-{tangerine|lime|sky|pink|violet|sun}</code></div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-head">
+          <h3>Soft (status)</h3>
+          <p>State badges. No ink border. Subtle.</p>
+        </div>
+        <div class="ds-card-body">
+          <span class="badge-soft b-amber"><svg class="icon"><use href="#i-clock"/></svg> expires in 5d</span>
+          <span class="badge-soft b-emerald">verified</span>
+          <span class="badge-soft b-rose"><svg class="icon"><use href="#i-lock"/></svg> password</span>
+          <span class="badge-soft b-slate">archived</span>
+        </div>
+        <div class="ds-card-foot"><code>.badge-soft.b-{amber|emerald|rose|slate}</code></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHIPS / INPUTS -->
+  <section class="ds shell" id="chips">
+    <div class="ds-head">
+      <span class="small-caps">07 · Components · Filters &amp; inputs</span>
+      <h2 class="section">Chips and search.</h2>
+    </div>
+    <div class="ds-grid">
+      <div class="ds-card">
+        <div class="ds-card-head">
+          <h3>Filter chip</h3>
+          <p>Active state inverts to tangerine + ink border. Inactive: paper + soft rule.</p>
+        </div>
+        <div class="ds-card-body">
+          <a href="#" class="chip chip-active">
+            <span class="chip-dot" style="background:var(--tangerine);"></span>
+            Q2 Product Launch
+            <svg class="icon"><use href="#i-x"/></svg>
+          </a>
+          <a href="#" class="chip">
+            <span class="chip-dot" style="background:var(--lime);"></span>
+            Spring Sale
+          </a>
+          <a href="#" class="chip">
+            <svg class="icon"><use href="#i-archive"/></svg>
+            Archived <span style="color:var(--ink-faint);">12</span>
+          </a>
+        </div>
+        <div class="ds-card-foot"><code>.chip</code> · <code>.chip-active</code></div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-head">
+          <h3>Search input</h3>
+          <p>Focus → canvas background, ink border. No ring shadow.</p>
+        </div>
+        <div class="ds-card-body">
+          <div class="search">
+            <svg class="search-icon"><use href="#i-search"/></svg>
+            <input type="search" placeholder="Search links, campaigns, slugs…">
+          </div>
+        </div>
+        <div class="ds-card-foot"><code>.search input</code></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAT TILES -->
+  <section class="ds shell" id="tiles">
+    <div class="ds-head">
+      <span class="small-caps">08 · Components · Data</span>
+      <h2 class="section">Stat tile <span class="marker m-sky">(Beam orb)</span>.</h2>
+      <p class="lede">Big number in Migra (data display, not a heading). Bottom row: small-caps label + optional delta pill. Gradient corner orb is the Beam injection — distinct color per tile (.t-1, .t-2, .t-3).</p>
+    </div>
+    <div class="ds-grid cols-3">
+      <div class="stat-tile t-1">
+        <div class="stat-num">142</div>
+        <div class="stat-bottom">
+          <span class="stat-label">Links</span>
+          <span class="stat-delta"><svg class="icon"><use href="#i-trending-up"/></svg>+8</span>
+        </div>
+      </div>
+      <div class="stat-tile t-2">
+        <div class="stat-num">213k</div>
+        <div class="stat-bottom">
+          <span class="stat-label">Clicks · 30d</span>
+          <span class="stat-delta"><svg class="icon"><use href="#i-trending-up"/></svg>+18%</span>
+        </div>
+      </div>
+      <div class="stat-tile t-3">
+        <div class="stat-num">7</div>
+        <div class="stat-bottom">
+          <span class="stat-label">Campaigns</span>
+        </div>
+      </div>
+    </div>
+    <div class="ds-card-foot" style="margin-top:14px; border-top:none; border-radius: 0; padding: 0;"><code>.stat-tile.t-{1|2|3}</code> &middot; min-height ensures consistent height with/without delta</div>
+  </section>
+
+  <!-- FEATURE CARDS -->
+  <section class="ds shell" id="features">
+    <div class="ds-head">
+      <span class="small-caps">09 · Components · Feature card</span>
+      <h2 class="section">Feature card <span class="marker m-tangerine">(Beam orb scales)</span>.</h2>
+      <p class="lede">Splash flat icon on top-left (rounded square, ink border, tilted -3°), Beam gradient corner orb top-right that scales 1.15x on hover. h3 + body in General Sans. Hard-shadow pop on hover.</p>
+    </div>
+    <div class="ds-grid cols-3">
+      <div class="feat-card" style="--orb-grad: var(--grad-tangerine);">
+        <div class="feat-icon"><svg class="icon"><use href="#i-lock"/></svg></div>
+        <h3>Password protection</h3>
+        <p>Lock any link. Visitors authenticate before they get redirected.</p>
+      </div>
+      <div class="feat-card" style="background:var(--paper);">
+        <div class="feat-icon" style="background:var(--lime);"><svg class="icon"><use href="#i-clock"/></svg></div>
+        <h3>Expiry dates</h3>
+        <p>Links that self-destruct. Set a date or let them live forever.</p>
+        <style>.feat-card:nth-of-type(2)::after { background: var(--grad-lime); }</style>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:var(--pink);"><svg class="icon"><use href="#i-image"/></svg></div>
+        <h3>Custom OG previews</h3>
+        <p>Control the title, description, and image that show in social cards.</p>
+        <style>.feat-card:nth-of-type(3)::after { background: var(--grad-pink); }</style>
+      </div>
+    </div>
+    <div class="ds-card-foot" style="margin-top:14px; border-top:none; padding: 0; border-radius: 0;"><code>.feat-card.fc-{1..6}</code> · 6 gradient pairs for the orb</div>
+  </section>
+
+  <!-- CARDS -->
+  <section class="ds shell" id="cards">
+    <div class="ds-head">
+      <span class="small-caps">10 · Components · Cards</span>
+      <h2 class="section">Card &amp; tilted variants.</h2>
+      <p class="lede">Standard card uses 1.25px ink border and 4px hard shadow. Tilted variants pre-tilt by ±0.6° and straighten to 0° on hover (matches the brand-mark micro-interaction).</p>
+    </div>
+    <div class="ds-grid cols-3">
+      <div class="ds-card">
+        <div class="ds-card-head"><h3>Standard</h3><p>Default content card.</p></div>
+        <div class="ds-card-body" style="background:var(--canvas);">
+          <div class="pcard" style="width:200px;text-align:center;">A card</div>
+        </div>
+        <div class="ds-card-foot"><code>.pcard</code></div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-head"><h3>Tilt-left</h3><p>Used on Analytics + Creator OG mocks.</p></div>
+        <div class="ds-card-body" style="background:var(--canvas);">
+          <div class="pcard tilt-l" style="width:200px;text-align:center;">Tilted -0.6°</div>
+        </div>
+        <div class="ds-card-foot"><code>.pcard.tilt-l</code></div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-head"><h3>Tilt-right</h3><p>Used on Custom Domains mock.</p></div>
+        <div class="ds-card-body" style="background:var(--canvas);">
+          <div class="pcard tilt-r" style="width:200px;text-align:center;">Tilted +0.6°</div>
+        </div>
+        <div class="ds-card-foot"><code>.pcard.tilt-r</code></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTION ICONS -->
+  <section class="ds shell" id="actions">
+    <div class="ds-head">
+      <span class="small-caps">11 · Components · Action icons</span>
+      <h2 class="section">Icon button — progressive emphasis.</h2>
+      <p class="lede">Always visible (no hover-to-reveal). Default: muted ink-faint, no border. Row hover: ink-soft. Direct icon hover: full lime sticker pop. Keyboard focus: 2px ink outline. Lives in the link-foot, right-aligned via margin-left: auto.</p>
+    </div>
+    <div class="ds-grid">
+      <div class="ds-card">
+        <div class="ds-card-head"><h3>States</h3><p>Default · row-hover · icon-hover · focus</p></div>
+        <div class="ds-card-body row-emphasis-demo">
+          <button class="icon-btn" title="Copy"><svg class="icon"><use href="#i-copy"/></svg></button>
+          <button class="icon-btn" title="Edit"><svg class="icon"><use href="#i-edit"/></svg></button>
+          <span style="font-size:11.5px;color:var(--ink-faint);font-family:var(--mono);margin-left:6px;">↑ hover this card to see row-emphasis</span>
+        </div>
+        <div class="ds-card-foot"><code>.icon-btn</code> · 28×28 touch target · 13px glyph</div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-head"><h3>In context</h3><p>Bottom-right of every link row, inside .link-foot.</p></div>
+        <div class="ds-card-body" style="padding:14px 18px;">
+          <div style="display:flex; align-items:center; gap:9px; font-size:11px; color:var(--ink-faint); width:100%;">
+            <span><strong style="color:var(--ink-soft);">2h ago</strong></span>
+            <span>·</span>
+            <span>top: <strong style="color:var(--ink-soft);">producthunt</strong></span>
+            <div style="display:flex;gap:4px;margin-left:auto;">
+              <button class="icon-btn" title="Copy"><svg class="icon"><use href="#i-copy"/></svg></button>
+              <button class="icon-btn" title="Edit"><svg class="icon"><use href="#i-edit"/></svg></button>
+            </div>
+          </div>
+        </div>
+        <div class="ds-card-foot">.link-foot .actions { margin-left: auto; }</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DATA ACCENTS -->
+  <section class="ds shell" id="data">
+    <div class="ds-head">
+      <span class="small-caps">12 · Components · Data accents</span>
+      <h2 class="section">Sparklines &amp; click counts.</h2>
+    </div>
+    <div class="ds-grid cols-3">
+      <div class="ds-card">
+        <div class="ds-card-head"><h3>Sparkline · up</h3><p>Lime stroke + lime area fill.</p></div>
+        <div class="ds-card-body">
+          <svg class="sparkline" viewBox="0 0 56 20" preserveAspectRatio="none"><path class="area" d="M0,16 L7,14 L14,15 L21,11 L28,10 L35,7 L42,5 L56,3 L56,20 L0,20 Z"/><path class="line" d="M0,16 L7,14 L14,15 L21,11 L28,10 L35,7 L42,5 L56,3"/></svg>
+          <span style="color:var(--lime-deep);font-weight:600;font-family:var(--mono);font-size:11px;">+312</span>
+        </div>
+        <div class="ds-card-foot"><code>.sparkline</code></div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-head"><h3>Sparkline · flat</h3><p>Ink-faint stroke.</p></div>
+        <div class="ds-card-body">
+          <svg class="sparkline flat" viewBox="0 0 56 20" preserveAspectRatio="none"><path class="line" d="M0,12 L9,11 L18,12 L27,10 L36,11 L45,10 L56,11"/></svg>
+          <span style="color:var(--ink-faint);font-weight:600;font-family:var(--mono);font-size:11px;">+3</span>
+        </div>
+        <div class="ds-card-foot"><code>.sparkline.flat</code></div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-head"><h3>Sparkline · down</h3><p>Red stroke + pink area.</p></div>
+        <div class="ds-card-body">
+          <svg class="sparkline down" viewBox="0 0 56 20" preserveAspectRatio="none"><path class="area" d="M0,5 L9,7 L18,9 L27,11 L36,13 L45,15 L56,17 L56,20 L0,20 Z"/><path class="line" d="M0,5 L9,7 L18,9 L27,11 L36,13 L45,15 L56,17"/></svg>
+          <span style="color:var(--red-deep);font-weight:600;font-family:var(--mono);font-size:11px;">-128</span>
+        </div>
+        <div class="ds-card-foot"><code>.sparkline.down</code></div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-head"><h3>Click count</h3><p>General Sans 700, tabular nums, small-caps label.</p></div>
+        <div class="ds-card-body">
+          <div class="clicks-block">
+            <div class="clicks-num">8,432</div>
+            <div class="clicks-label">clicks</div>
+          </div>
+          <div class="clicks-block">
+            <div class="clicks-num" style="color:var(--ink-mid);">9,847</div>
+            <div class="clicks-label">final</div>
+          </div>
+        </div>
+        <div class="ds-card-foot"><code>.clicks-num</code> · <code>.clicks-label</code> · ink-mid for archived/expired</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEXT ACCENTS -->
+  <section class="ds shell" id="text">
+    <div class="ds-head">
+      <span class="small-caps">13 · Components · Text accents</span>
+      <h2 class="section">Markers &amp; code chips.</h2>
+    </div>
+    <div class="ds-grid">
+      <div class="ds-card">
+        <div class="ds-card-head"><h3>Marker highlight</h3><p>Wraps a single keyword on display headlines. Five colors — pick one per page or per section.</p></div>
+        <div class="ds-card-body" style="font-family:var(--sans);font-weight:700;font-size:24px;letter-spacing:-0.02em;display:block;">
+          Every <span class="marker">click</span>.<br>
+          Your <span class="marker m-pink">domain</span>.<br>
+          One <span class="marker m-sky">spark</span>.<br>
+          All the <span class="marker m-tangerine">paywall</span>.
+        </div>
+        <div class="ds-card-foot"><code>.marker</code> (lime) · <code>.marker.m-{tangerine|pink|sky|sun}</code></div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-head"><h3>HTTP method chip</h3><p>Inline mono chip in code-style. Used in developer-persona headlines.</p></div>
+        <div class="ds-card-body" style="font-family:var(--sans);font-weight:700;font-size:24px;letter-spacing:-0.02em;display:block;">
+          One <code class="method">POST</code>,<br>
+          one short <span class="marker m-tangerine">link</span>
+        </div>
+        <div class="ds-card-foot"><code>code.method</code> · ink bg, paper text, mono</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PATTERNS -->
+  <section class="ds shell" id="patterns">
+    <div class="ds-head">
+      <span class="small-caps">14 · Patterns · Compositions</span>
+      <h2 class="section">Patterns.</h2>
+      <p class="lede">Standard layouts that combine the components above. Use these as the building blocks for any new screen.</p>
+    </div>
+
+    <h3 class="subsection" style="margin: 24px 0 12px;">Active campaign banner</h3>
+    <div class="camp-banner" style="margin-bottom: 28px;">
+      <span class="emblem"><svg class="icon"><use href="#i-rocket"/></svg></span>
+      <div>
+        <div class="title">Q2 Product Launch</div>
+        <div class="meta">23 links · 28,734 clicks · launches in 12 days</div>
+      </div>
+      <span class="pace"><svg class="icon"><use href="#i-trending-up"/></svg> pace +18%</span>
+    </div>
+
+    <h3 class="subsection" style="margin: 24px 0 12px;">Link row (full pattern)</h3>
+    <div class="link-card" style="margin-bottom:12px;">
+      <div class="link-row">
+        <div class="favicon"><svg class="icon"><use href="#i-rocket"/></svg></div>
+        <div class="link-info">
+          <div class="link-top">
+            <span class="short-url">slsh.me<span class="slash">/</span>q2-launch</span>
+            <span class="sticker s-tangerine">Q2 Product Launch</span>
+            <span class="badge-soft b-amber"><svg class="icon"><use href="#i-clock"/></svg> expires in 5d</span>
+          </div>
+          <p class="link-dest">producthunt.com/posts/slsh-launch<span class="qs">?utm_source=producthunt&amp;utm_medium=launch&amp;utm_campaign=q2-launch</span></p>
+        </div>
+        <div class="clicks-trend">
+          <svg class="sparkline" viewBox="0 0 56 20" preserveAspectRatio="none"><path class="area" d="M0,16 L7,14 L14,15 L21,11 L28,10 L35,7 L42,5 L56,3 L56,20 L0,20 Z"/><path class="line" d="M0,16 L7,14 L14,15 L21,11 L28,10 L35,7 L42,5 L56,3"/></svg>
+          <span style="color:var(--lime-deep);font-weight:600;">+312</span>
+        </div>
+        <div class="clicks-block">
+          <div class="clicks-num">8,432</div>
+          <div class="clicks-label">clicks</div>
+        </div>
+      </div>
+      <div class="link-foot">
+        <span><strong>2h ago</strong></span>
+        <span>·</span>
+        <span>top: <strong>producthunt</strong> · 64%</span>
+        <div class="actions">
+          <button class="icon-btn" title="Copy"><svg class="icon"><use href="#i-copy"/></svg></button>
+          <button class="icon-btn" title="Edit"><svg class="icon"><use href="#i-edit"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection" style="margin: 32px 0 12px;">Final CTA</h3>
+    <div class="final-cta">
+      <div class="final-cta-blob b1"></div>
+      <div class="final-cta-blob b2"></div>
+      <div class="final-cta-content">
+        <h2>Start <span class="marker">slashing</span></h2>
+        <p>Free forever. No credit card. No catch.</p>
+        <a href="#" class="btn-tangerine">Create your account <svg class="icon"><use href="#i-arrow-right"/></svg></a>
+      </div>
+    </div>
+
+    <h3 class="subsection" style="margin: 32px 0 12px;">Empty state mark</h3>
+    <div style="display:flex; align-items:center; gap:18px; padding:14px 0;">
+      <div class="empty-mark"><svg class="icon"><use href="#i-slash"/></svg></div>
+      <div>
+        <p style="font-family:var(--sans);font-weight:700;font-size:22px;margin:0;letter-spacing:-0.025em;">Nothing here yet. <span class="marker">Slash</span> something.</p>
+        <p style="font-size:13px;color:var(--ink-soft);margin:6px 0 0;">Tilted -3° default, +2° on hover. Same micro-interaction as brand-mark.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SURFACES -->
+  <section class="ds shell" id="surfaces">
+    <div class="ds-head">
+      <span class="small-caps">15 · Surfaces</span>
+      <h2 class="section">In situ.</h2>
+      <p class="lede">Both pages composed from the components above. Open them side-by-side with the running app to compare.</p>
+    </div>
+    <div class="surface-grid">
+      <a href="final.html" class="surface-link">
+        <span class="small-caps">Product · App screen</span>
+        <span class="name">Links index</span>
+        <span class="desc">Dashboard with stat tiles, dev surface, filters, active campaign banner, full populated link list, empty state, brand footer.</span>
+        <span class="arrow">Open <svg class="icon"><use href="#i-arrow-right"/></svg></span>
+      </a>
+      <a href="landing-final.html" class="surface-link">
+        <span class="small-caps">Marketing · Public site</span>
+        <span class="name">Landing page</span>
+        <span class="desc">Hero · trust bar · Analytics + Custom Domains · 6-card feature grid · three personas · FAQ · changelog · light final CTA.</span>
+        <span class="arrow">Open <svg class="icon"><use href="#i-arrow-right"/></svg></span>
+      </a>
+    </div>
+  </section>
+
+  <footer class="shell">
+    <span>slsh.me design system · v1 · 2026-05-01</span>
+    <span><a href="index.html">← back to gallery</a></span>
+  </footer>
+
+</main>
+
+</body>
+</html>
