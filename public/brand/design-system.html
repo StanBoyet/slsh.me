@@ -251,9 +251,18 @@
     border: 1px solid var(--rule-soft);
     border-radius: 12px;
     overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    position: relative;
+    background: var(--paper);
   }
-  .swatch .chip {
-    height: 60px;
+  .swatch:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+  .swatch:active { transform: translate(0, 0); box-shadow: 1px 1px 0 var(--ink); }
+  .swatch-color {
+    display: block;
+    width: 100%;
+    height: 64px;
     border-bottom: 1px solid var(--rule-soft);
   }
   .swatch .meta {
@@ -266,6 +275,22 @@
     font-size: 10.5px;
     color: var(--ink-faint);
   }
+  .swatch .copied-flag {
+    position: absolute; top: 6px; right: 6px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 99px;
+    opacity: 0;
+    transform: translateY(-2px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    pointer-events: none;
+  }
+  .swatch.is-copied .copied-flag { opacity: 1; transform: translateY(0); }
 
   /* Typography specimens */
   .type-spec {
@@ -998,28 +1023,28 @@
     </div>
     <h3 class="subsection" style="margin-bottom:12px;">Core</h3>
     <div class="swatch-row" style="margin-bottom:24px;">
-      <div class="swatch"><div class="chip" style="background:var(--paper);border-bottom-color:var(--rule-soft);"></div><div class="meta"><div class="name">paper</div><div class="hex">#FFFCF5</div></div></div>
-      <div class="swatch"><div class="chip" style="background:var(--canvas);"></div><div class="meta"><div class="name">canvas</div><div class="hex">#FFF8E7</div></div></div>
-      <div class="swatch"><div class="chip" style="background:var(--ink);"></div><div class="meta"><div class="name">ink</div><div class="hex">#131210</div></div></div>
-      <div class="swatch"><div class="chip" style="background:var(--ink-soft);"></div><div class="meta"><div class="name">ink-soft</div><div class="hex">#44403C</div></div></div>
+      <div class="swatch" data-copy="#FFFCF5" title="Click to copy"><span class="swatch-color" style="background:var(--paper);border-bottom-color:var(--rule-soft);"></span><div class="meta"><div class="name">paper</div><div class="hex">#FFFCF5</div></div><span class="copied-flag">copied</span></div>
+      <div class="swatch" data-copy="#FFF8E7" title="Click to copy"><span class="swatch-color" style="background:var(--canvas);"></span><div class="meta"><div class="name">canvas</div><div class="hex">#FFF8E7</div></div><span class="copied-flag">copied</span></div>
+      <div class="swatch" data-copy="#131210" title="Click to copy"><span class="swatch-color" style="background:var(--ink);"></span><div class="meta"><div class="name">ink</div><div class="hex">#131210</div></div><span class="copied-flag">copied</span></div>
+      <div class="swatch" data-copy="#44403C" title="Click to copy"><span class="swatch-color" style="background:var(--ink-soft);"></span><div class="meta"><div class="name">ink-soft</div><div class="hex">#44403C</div></div><span class="copied-flag">copied</span></div>
     </div>
     <h3 class="subsection" style="margin-bottom:12px;">Brand &amp; campaign accents</h3>
     <div class="swatch-row" style="margin-bottom:24px;">
-      <div class="swatch"><div class="chip" style="background:var(--tangerine);"></div><div class="meta"><div class="name">tangerine</div><div class="hex">#FB8B3C</div></div></div>
-      <div class="swatch"><div class="chip" style="background:var(--lime);"></div><div class="meta"><div class="name">lime</div><div class="hex">#B6DE5B</div></div></div>
-      <div class="swatch"><div class="chip" style="background:var(--sky);"></div><div class="meta"><div class="name">sky</div><div class="hex">#6FC4EE</div></div></div>
-      <div class="swatch"><div class="chip" style="background:var(--pink);"></div><div class="meta"><div class="name">pink</div><div class="hex">#F49AC0</div></div></div>
-      <div class="swatch"><div class="chip" style="background:var(--violet);"></div><div class="meta"><div class="name">violet</div><div class="hex">#B5A0FB</div></div></div>
-      <div class="swatch"><div class="chip" style="background:var(--sun);"></div><div class="meta"><div class="name">sun</div><div class="hex">#FBDF6E</div></div></div>
+      <div class="swatch" data-copy="#FB8B3C" title="Click to copy"><span class="swatch-color" style="background:var(--tangerine);"></span><div class="meta"><div class="name">tangerine</div><div class="hex">#FB8B3C</div></div><span class="copied-flag">copied</span></div>
+      <div class="swatch" data-copy="#B6DE5B" title="Click to copy"><span class="swatch-color" style="background:var(--lime);"></span><div class="meta"><div class="name">lime</div><div class="hex">#B6DE5B</div></div><span class="copied-flag">copied</span></div>
+      <div class="swatch" data-copy="#6FC4EE" title="Click to copy"><span class="swatch-color" style="background:var(--sky);"></span><div class="meta"><div class="name">sky</div><div class="hex">#6FC4EE</div></div><span class="copied-flag">copied</span></div>
+      <div class="swatch" data-copy="#F49AC0" title="Click to copy"><span class="swatch-color" style="background:var(--pink);"></span><div class="meta"><div class="name">pink</div><div class="hex">#F49AC0</div></div><span class="copied-flag">copied</span></div>
+      <div class="swatch" data-copy="#B5A0FB" title="Click to copy"><span class="swatch-color" style="background:var(--violet);"></span><div class="meta"><div class="name">violet</div><div class="hex">#B5A0FB</div></div><span class="copied-flag">copied</span></div>
+      <div class="swatch" data-copy="#FBDF6E" title="Click to copy"><span class="swatch-color" style="background:var(--sun);"></span><div class="meta"><div class="name">sun</div><div class="hex">#FBDF6E</div></div><span class="copied-flag">copied</span></div>
     </div>
     <h3 class="subsection" style="margin-bottom:12px;">Gradient pairs <span style="font-weight:500;color:var(--ink-faint);font-size:12px;">— Beam injection, KPI tiles + feature card orbs only</span></h3>
     <div class="swatch-row">
-      <div class="swatch"><div class="chip" style="background:var(--grad-tangerine);"></div><div class="meta"><div class="name">tangerine → pink</div><div class="hex">stat-tile.t-1 / fc-1</div></div></div>
-      <div class="swatch"><div class="chip" style="background:var(--grad-sky);"></div><div class="meta"><div class="name">sky → violet</div><div class="hex">stat-tile.t-2 / fc-4</div></div></div>
-      <div class="swatch"><div class="chip" style="background:var(--grad-pink);"></div><div class="meta"><div class="name">pink → violet</div><div class="hex">stat-tile.t-3 / fc-3</div></div></div>
-      <div class="swatch"><div class="chip" style="background:var(--grad-lime);"></div><div class="meta"><div class="name">lime → sky</div><div class="hex">fc-2</div></div></div>
-      <div class="swatch"><div class="chip" style="background:var(--grad-sun);"></div><div class="meta"><div class="name">sun → tangerine</div><div class="hex">fc-6</div></div></div>
-      <div class="swatch"><div class="chip" style="background:var(--grad-violet);"></div><div class="meta"><div class="name">violet → pink</div><div class="hex">fc-5</div></div></div>
+      <div class="swatch" data-copy="var(--grad-tangerine)" title="Click to copy"><span class="swatch-color" style="background:var(--grad-tangerine);"></span><div class="meta"><div class="name">tangerine → pink</div><div class="hex">stat-tile.t-1 / fc-1</div></div><span class="copied-flag">copied</span></div>
+      <div class="swatch" data-copy="var(--grad-sky)" title="Click to copy"><span class="swatch-color" style="background:var(--grad-sky);"></span><div class="meta"><div class="name">sky → violet</div><div class="hex">stat-tile.t-2 / fc-4</div></div><span class="copied-flag">copied</span></div>
+      <div class="swatch" data-copy="var(--grad-pink)" title="Click to copy"><span class="swatch-color" style="background:var(--grad-pink);"></span><div class="meta"><div class="name">pink → violet</div><div class="hex">stat-tile.t-3 / fc-3</div></div><span class="copied-flag">copied</span></div>
+      <div class="swatch" data-copy="var(--grad-lime)" title="Click to copy"><span class="swatch-color" style="background:var(--grad-lime);"></span><div class="meta"><div class="name">lime → sky</div><div class="hex">fc-2</div></div><span class="copied-flag">copied</span></div>
+      <div class="swatch" data-copy="var(--grad-sun)" title="Click to copy"><span class="swatch-color" style="background:var(--grad-sun);"></span><div class="meta"><div class="name">sun → tangerine</div><div class="hex">fc-6</div></div><span class="copied-flag">copied</span></div>
+      <div class="swatch" data-copy="var(--grad-violet)" title="Click to copy"><span class="swatch-color" style="background:var(--grad-violet);"></span><div class="meta"><div class="name">violet → pink</div><div class="hex">fc-5</div></div><span class="copied-flag">copied</span></div>
     </div>
   </section>
 
@@ -1542,6 +1567,19 @@
   </footer>
 
 </main>
+
+<script>
+  // Click any swatch to copy its hex (or gradient CSS value) to the clipboard.
+  document.querySelectorAll('.swatch[data-copy]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      var value = el.getAttribute('data-copy');
+      navigator.clipboard.writeText(value).then(function() {
+        el.classList.add('is-copied');
+        setTimeout(function() { el.classList.remove('is-copied'); }, 1200);
+      });
+    });
+  });
+</script>
 
 </body>
 </html>
