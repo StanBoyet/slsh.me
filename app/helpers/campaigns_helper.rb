@@ -8,7 +8,8 @@ module CampaignsHelper
     "slack"       => { label: "Slack",       icon: "⌘",  medium: "dm",     bg: "bg-indigo-100 dark:bg-indigo-500/15", fg: "text-indigo-500" },
     "tiktok"      => { label: "TikTok",      icon: "♪",  medium: "social", bg: "bg-zinc-100 dark:bg-zinc-700/40",     fg: "text-zinc-700 dark:text-zinc-200" },
     "facebook"    => { label: "Facebook",    icon: "f",  medium: "social", bg: "bg-blue-100 dark:bg-blue-500/15",     fg: "text-blue-600" },
-    "reddit"      => { label: "Reddit",      icon: "®",  medium: "social", bg: "bg-orange-100 dark:bg-orange-500/15", fg: "text-orange-600" }
+    "reddit"      => { label: "Reddit",      icon: "®",  medium: "social", bg: "bg-orange-100 dark:bg-orange-500/15", fg: "text-orange-600" },
+    "github"      => { label: "GitHub",      icon: "gh", medium: "social", bg: "bg-zinc-100 dark:bg-zinc-700/40",     fg: "text-zinc-800 dark:text-zinc-100" }
   }.freeze
 
   DEFAULT_CHANNEL = { label: "Custom", icon: "•", medium: nil,
