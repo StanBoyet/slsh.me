@@ -1,8 +1,63 @@
-<% content_for :head do %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>slsh.me — Paste. Slash. Share.</title>
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g transform='rotate(-4 50 50)'><circle cx='50' cy='50' r='42' fill='%23FB8B3C' stroke='%23131210' stroke-width='4'/><path d='M65 28 L35 72' stroke='%23131210' stroke-width='10' stroke-linecap='round' fill='none'/></g></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=migra@400,500,600,700&display=swap" rel="stylesheet">
 <style>
-  /* Tokens (--paper, --ink, --tangerine, --sans, etc.) are provided globally
-     by app/assets/tailwind/application.css. The styles below are landing-only. */
-  body { font-size: 15px; }
+  :root {
+    --paper: #FFFCF5;
+    --canvas: #FFF8E7;
+    --ink: #131210;
+    --ink-soft: #44403C;
+    --ink-mid: #6B6660;
+    --ink-faint: #9A9389;
+    --rule: rgba(19, 18, 16, 0.65);
+    --rule-soft: rgba(19, 18, 16, 0.18);
+
+    --tangerine: #FB8B3C;
+    --tangerine-soft: #FFE7D4;
+    --lime: #B6DE5B;
+    --lime-soft: #ECF5D2;
+    --lime-deep: #65A30D;
+    --sky: #6FC4EE;
+    --sky-soft: #DCEFF9;
+    --pink: #F49AC0;
+    --pink-soft: #FCE3EE;
+    --violet: #B5A0FB;
+    --violet-soft: #EAE2FE;
+    --sun: #FBDF6E;
+    --sun-soft: #FEF6CC;
+    --red-deep: #DC2626;
+    --emerald: #65A30D;
+
+    --sans: "General Sans", system-ui, sans-serif;
+    --display: "Migra", "Instrument Serif", serif;
+    --serif: "Instrument Serif", "Georgia", serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink);
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse 50% 30% at 90% 0%, var(--pink-soft), transparent 70%),
+      radial-gradient(ellipse 40% 25% at 5% 30%, var(--lime-soft), transparent 70%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
   .display { font-family: var(--display); font-weight: 600; letter-spacing: -0.03em; line-height: 0.95; }
   .mono { font-family: var(--mono); }
   .small-caps {
@@ -912,8 +967,8 @@
     font-family: var(--mono);
   }
 </style>
-
-<% end %>
+</head>
+<body>
 
 <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
   <defs>
@@ -933,15 +988,17 @@
   </defs>
 </svg>
 
+<div class="direction-tag">Splash · Beam</div>
+
 <nav class="topbar">
   <div class="shell nav-inner">
-    <a href="<%= root_path %>" class="brand">
+    <a href="/" class="brand">
       <span class="brand-mark"><svg class="icon"><use href="#i-slash"/></svg></span>
       <span class="brand-word">slsh<span class="dot">.</span>me</span>
     </a>
     <div class="nav-actions">
-      <a href="<%= new_session_path %>" class="btn btn-ghost">Sign in</a>
-      <a href="<%= new_registration_path %>" class="btn btn-primary">Start free</a>
+      <a href="/session/new" class="btn btn-ghost">Sign in</a>
+      <a href="/registration/new" class="btn btn-primary">Start free</a>
     </div>
   </div>
 </nav>
@@ -960,7 +1017,7 @@
         The link shortener with analytics, <span class="nb">custom&nbsp;domains</span>, and none of the paywall.
       </p>
       <div class="hero-cta">
-        <a href="<%= new_registration_path %>" class="btn-tangerine">Shorten your first link</a>
+        <a href="/registration/new" class="btn-tangerine">Shorten your first link</a>
         <span class="hero-cta-meta">Free forever &middot; no account needed to try</span>
       </div>
 
@@ -1454,7 +1511,7 @@
         <div class="final-cta-content">
           <h2>Start <span class="marker">slashing</span></h2>
           <p>Free forever. No credit card. No catch.</p>
-          <a href="<%= new_registration_path %>" class="btn-tangerine">Create your account <svg class="icon"><use href="#i-arrow-right"/></svg></a>
+          <a href="/registration/new" class="btn-tangerine">Create your account <svg class="icon"><use href="#i-arrow-right"/></svg></a>
         </div>
       </div>
     </div>
@@ -1465,12 +1522,13 @@
     <div class="shell footer-row">
       <span>&copy; 2026 slsh.me</span>
       <span class="links">
-        <a href="<%= new_registration_path %>" class="primary">Get started</a>
-        <a href="<%= new_session_path %>">Sign in</a>
+        <a href="/registration/new" class="primary">Get started</a>
+        <a href="/session/new">Sign in</a>
       </span>
     </div>
   </footer>
 
 </main>
 
-
+</body>
+</html>

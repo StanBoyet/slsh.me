@@ -26,94 +26,63 @@
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=migra@400,500,600,700&display=swap" rel="stylesheet">
+  <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+  <%= yield :head %>
+  <%# Set .js on <html> as early as possible so animation styles only hide content when JS is available. %>
+  <script>document.documentElement.classList.add('js');</script>
   <style>
-    :root {
-      --font-sans: "Albert Sans", ui-sans-serif, system-ui, sans-serif;
-      --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
-      --font-mono: "JetBrains Mono", ui-monospace, monospace;
-    }
-
-    code {
-      display: inline;
-      background: rgb(0 0 0 / 0.05);
-      padding: 0.1em 0.35em;
-      border-radius: 0.25em;
-      font-size: 0.88em;
-    }
-    .dark code { background: rgb(255 255 255 / 0.08); }
-
-    /* Hero entrance */
+    /* Hero entrance — only hide if JS is enabled (fail-open if JS fails or is off) */
     @keyframes hero-reveal {
       0%   { opacity: 0; transform: translateY(28px); filter: blur(4px); }
       100% { opacity: 1; transform: translateY(0);    filter: blur(0); }
     }
-    .hero-word {
+    .js .hero-word {
       opacity: 0;
       animation: hero-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    .hero-word:nth-child(1) { animation-delay: 0.1s; }
-    .hero-word:nth-child(2) { animation-delay: 0.28s; }
-    .hero-word:nth-child(3) { animation-delay: 0.46s; }
+    .js .hero-word:nth-child(1) { animation-delay: 0.1s; }
+    .js .hero-word:nth-child(2) { animation-delay: 0.28s; }
+    .js .hero-word:nth-child(3) { animation-delay: 0.46s; }
 
     @keyframes fade-up {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    .hero-fade {
+    .js .hero-fade {
       opacity: 0;
       animation: fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    .hero-fade-1 { animation-delay: 0.65s; }
-    .hero-fade-2 { animation-delay: 0.8s; }
-    .hero-fade-3 { animation-delay: 0.95s; }
+    .js .hero-fade-1 { animation-delay: 0.65s; }
+    .js .hero-fade-2 { animation-delay: 0.8s; }
+    .js .hero-fade-3 { animation-delay: 0.95s; }
 
     /* Scroll reveal */
-    .reveal {
+    .js .reveal {
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
                   transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .reveal.is-visible {
+    .js .reveal.is-visible {
       opacity: 1;
       transform: none;
     }
-    .reveal-stagger > .reveal:nth-child(1) { transition-delay: 0s; }
-    .reveal-stagger > .reveal:nth-child(2) { transition-delay: 0.06s; }
-    .reveal-stagger > .reveal:nth-child(3) { transition-delay: 0.12s; }
-    .reveal-stagger > .reveal:nth-child(4) { transition-delay: 0.18s; }
-    .reveal-stagger > .reveal:nth-child(5) { transition-delay: 0.24s; }
-    .reveal-stagger > .reveal:nth-child(6) { transition-delay: 0.30s; }
+    .js .reveal-stagger > .reveal:nth-child(1) { transition-delay: 0s; }
+    .js .reveal-stagger > .reveal:nth-child(2) { transition-delay: 0.06s; }
+    .js .reveal-stagger > .reveal:nth-child(3) { transition-delay: 0.12s; }
+    .js .reveal-stagger > .reveal:nth-child(4) { transition-delay: 0.18s; }
+    .js .reveal-stagger > .reveal:nth-child(5) { transition-delay: 0.24s; }
+    .js .reveal-stagger > .reveal:nth-child(6) { transition-delay: 0.30s; }
   </style>
-  <script>
-    (function() {
-      var t = localStorage.getItem("theme");
-      if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-        document.documentElement.classList.add("dark");
-      }
-    })();
-  </script>
 </head>
-<body class="bg-[#faf9f7] dark:bg-[#0c0c0d] text-zinc-900 dark:text-zinc-100 antialiased overflow-x-hidden">
+<body>
   <%= yield %>
 
-  <%# Theme toggle %>
-  <button id="theme-toggle"
-          class="fixed bottom-4 left-4 z-50 p-2 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-md hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
-          aria-label="Toggle theme">
-    <svg class="w-4 h-4 text-zinc-500 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-    <svg class="w-4 h-4 text-zinc-500 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-  </button>
-
   <script>
     (function() {
-      document.getElementById('theme-toggle').addEventListener('click', function() {
-        document.documentElement.classList.toggle('dark');
-        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-      });
-
       var obs = new IntersectionObserver(function(entries) {
         entries.forEach(function(e) {
           if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); }
