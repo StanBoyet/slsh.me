@@ -1,0 +1,8 @@
+<%# Brand-mark + brand-word logo lockup. Used in app nav and on auth pages.
+   Optional `href:` (defaults to root_path), `class:` for extra wrapper classes. %>
+<% href ||= root_path %>
+<% wrapper_class = local_assigns.fetch(:class, "") %>
+<%= link_to href, class: "brand inline-flex items-center gap-2.5 #{wrapper_class}" do %>
+  <span class="brand-mark"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2.6" d="M17 4 7 20"/></svg></span>
+  <span class="brand-word">slsh<span class="dot">.</span>me</span>
+<% end %>

@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Direction · Signal — slsh.me</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --canvas: #F1EDE3;
+    --paper: #FAF7EE;
+    --paper-elev: #FFFFFF;
+    --ink: #0E0E10;
+    --ink-soft: #2C2A2A;
+    --ink-mid: #5A5754;
+    --ink-faint: #8E877E;
+    --rule: #E2DBCC;
+    --rule-soft: #ECE5D4;
+
+    --indigo: #4F46E5;
+    --indigo-bright: #6366F1;
+    --indigo-soft: #E1DFFC;
+    --coral: #F26D5B;
+    --coral-soft: #FBDDD5;
+    --amber: #B45309;
+    --amber-soft: #FBE5B5;
+    --emerald: #047857;
+    --emerald-soft: #C8E8D8;
+    --slate: #475569;
+    --slate-soft: #E2E8F0;
+
+    --sans: "Geist", system-ui, -apple-system, sans-serif;
+    --serif: "Instrument Serif", "Georgia", serif;
+    --mono: "Geist Mono", ui-monospace, monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink);
+    background: var(--canvas);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "ss01", "ss02", "cv11";
+  }
+
+  .serif { font-family: var(--serif); }
+  .mono { font-family: var(--mono); font-size: 0.9em; }
+  .small-caps {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .icon { width: 1em; height: 1em; vertical-align: -0.15em; flex-shrink: 0; }
+
+  .shell { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
+
+  /* Top metadata strip */
+  .meta-strip {
+    background: var(--ink);
+    color: var(--ink-faint);
+    font-size: 11px;
+    font-family: var(--mono);
+    padding: 6px 0;
+  }
+  .meta-strip-inner {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 24px;
+  }
+  .meta-strip a { color: var(--paper); text-decoration: none; }
+  .meta-strip a:hover { color: var(--coral); }
+  .meta-strip-left { display: flex; gap: 14px; align-items: center; }
+  .meta-strip-right { display: flex; gap: 14px; align-items: center; }
+  .pulse-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #34D399;
+    box-shadow: 0 0 0 3px rgba(52,211,153,0.18);
+    display: inline-block;
+    margin-right: 6px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  /* Nav */
+  nav.topbar {
+    position: sticky; top: 0; z-index: 40;
+    backdrop-filter: blur(12px);
+    background: color-mix(in srgb, var(--canvas) 88%, transparent);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+  .brand { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--ink); }
+  .brand-mark {
+    width: 28px; height: 28px;
+    background: var(--ink);
+    color: var(--paper);
+    display: grid; place-items: center;
+    font-family: var(--sans); font-weight: 700;
+    border-radius: 7px;
+    position: relative;
+  }
+  .brand-mark .icon { width: 14px; height: 14px; stroke-width: 2.4; }
+  .brand-mark::after {
+    content: "";
+    position: absolute;
+    width: 7px; height: 7px;
+    background: var(--coral);
+    border-radius: 2px;
+    bottom: -2px; right: -2px;
+    border: 2px solid var(--canvas);
+  }
+  .brand-word {
+    font-family: var(--sans);
+    font-size: 16px; font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+  .brand-word .dot { color: var(--coral); }
+
+  .nav-center {
+    display: flex; gap: 2px; align-items: center;
+  }
+  .nav-link {
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--ink-mid);
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .nav-link:hover { background: var(--rule-soft); color: var(--ink); }
+  .nav-link.active { color: var(--ink); background: var(--paper); box-shadow: inset 0 0 0 1px var(--rule); }
+
+  .nav-actions { display: flex; align-items: center; gap: 8px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    font-family: var(--sans); font-weight: 500; font-size: 13px;
+    border-radius: 7px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    color: var(--ink);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+  .btn-primary { background: var(--ink); color: var(--paper); }
+  .btn-primary:hover { background: var(--ink-soft); }
+  .btn-ghost { background: transparent; color: var(--ink-mid); }
+  .btn-ghost:hover { background: var(--rule-soft); color: var(--ink); }
+  .btn-outline {
+    border-color: var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .btn-outline:hover { border-color: var(--ink-faint); }
+
+  .kbd {
+    display: inline-block;
+    padding: 1px 5px;
+    font-family: var(--mono);
+    font-size: 10px;
+    background: var(--rule-soft);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    color: var(--ink-mid);
+    line-height: 1.4;
+  }
+
+  .avatar-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 3px 4px 3px 10px;
+    border-radius: 7px;
+    background: transparent;
+    border: 1px solid var(--rule);
+    cursor: pointer;
+  }
+  .avatar-btn:hover { background: var(--paper); }
+  .avatar {
+    width: 22px; height: 22px; border-radius: 5px;
+    background: linear-gradient(135deg, var(--coral), var(--amber));
+    display: grid; place-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: -0.02em;
+  }
+
+  /* Page header */
+  .page-header { padding: 48px 0 28px; }
+  .header-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 48px;
+    align-items: end;
+  }
+  h1.title {
+    font-family: var(--sans);
+    font-size: 56px;
+    line-height: 0.95;
+    font-weight: 600;
+    letter-spacing: -0.045em;
+    margin: 0;
+    color: var(--ink);
+  }
+  h1.title .accent {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    color: var(--coral);
+    font-size: 1.05em;
+  }
+  .header-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border-left: 1px solid var(--rule);
+  }
+  .header-meta-cell {
+    padding: 0 22px;
+    border-right: 1px solid var(--rule);
+  }
+  .header-meta-cell:last-child { border-right: none; }
+  .header-meta-num {
+    font-family: var(--sans);
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    font-feature-settings: "tnum";
+    color: var(--ink);
+  }
+  .header-meta-num .delta {
+    font-size: 13px;
+    color: var(--emerald);
+    margin-left: 6px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .header-meta-label {
+    font-size: 11px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .header-meta-mini-chart {
+    margin-top: 8px;
+    height: 22px;
+  }
+  .header-meta-mini-chart svg { width: 100%; height: 100%; display: block; }
+  .header-meta-mini-chart path { stroke: var(--indigo); stroke-width: 1.4; fill: none; }
+  .header-meta-mini-chart .area { fill: var(--indigo-soft); stroke: none; opacity: 0.6; }
+
+  /* Developer surface — terminal-style strip */
+  .dev-bar {
+    margin-top: 28px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    border: 1px solid var(--ink-soft);
+  }
+  .dev-bar-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .dev-bar-divider {
+    width: 1px; height: 16px;
+    background: var(--ink-soft);
+  }
+  .dev-item {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+  .dev-item .label { color: var(--ink-faint); }
+  .dev-item .val { color: var(--paper); font-weight: 500; }
+  .dev-item .ok { color: #34D399; font-size: 9px; }
+  .dev-item .icon { width: 11px; height: 11px; color: var(--ink-faint); stroke-width: 1.7; }
+  .dev-item-link {
+    margin-left: auto;
+    color: var(--paper);
+    font-size: 11px;
+    font-family: var(--mono);
+    text-decoration: none;
+    padding: 4px 10px;
+    border: 1px solid var(--ink-soft);
+    border-radius: 5px;
+    transition: all 0.1s;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .dev-item-link:hover { border-color: var(--coral); color: var(--coral); }
+
+  /* Filter row */
+  .filter-row {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .search {
+    position: relative;
+    flex: 1;
+    min-width: 280px;
+  }
+  .search input {
+    width: 100%;
+    padding: 7px 12px 7px 34px;
+    font-family: var(--sans); font-size: 13px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 7px;
+    color: var(--ink);
+    outline: none;
+    letter-spacing: -0.01em;
+  }
+  .search input:focus { border-color: var(--ink-mid); }
+  .search input::placeholder { color: var(--ink-faint); }
+  .search-icon-wrap {
+    position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+    width: 14px; height: 14px; color: var(--ink-faint);
+  }
+  .search-shortcut {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 10px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 7px;
+    font-size: 12px;
+    color: var(--ink-mid);
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .chip:hover { border-color: var(--ink-faint); color: var(--ink); }
+  .chip .icon { width: 12px; height: 12px; stroke-width: 1.8; }
+  .chip-active {
+    background: var(--indigo-soft);
+    border-color: color-mix(in srgb, var(--indigo) 25%, transparent);
+    color: var(--indigo);
+  }
+  .chip-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* Active campaign banner */
+  .campaign-banner {
+    margin-top: 14px;
+    padding: 14px 18px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--indigo);
+    border-radius: 8px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .campaign-banner-title {
+    font-family: var(--sans); font-size: 14px;
+    font-weight: 600; color: var(--ink);
+    letter-spacing: -0.015em;
+  }
+  .campaign-banner-meta {
+    font-size: 12px; color: var(--ink-mid);
+    font-family: var(--mono);
+    margin-top: 2px;
+  }
+  .pace-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px;
+    background: var(--emerald-soft);
+    color: var(--emerald);
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    font-feature-settings: "tnum";
+  }
+  .pace-badge .icon { width: 10px; height: 10px; stroke-width: 2.2; }
+
+  /* Links section */
+  .links-section {
+    margin-top: 24px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .links-header {
+    display: grid;
+    grid-template-columns: 32px 1fr 110px 100px 32px;
+    gap: 16px;
+    padding: 8px 18px;
+    background: var(--rule-soft);
+    border-bottom: 1px solid var(--rule);
+    font-size: 10px;
+    font-family: var(--sans);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    font-weight: 600;
+    align-items: center;
+  }
+  .link-row-grid {
+    display: grid;
+    grid-template-columns: 32px 1fr 110px 100px 32px;
+    gap: 16px;
+    padding: 13px 18px;
+    align-items: center;
+    border-bottom: 1px solid var(--rule);
+    transition: background 0.1s;
+    position: relative;
+  }
+  .link-row-grid:last-child { border-bottom: none; }
+  .link-row-grid:hover { background: var(--paper-elev); }
+  .link-row-grid.archived { opacity: 0.55; }
+  .link-row-grid.flash {
+    background: linear-gradient(90deg, var(--coral-soft), transparent 70%);
+  }
+  .favicon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: var(--paper-elev);
+    border: 1px solid var(--rule);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    color: var(--ink-mid);
+  }
+  .favicon .icon { width: 14px; height: 14px; stroke-width: 1.7; }
+  .favicon.f-launch { background: color-mix(in srgb, var(--indigo) 7%, var(--paper-elev)); color: var(--indigo); }
+  .favicon.f-sale { background: color-mix(in srgb, var(--emerald) 8%, var(--paper-elev)); color: var(--emerald); }
+  .favicon.f-podcast { background: color-mix(in srgb, var(--amber) 8%, var(--paper-elev)); color: var(--amber); }
+  .favicon.f-internal { background: var(--slate-soft); color: var(--slate); }
+  .favicon.f-twitter { background: color-mix(in srgb, var(--coral) 8%, var(--paper-elev)); color: var(--coral); }
+  .favicon.f-live { background: var(--coral-soft); color: var(--coral); }
+
+  .link-info { min-width: 0; }
+  .link-top {
+    display: flex; align-items: center; gap: 7px;
+    flex-wrap: wrap;
+  }
+  .short-url {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .short-url .domain { color: var(--ink-mid); }
+  .short-url .slug { color: var(--coral); }
+  .link-dest {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--mono);
+  }
+  .link-dest .qs { color: color-mix(in srgb, var(--ink-faint) 55%, transparent); }
+  .link-dest .meta { color: var(--ink-mid); }
+  .clicks-num {
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    font-feature-settings: "tnum";
+    letter-spacing: -0.015em;
+    text-align: right;
+  }
+  .clicks-num .sub {
+    display: block;
+    font-size: 10px;
+    color: var(--ink-faint);
+    font-weight: 400;
+    margin-top: 1px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .clicks-trend {
+    display: flex; align-items: center; gap: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mid);
+  }
+  .sparkline {
+    width: 60px; height: 20px;
+    flex-shrink: 0;
+  }
+  .sparkline path.line {
+    stroke: var(--indigo);
+    stroke-width: 1.4;
+    fill: none;
+  }
+  .sparkline path.area {
+    fill: var(--indigo-soft);
+    opacity: 0.4;
+  }
+  .sparkline.up path.line { stroke: var(--emerald); }
+  .sparkline.up path.area { fill: var(--emerald-soft); }
+  .sparkline.down path.line { stroke: var(--coral); }
+  .sparkline.down path.area { fill: var(--coral-soft); }
+  .sparkline.flat path.line { stroke: var(--ink-faint); }
+  .sparkline.flat path.area { fill: var(--rule-soft); }
+
+  .icon-btn {
+    width: 24px; height: 24px;
+    border-radius: 5px;
+    border: none;
+    background: transparent;
+    display: grid; place-items: center;
+    cursor: pointer;
+    color: var(--ink-faint);
+  }
+  .icon-btn .icon { width: 14px; height: 14px; }
+  .icon-btn:hover { background: var(--rule-soft); color: var(--ink); }
+
+  /* Badges — minimal */
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    line-height: 1.4;
+    font-family: var(--sans);
+    letter-spacing: -0.01em;
+  }
+  .badge .icon { width: 11px; height: 11px; stroke-width: 1.8; }
+  .badge-indigo { background: var(--indigo-soft); color: var(--indigo); }
+  .badge-coral { background: var(--coral-soft); color: var(--coral); }
+  .badge-amber { background: var(--amber-soft); color: var(--amber); }
+  .badge-emerald { background: var(--emerald-soft); color: var(--emerald); }
+  .badge-slate { background: var(--slate-soft); color: var(--slate); }
+  .badge-outline {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    color: var(--ink-mid);
+  }
+  .badge-mono { font-family: var(--mono); font-size: 10px; }
+  .badge-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+  .live-pulse {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--coral);
+    display: inline-block;
+    animation: pulseLive 1.4s ease-in-out infinite;
+  }
+  @keyframes pulseLive {
+    0%, 100% { box-shadow: 0 0 0 0 var(--coral); opacity: 1; }
+    50% { box-shadow: 0 0 0 4px transparent; opacity: 0.6; }
+  }
+
+  /* Empty state */
+  .empty-section {
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+  }
+  .empty-section .small-caps { margin-bottom: 12px; }
+  .empty-card {
+    padding: 56px 32px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .empty-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--rule) 1px, transparent 1px),
+      linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
+    opacity: 0.5;
+    mask-image: radial-gradient(circle at center, black 30%, transparent 70%);
+    -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 70%);
+    pointer-events: none;
+  }
+  .empty-content { position: relative; }
+  .terminal-block {
+    display: inline-block;
+    margin: 0 auto 24px;
+    padding: 14px 18px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    text-align: left;
+    line-height: 1.7;
+    box-shadow: 0 8px 24px -10px rgba(14,14,16,0.25);
+  }
+  .terminal-block .cmd { color: var(--paper); }
+  .terminal-block .arg { color: #FBBF24; }
+  .terminal-block .resp { color: #34D399; }
+  .terminal-block .comment { color: var(--ink-faint); font-style: italic; }
+  .empty-headline {
+    font-family: var(--sans);
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    margin: 0 0 12px;
+    line-height: 1.05;
+    color: var(--ink);
+  }
+  .empty-headline .accent {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--coral);
+    font-size: 1.1em;
+  }
+  .empty-sub {
+    font-size: 14px; color: var(--ink-mid);
+    max-width: 480px; margin: 0 auto 20px;
+  }
+
+  /* Brand footer */
+  .brand-footer {
+    margin-top: 80px;
+    padding: 40px 0 80px;
+    border-top: 1px solid var(--rule);
+  }
+  .brand-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  .brand-card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 22px;
+  }
+  .swatches { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+  .sw {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--rule);
+  }
+  .specimen { font-family: var(--sans); font-size: 28px; font-weight: 700; line-height: 1; margin-top: 8px; letter-spacing: -0.04em; }
+  .specimen-italic {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 32px;
+    color: var(--coral);
+    line-height: 1;
+    margin-top: 4px;
+    letter-spacing: -0.02em;
+  }
+  .specimen-sub { font-size: 11px; color: var(--ink-faint); margin-top: 6px; font-family: var(--mono); }
+
+  .theme-toggle {
+    position: fixed; bottom: 20px; left: 20px;
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    display: grid; place-items: center;
+    cursor: pointer;
+    color: var(--ink-mid);
+  }
+  .theme-toggle .icon { width: 14px; height: 14px; stroke-width: 1.8; }
+
+  .direction-tag {
+    position: fixed; top: 12px; right: 12px;
+    padding: 5px 11px;
+    background: var(--ink); color: var(--coral);
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 5px;
+    z-index: 50;
+    font-family: var(--mono);
+  }
+</style>
+</head>
+<body>
+
+<!-- Icon defs -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <defs>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M5 12h14M12 5v14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></g></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="5" rx="1.5"/><path d="M4 9v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9M10 13h4"/></g></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M7 12h10M11 18h2"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></symbol>
+    <symbol id="i-group" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M3 9h18M3 15h18M9 3v18M15 3v18"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></g></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M6 18L18 6"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="11" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></g></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></g></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="1.5"/><path d="m21 15-5-5L5 21"/></g></symbol>
+    <symbol id="i-rocket" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></g></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.4"/></g></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"/></g></symbol>
+    <symbol id="i-shopping-bag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></g></symbol>
+    <symbol id="i-ticket" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v3a2 2 0 0 0 0 6v3a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-6z"/><path d="M13 5v14" stroke-dasharray="2 2"/></g></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></g></symbol>
+    <symbol id="i-newspaper" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zM2 18v-3a2 2 0 0 1 2-2h2"/><path d="M10 6h8M10 10h8M10 14h4"/></g></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></g></symbol>
+    <symbol id="i-trending-up" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 17l6-6 4 4 8-8M14 7h7v7"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M13 2 3 14h8l-1 8 10-12h-8l1-8z"/></symbol>
+    <symbol id="i-webhook" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16.98h-5.99c-1.1 0-1.95.94-2.48 1.9A4 4 0 0 1 2 17c.01-.7.2-1.4.57-2"/><path d="m6 17 3.13-5.78c.53-.97.43-2.22-.26-3.07A4 4 0 0 1 11 1.2"/><path d="m18.65 11.5-1.84-3.43c-.65-1.17-.32-2.6.7-3.43A4 4 0 1 0 12 4l1 1.95"/></g></symbol>
+    <symbol id="i-link2" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2M15 7h2a5 5 0 1 1 0 10h-2M8 12h8"/></g></symbol>
+    <symbol id="i-twitter" viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></symbol>
+    <symbol id="i-bar-chart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M7 17V9M12 17V5M17 17v-7"/></g></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v6c0 1.7 4 3 9 3s9-1.3 9-3V5M3 11v6c0 1.7 4 3 9 3s9-1.3 9-3v-6"/></g></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+    <symbol id="i-slash" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="M17 4 7 20"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/></g></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M4 22V4a1 1 0 0 1 1-1h13l-2 5 2 5H5"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14L21 3"/></g></symbol>
+  </defs>
+</svg>
+
+<div class="direction-tag">Signal · v2</div>
+
+<!-- Top metadata strip -->
+<div class="meta-strip">
+  <div class="shell meta-strip-inner">
+    <div class="meta-strip-left">
+      <span><span class="pulse-dot"></span> All systems operational · 99.99%</span>
+      <span style="color:var(--ink-mid);">·</span>
+      <span>Region <a href="#">eu-west-3</a></span>
+      <span style="color:var(--ink-mid);">·</span>
+      <span>p50 <span style="color:var(--paper);">12ms</span></span>
+    </div>
+    <div class="meta-strip-right">
+      <span>v2.7.3</span>
+      <span><a href="#">changelog</a></span>
+      <span><a href="#">api docs</a></span>
+    </div>
+  </div>
+</div>
+
+<nav class="topbar">
+  <div class="shell nav-inner">
+    <a href="#" class="brand">
+      <span class="brand-mark"><svg class="icon"><use href="#i-slash"/></svg></span>
+      <span class="brand-word">slsh<span class="dot">.</span>me</span>
+    </a>
+    <div class="nav-center">
+      <a href="#" class="nav-link active">Links</a>
+      <a href="#" class="nav-link">Campaigns</a>
+      <a href="#" class="nav-link">Analytics</a>
+      <a href="#" class="nav-link">Domains</a>
+      <a href="#" class="nav-link">Integrations</a>
+    </div>
+    <div class="nav-actions">
+      <a href="#" class="btn btn-ghost">Docs</a>
+      <a href="#" class="btn btn-primary">
+        <svg class="icon"><use href="#i-plus"/></svg>
+        New link
+        <span class="kbd" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:var(--ink-faint);margin-left:2px;">N</span>
+      </a>
+      <button class="avatar-btn">
+        <span style="font-size:12px;color:var(--ink-mid);">stan</span>
+        <span class="avatar">S</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main class="shell">
+
+  <section class="page-header">
+    <div class="header-grid">
+      <div>
+        <p class="small-caps" style="margin-bottom:14px;">Workspace · Acme Marketing</p>
+        <h1 class="title">
+          Every link.<br>
+          Every channel.<br>
+          <span class="accent">One signal.</span>
+        </h1>
+      </div>
+      <div class="header-meta">
+        <div class="header-meta-cell">
+          <div class="header-meta-num">142 <span class="delta">+8</span></div>
+          <div class="header-meta-label">Links · 30d</div>
+          <div class="header-meta-mini-chart"><svg viewBox="0 0 100 22" preserveAspectRatio="none"><path class="area" d="M0,18 L8,17 L16,16 L24,15 L32,13 L40,12 L48,11 L56,10 L64,9 L72,8 L80,7 L88,6 L100,5 L100,22 L0,22 Z"/><path class="line" d="M0,18 L8,17 L16,16 L24,15 L32,13 L40,12 L48,11 L56,10 L64,9 L72,8 L80,7 L88,6 L100,5"/></svg></div>
+        </div>
+        <div class="header-meta-cell">
+          <div class="header-meta-num">213,407 <span class="delta">+18%</span></div>
+          <div class="header-meta-label">Clicks · 30d</div>
+          <div class="header-meta-mini-chart"><svg viewBox="0 0 100 22" preserveAspectRatio="none"><path class="area" d="M0,16 L10,14 L20,15 L30,12 L40,10 L50,11 L60,8 L70,6 L80,7 L90,4 L100,3 L100,22 L0,22 Z"/><path class="line" d="M0,16 L10,14 L20,15 L30,12 L40,10 L50,11 L60,8 L70,6 L80,7 L90,4 L100,3"/></svg></div>
+        </div>
+        <div class="header-meta-cell">
+          <div class="header-meta-num">7</div>
+          <div class="header-meta-label">Live campaigns</div>
+          <div class="header-meta-mini-chart" style="display:flex;gap:2px;align-items:flex-end;">
+            <span style="width:10%;background:var(--indigo);height:100%;border-radius:1px;"></span>
+            <span style="width:10%;background:var(--emerald);height:80%;border-radius:1px;"></span>
+            <span style="width:10%;background:var(--amber);height:60%;border-radius:1px;"></span>
+            <span style="width:10%;background:var(--coral);height:50%;border-radius:1px;"></span>
+            <span style="width:10%;background:var(--slate);height:40%;border-radius:1px;"></span>
+            <span style="width:10%;background:var(--indigo-bright);height:30%;border-radius:1px;"></span>
+            <span style="width:10%;background:var(--ink-faint);height:20%;border-radius:1px;"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Developer surface — terminal strip -->
+    <div class="dev-bar">
+      <span class="dev-bar-label">Connected</span>
+      <span class="dev-bar-divider"></span>
+      <span class="dev-item"><svg class="icon"><use href="#i-zap"/></svg><span class="label">api</span> <span class="ok">●</span> <span class="val">1,247 req/24h</span></span>
+      <span class="dev-bar-divider"></span>
+      <span class="dev-item"><svg class="icon"><use href="#i-webhook"/></svg><span class="label">webhooks</span> <span class="ok">●</span> <span class="val">3 active · 0 failures</span></span>
+      <span class="dev-bar-divider"></span>
+      <span class="dev-item"><svg class="icon"><use href="#i-link2"/></svg><span class="label">zapier</span> <span class="ok">●</span> <span class="val">connected</span></span>
+      <span class="dev-bar-divider"></span>
+      <span class="dev-item"><svg class="icon"><use href="#i-database"/></svg><span class="label">zoho</span> <span class="ok">●</span> <span class="val">connected</span></span>
+      <span class="dev-bar-divider"></span>
+      <span class="dev-item"><svg class="icon"><use href="#i-globe"/></svg><span class="label">domains</span> <span class="val">go.acme.io · l.acme.dev</span></span>
+      <a href="#" class="dev-item-link">surface <svg class="icon" style="width:10px;height:10px;"><use href="#i-arrow-right"/></svg></a>
+    </div>
+  </section>
+
+  <!-- Filter row -->
+  <div class="filter-row">
+    <div class="search">
+      <span class="search-icon-wrap"><svg class="icon"><use href="#i-search"/></svg></span>
+      <input type="search" placeholder="Search links, campaigns, slugs, destinations…">
+      <span class="search-shortcut"><span class="kbd">⌘K</span></span>
+    </div>
+    <a href="#" class="chip chip-active">
+      <span class="chip-dot" style="background:var(--indigo);"></span>
+      Q2 Product Launch
+      <svg class="icon"><use href="#i-x"/></svg>
+    </a>
+    <a href="#" class="chip">
+      <svg class="icon"><use href="#i-filter"/></svg>
+      Filters
+      <span style="color:var(--ink-faint);">(2)</span>
+    </a>
+    <a href="#" class="chip">
+      <svg class="icon"><use href="#i-archive"/></svg>
+      Archived <span style="color:var(--ink-faint);">12</span>
+    </a>
+    <a href="#" class="chip" style="margin-left:auto;">
+      <svg class="icon"><use href="#i-group"/></svg>
+      Group: campaign
+    </a>
+    <a href="#" class="chip">
+      <svg class="icon"><use href="#i-download"/></svg>
+      Export <span class="mono" style="color:var(--ink-faint);">CSV</span>
+    </a>
+  </div>
+
+  <!-- Active campaign banner -->
+  <div class="campaign-banner">
+    <span style="width:8px;height:8px;border-radius:50%;background:var(--indigo);flex-shrink:0;"></span>
+    <div style="flex:1;">
+      <div class="campaign-banner-title">Q2 Product Launch</div>
+      <div class="campaign-banner-meta">23 links · 28,734 clicks · launch in T-12d · goal 80% complete</div>
+    </div>
+    <span class="pace-badge">
+      <svg class="icon"><use href="#i-trending-up"/></svg>
+      pace +18% vs target
+    </span>
+    <a href="#" class="btn btn-outline" style="font-size:12px;">Open campaign <svg class="icon"><use href="#i-arrow-right"/></svg></a>
+  </div>
+
+  <!-- Links list -->
+  <section class="links-section">
+    <div class="links-header">
+      <span></span>
+      <span>Link · destination</span>
+      <span style="text-align:left;">Trend · 7d</span>
+      <span style="text-align:right;">Clicks</span>
+      <span></span>
+    </div>
+
+    <!-- 1. Q2 launch + UTM -->
+    <div class="link-row-grid">
+      <div class="favicon f-launch"><svg class="icon"><use href="#i-rocket"/></svg></div>
+      <div class="link-info">
+        <div class="link-top">
+          <span class="short-url"><span class="domain">slsh.me/</span><span class="slug">q2-launch</span></span>
+          <span class="badge badge-indigo"><span class="badge-dot" style="background:var(--indigo);"></span>Q2 Product Launch</span>
+          <span class="badge badge-amber">
+            <svg class="icon"><use href="#i-clock"/></svg>
+            T-5d
+          </span>
+          <span class="badge badge-outline badge-mono">2h ago</span>
+        </div>
+        <div class="link-dest">producthunt.com/posts/slsh-launch<span class="qs">?utm_source=producthunt&amp;utm_medium=launch&amp;utm_campaign=q2-launch&amp;utm_content=hero</span></div>
+      </div>
+      <div class="clicks-trend">
+        <svg class="sparkline up" viewBox="0 0 60 20" preserveAspectRatio="none"><path class="area" d="M0,16 L8,14 L16,15 L24,11 L32,10 L40,7 L48,5 L60,3 L60,20 L0,20 Z"/><path class="line" d="M0,16 L8,14 L16,15 L24,11 L32,10 L40,7 L48,5 L60,3"/></svg>
+        <span style="color:var(--emerald);font-weight:500;">+312</span>
+      </div>
+      <div class="clicks-num">8,432<span class="sub">clicks</span></div>
+      <button class="icon-btn"><svg class="icon"><use href="#i-more"/></svg></button>
+    </div>
+
+    <!-- 2. Custom domain -->
+    <div class="link-row-grid">
+      <div class="favicon f-sale"><svg class="icon"><use href="#i-tag"/></svg></div>
+      <div class="link-info">
+        <div class="link-top">
+          <span class="short-url"><span class="domain" style="color:var(--indigo);">go.acme.io/</span><span class="slug">spring</span></span>
+          <span class="badge badge-outline">
+            <svg class="icon"><use href="#i-globe"/></svg>
+            custom domain
+          </span>
+          <span class="badge badge-emerald"><span class="badge-dot" style="background:var(--emerald);"></span>Spring Sale</span>
+          <span class="badge badge-outline badge-mono">4d ago</span>
+        </div>
+        <div class="link-dest">acme.io/sale<span class="qs">?utm_source=email&amp;utm_medium=newsletter&amp;utm_campaign=spring-2026</span></div>
+      </div>
+      <div class="clicks-trend">
+        <svg class="sparkline up" viewBox="0 0 60 20" preserveAspectRatio="none"><path class="area" d="M0,14 L8,13 L16,15 L24,10 L32,9 L40,6 L48,7 L60,5 L60,20 L0,20 Z"/><path class="line" d="M0,14 L8,13 L16,15 L24,10 L32,9 L40,6 L48,7 L60,5"/></svg>
+        <span style="color:var(--emerald);font-weight:500;">+489</span>
+      </div>
+      <div class="clicks-num">14,201<span class="sub">clicks</span></div>
+      <button class="icon-btn"><svg class="icon"><use href="#i-more"/></svg></button>
+    </div>
+
+    <!-- 3. Live flash -->
+    <div class="link-row-grid flash">
+      <div class="favicon f-live"><svg class="icon"><use href="#i-sparkle"/></svg></div>
+      <div class="link-info">
+        <div class="link-top">
+          <span class="short-url"><span class="domain">slsh.me/</span><span class="slug">welcome</span></span>
+          <span class="badge badge-coral">
+            <span class="live-pulse"></span>
+            live · just clicked
+          </span>
+          <span class="badge badge-outline badge-mono">via API</span>
+          <span class="badge badge-outline badge-mono">webhook ✓</span>
+        </div>
+        <div class="link-dest">app.acme.io/welcome<span class="qs">?ref=onboard</span> <span class="meta">· 🇫🇷 Paris · Safari · ref direct</span></div>
+      </div>
+      <div class="clicks-trend">
+        <svg class="sparkline" viewBox="0 0 60 20" preserveAspectRatio="none"><path class="line" d="M0,18 L60,18" stroke="var(--coral)"/><circle cx="60" cy="18" r="2" fill="var(--coral)"/></svg>
+        <span style="color:var(--coral);font-weight:500;">+1</span>
+      </div>
+      <div class="clicks-num" style="color:var(--coral);">1<span class="sub">click</span></div>
+      <button class="icon-btn"><svg class="icon"><use href="#i-more"/></svg></button>
+    </div>
+
+    <!-- 4. Podcast -->
+    <div class="link-row-grid">
+      <div class="favicon f-podcast"><svg class="icon"><use href="#i-mic"/></svg></div>
+      <div class="link-info">
+        <div class="link-top">
+          <span class="short-url"><span class="domain">slsh.me/</span><span class="slug">podcast-72</span></span>
+          <span class="badge badge-amber"><span class="badge-dot" style="background:var(--amber);"></span>Podcast Tour</span>
+          <span class="badge badge-outline">
+            <svg class="icon"><use href="#i-image"/></svg>
+            custom OG
+          </span>
+          <span class="badge badge-outline badge-mono">12d ago</span>
+        </div>
+        <div class="link-dest">podcasts.apple.com/episode/marketing-attribution-72 <span class="meta">· OG: "Why attribution matters"</span></div>
+      </div>
+      <div class="clicks-trend">
+        <svg class="sparkline up" viewBox="0 0 60 20" preserveAspectRatio="none"><path class="area" d="M0,18 L8,16 L16,13 L24,11 L32,9 L40,7 L48,5 L60,3 L60,20 L0,20 Z"/><path class="line" d="M0,18 L8,16 L16,13 L24,11 L32,9 L40,7 L48,5 L60,3"/></svg>
+        <span style="color:var(--emerald);font-weight:500;">+1.2k</span>
+      </div>
+      <div class="clicks-num">47,892<span class="sub">clicks</span></div>
+      <button class="icon-btn"><svg class="icon"><use href="#i-more"/></svg></button>
+    </div>
+
+    <!-- 5. Password -->
+    <div class="link-row-grid">
+      <div class="favicon f-internal"><svg class="icon"><use href="#i-bar-chart"/></svg></div>
+      <div class="link-info">
+        <div class="link-top">
+          <span class="short-url"><span class="domain">slsh.me/</span><span class="slug">internal-deck</span></span>
+          <span class="badge badge-slate">
+            <svg class="icon"><use href="#i-lock"/></svg>
+            password
+          </span>
+          <span class="badge badge-outline"><span class="badge-dot" style="background:var(--slate);"></span>Internal</span>
+          <span class="badge badge-outline badge-mono">1d ago</span>
+        </div>
+        <div class="link-dest">drive.google.com/file/d/1aBcD3.../view <span class="meta">· 3 unlocks · 2 access denied</span></div>
+      </div>
+      <div class="clicks-trend">
+        <svg class="sparkline flat" viewBox="0 0 60 20" preserveAspectRatio="none"><path class="area" d="M0,15 L10,14 L20,15 L30,13 L40,14 L50,12 L60,13 L60,20 L0,20 Z"/><path class="line" d="M0,15 L10,14 L20,15 L30,13 L40,14 L50,12 L60,13"/></svg>
+        <span style="color:var(--ink-mid);font-weight:500;">+3</span>
+      </div>
+      <div class="clicks-num">23<span class="sub">clicks</span></div>
+      <button class="icon-btn"><svg class="icon"><use href="#i-more"/></svg></button>
+    </div>
+
+    <!-- 6. Expired -->
+    <div class="link-row-grid">
+      <div class="favicon"><svg class="icon"><use href="#i-shopping-bag"/></svg></div>
+      <div class="link-info">
+        <div class="link-top">
+          <span class="short-url" style="color:var(--ink-faint);"><span class="domain">slsh.me/</span><span class="slug" style="color:var(--ink-faint);">black-friday</span></span>
+          <span class="badge badge-slate">expired</span>
+          <span class="badge badge-emerald"><span class="badge-dot" style="background:var(--emerald);"></span>Spring Sale</span>
+          <span class="badge badge-outline badge-mono">Nov 30 '25</span>
+        </div>
+        <div class="link-dest">acme.io/black-friday-2025 <span class="meta">· peak: 184 clicks/min</span></div>
+      </div>
+      <div class="clicks-trend">
+        <svg class="sparkline flat" viewBox="0 0 60 20" preserveAspectRatio="none"><path class="line" d="M0,18 L8,3 L16,5 L24,7 L32,12 L40,14 L48,16 L60,17"/></svg>
+        <span style="color:var(--ink-faint);font-weight:500;">final</span>
+      </div>
+      <div class="clicks-num" style="color:var(--ink-mid);">2,341<span class="sub">final</span></div>
+      <button class="icon-btn"><svg class="icon"><use href="#i-more"/></svg></button>
+    </div>
+
+    <!-- 7. OG branded -->
+    <div class="link-row-grid">
+      <div class="favicon f-twitter"><svg class="icon"><use href="#i-twitter"/></svg></div>
+      <div class="link-info">
+        <div class="link-top">
+          <span class="short-url"><span class="domain">slsh.me/</span><span class="slug">twitter-thread</span></span>
+          <span class="badge badge-indigo"><span class="badge-dot" style="background:var(--indigo);"></span>Q2 Product Launch</span>
+          <span class="badge badge-coral">
+            <svg class="icon"><use href="#i-image"/></svg>
+            branded card
+          </span>
+          <span class="badge badge-outline badge-mono">1d ago</span>
+        </div>
+        <div class="link-dest">twitter.com/acme/status/1789432<span class="qs">?utm_medium=social&amp;utm_source=twitter</span></div>
+      </div>
+      <div class="clicks-trend">
+        <svg class="sparkline up" viewBox="0 0 60 20" preserveAspectRatio="none"><path class="area" d="M0,16 L10,11 L20,8 L30,6 L40,5 L50,4 L60,3 L60,20 L0,20 Z"/><path class="line" d="M0,16 L10,11 L20,8 L30,6 L40,5 L50,4 L60,3"/></svg>
+        <span style="color:var(--emerald);font-weight:500;">+428</span>
+      </div>
+      <div class="clicks-num">6,103<span class="sub">clicks</span></div>
+      <button class="icon-btn"><svg class="icon"><use href="#i-more"/></svg></button>
+    </div>
+
+    <!-- 8. Limit reached -->
+    <div class="link-row-grid">
+      <div class="favicon"><svg class="icon"><use href="#i-ticket"/></svg></div>
+      <div class="link-info">
+        <div class="link-top">
+          <span class="short-url" style="color:var(--ink-faint);"><span class="domain">slsh.me/</span><span class="slug" style="color:var(--ink-faint);">limited-100</span></span>
+          <span class="badge badge-coral">
+            <svg class="icon"><use href="#i-pause"/></svg>
+            limit reached · 100/100
+          </span>
+          <span class="badge badge-outline badge-mono">3d ago</span>
+        </div>
+        <div class="link-dest">form.typeform.com/early-access <span class="meta">· filled in 2h 14m</span></div>
+      </div>
+      <div class="clicks-trend">
+        <svg class="sparkline" viewBox="0 0 60 20" preserveAspectRatio="none"><path class="line" d="M0,16 L8,12 L16,8 L24,5 L32,4 L40,3 L48,3 L60,3" stroke="var(--coral)"/></svg>
+        <span style="color:var(--ink-faint);font-weight:500;">cap</span>
+      </div>
+      <div class="clicks-num" style="color:var(--ink-mid);">100<span class="sub">/ 100</span></div>
+      <button class="icon-btn"><svg class="icon"><use href="#i-more"/></svg></button>
+    </div>
+
+    <!-- 9. API created -->
+    <div class="link-row-grid">
+      <div class="favicon"><svg class="icon"><use href="#i-terminal"/></svg></div>
+      <div class="link-info">
+        <div class="link-top">
+          <span class="short-url"><span class="domain">slsh.me/</span><span class="slug">api-7f3k2</span></span>
+          <span class="badge badge-emerald"><span class="badge-dot" style="background:var(--emerald);"></span>Spring Sale</span>
+          <span class="badge badge-outline badge-mono">
+            <svg class="icon"><use href="#i-terminal"/></svg>
+            API
+          </span>
+          <span class="badge badge-outline badge-mono">1h ago</span>
+        </div>
+        <div class="link-dest"><span style="color:var(--ink-mid);">POST</span> /api/v1/links · key prod_•••••3a2f <span class="meta">· variant=A · cohort=q2</span></div>
+      </div>
+      <div class="clicks-trend">
+        <svg class="sparkline up" viewBox="0 0 60 20" preserveAspectRatio="none"><path class="area" d="M0,16 L20,14 L30,13 L40,11 L50,8 L60,6 L60,20 L0,20 Z"/><path class="line" d="M0,16 L20,14 L30,13 L40,11 L50,8 L60,6"/></svg>
+        <span style="color:var(--emerald);font-weight:500;">+156</span>
+      </div>
+      <div class="clicks-num">156<span class="sub">clicks</span></div>
+      <button class="icon-btn"><svg class="icon"><use href="#i-more"/></svg></button>
+    </div>
+
+    <!-- 10. Archived -->
+    <div class="link-row-grid archived">
+      <div class="favicon"><svg class="icon"><use href="#i-newspaper"/></svg></div>
+      <div class="link-info">
+        <div class="link-top">
+          <span class="short-url"><span class="domain">slsh.me/</span><span class="slug">old-page</span></span>
+          <span class="badge badge-slate">archived</span>
+          <span class="badge badge-outline badge-mono">2y ago</span>
+        </div>
+        <div class="link-dest">blog.acme.io/2024-recap <span class="meta">· still resolves</span></div>
+      </div>
+      <div class="clicks-trend">
+        <svg class="sparkline flat" viewBox="0 0 60 20" preserveAspectRatio="none"><path class="line" d="M0,3 L10,4 L20,6 L30,9 L40,12 L50,14 L60,16"/></svg>
+        <span style="color:var(--ink-faint);font-weight:500;">final</span>
+      </div>
+      <div class="clicks-num" style="color:var(--ink-mid);">9,847<span class="sub">final</span></div>
+      <button class="icon-btn"><svg class="icon"><use href="#i-more"/></svg></button>
+    </div>
+
+  </section>
+
+  <!-- Empty state -->
+  <section class="empty-section">
+    <p class="small-caps">Empty state · preview</p>
+    <div class="empty-card">
+      <div class="empty-grid-bg"></div>
+      <div class="empty-content">
+        <div class="terminal-block">
+<span class="comment"># or paste a URL above. either works.</span><br>
+<span class="cmd">curl</span> <span class="arg">-X POST</span> https://api.slsh.me/v1/links \<br>
+&nbsp;&nbsp;<span class="arg">-H</span> "Authorization: Bearer prod_•••••3a2f" \<br>
+&nbsp;&nbsp;<span class="arg">-d</span> '{"url": "https://acme.io/launch", "campaign": "q2"}'<br>
+<span class="resp">→ 201 Created · slsh.me/q2-launch</span>
+        </div>
+        <h2 class="empty-headline">No links yet. <span class="accent">Make some noise.</span></h2>
+        <p class="empty-sub">Paste a URL, hit <span class="kbd">N</span>. Or pipe 10,000 through the API in one POST. Either way, every click ends up here — attributed, sourced, ready for export.</p>
+        <div style="display:flex;gap:8px;justify-content:center;">
+          <a href="#" class="btn btn-primary">
+            <svg class="icon"><use href="#i-plus"/></svg>
+            Create your first link
+          </a>
+          <a href="#" class="btn btn-outline">Read API docs <svg class="icon"><use href="#i-arrow-right"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Brand footer -->
+  <section class="brand-footer">
+    <p class="small-caps">Direction · Signal</p>
+    <h3 style="font-family:var(--sans);font-size:48px; margin: 12px 0 28px; letter-spacing:-0.045em;font-weight:600;line-height:1;">
+      The marketer's <span style="font-family:var(--serif);font-style:italic;font-weight:400;color:var(--coral);">operator console</span>.
+    </h3>
+    <div class="brand-grid">
+      <div class="brand-card">
+        <p class="small-caps">Palette</p>
+        <div class="swatches">
+          <div class="sw" style="background:var(--canvas);" title="canvas"></div>
+          <div class="sw" style="background:var(--paper);" title="paper"></div>
+          <div class="sw" style="background:var(--ink);" title="ink"></div>
+          <div class="sw" style="background:var(--indigo);" title="indigo"></div>
+          <div class="sw" style="background:var(--coral);" title="coral"></div>
+          <div class="sw" style="background:var(--amber);" title="amber"></div>
+          <div class="sw" style="background:var(--emerald);" title="emerald"></div>
+        </div>
+        <p style="font-size:11px;color:var(--ink-faint);margin-top:14px;line-height:1.7;font-family:var(--mono);">
+          canvas #F1EDE3 (warmer)<br>
+          ink #0E0E10<br>
+          indigo #4F46E5 · primary<br>
+          coral #F26D5B · expressive accent<br>
+          emerald · amber · slate
+        </p>
+        <p style="font-size:13px;color:var(--ink-mid);margin-top:10px;font-family:var(--serif);font-style:italic;">
+          Quiet canvas, decisive ink, occasional poetry.
+        </p>
+      </div>
+      <div class="brand-card">
+        <p class="small-caps">Type</p>
+        <p class="specimen">Geist 700</p>
+        <p class="specimen-sub">— body · UI · operator-grade</p>
+        <p class="specimen-italic">"signal."</p>
+        <p class="specimen-sub">— Instrument Serif italic · the only flourish</p>
+        <p style="font-family:var(--mono);font-size:13px;margin-top:18px;"><span style="color:var(--ink-mid);">slsh.me/</span><span style="color:var(--coral);">q2-launch</span></p>
+        <p class="specimen-sub">— Geist Mono · slug always coral</p>
+      </div>
+      <div class="brand-card">
+        <p class="small-caps">Voice</p>
+        <p style="font-family:var(--sans);font-size:18px;font-weight:600;line-height:1.3;margin-top:8px;letter-spacing:-0.025em;">
+          Confident. Operator-grade. <span class="serif" style="font-style:italic;font-weight:400;color:var(--coral);">Sometimes a little poetic.</span>
+        </p>
+        <p style="font-size:13px;color:var(--ink-mid);margin-top:14px;line-height:1.6;">
+          For marketers who think like operators. Numbers up front, system-status visible, every action one keystroke away. The italic serif is the only place we let the brand sing.
+        </p>
+        <p style="font-size:11px;color:var(--ink-faint);margin-top:14px;font-family:var(--mono);">
+          v2: warmer canvas · sparklines on every row · icon set replaces emojis
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<button class="theme-toggle" title="Theme">
+  <svg class="icon"><use href="#i-moon"/></svg>
+</button>
+
+</body>
+</html>

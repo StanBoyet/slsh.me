@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brand directions · slsh.me</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Caveat:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=migra@500,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAF7F0;
+    --ink: #0E0E10;
+    --ink-soft: #2C2A2A;
+    --ink-faint: #8B857C;
+    --rule: #E8E0D2;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Geist", system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    font-size: 14.5px;
+    letter-spacing: -0.005em;
+  }
+  .shell { max-width: 1280px; margin: 0 auto; padding: 60px 32px 100px; }
+  h1 {
+    font-family: "Geist", sans-serif;
+    font-size: 80px;
+    font-weight: 600;
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+    margin: 0;
+  }
+  h1 .accent {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-weight: 400;
+    color: #F26D5B;
+    font-size: 1.05em;
+  }
+  .lede {
+    font-size: 17px;
+    color: var(--ink-soft);
+    max-width: 640px;
+    margin: 24px 0 56px;
+    line-height: 1.55;
+  }
+  .small-caps {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 1100px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px -16px rgba(0,0,0,0.15);
+    border-color: var(--ink-soft);
+  }
+  .preview {
+    aspect-ratio: 16 / 9;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+    overflow: hidden;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .pv-row {
+    flex: 1;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 8px;
+    font-size: 12px;
+    min-height: 36px;
+  }
+
+  /* === SPLASH === */
+  .splash {
+    background:
+      radial-gradient(ellipse 50% 30% at 90% 0%, #FCE3EE, transparent 70%),
+      radial-gradient(ellipse 40% 25% at 5% 30%, #ECF5D2, transparent 70%),
+      #FFFCF5;
+  }
+  .splash .pv-mock-title {
+    font-family: "Migra", "Cormorant Garamond", serif;
+    font-weight: 600;
+    font-size: 26px;
+    color: #131210;
+    letter-spacing: -0.035em;
+    line-height: 0.9;
+    margin-bottom: 14px;
+  }
+  .splash .pv-marker {
+    background: #B6DE5B;
+    padding: 0 4px;
+    border-radius: 4px;
+    border: 1.25px solid #131210;
+    display: inline-block;
+    transform: rotate(-1deg);
+  }
+  .splash .pv-row {
+    background: white;
+    border: 1.25px solid #131210;
+  }
+  .splash .pv-mono { font-family: "JetBrains Mono", monospace; font-size: 11.5px; color: #131210; }
+  .splash .pv-mono .slash { color: #FB8B3C; }
+  .splash .pv-pill {
+    background: #FB8B3C; color: #131210;
+    border: 1.25px solid #131210;
+    border-radius: 99px; padding: 1px 8px;
+    font-size: 9px; font-weight: 600;
+  }
+  .splash .pv-pill.lime { background: #B6DE5B; }
+  .splash .pv-pill.sky { background: #6FC4EE; }
+  .splash .pv-clicks {
+    margin-left: auto;
+    font-family: "Migra", serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #131210;
+  }
+  .splash .pv-spark {
+    width: 30px; height: 12px;
+  }
+  .splash .pv-spark path { stroke: #65A30D; stroke-width: 1.4; fill: none; }
+
+  /* === SPARK === */
+  .spark {
+    background:
+      radial-gradient(ellipse 50% 30% at 100% 0%, rgba(236,72,153,0.10), transparent 60%),
+      radial-gradient(ellipse 40% 25% at 0% 80%, rgba(14,165,233,0.10), transparent 60%),
+      #FAF7EE;
+  }
+  .spark .pv-mock-title {
+    font-family: "Migra", "Cormorant Garamond", serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: #131210;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    margin-bottom: 14px;
+  }
+  .spark .pv-mock-title .accent {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-weight: 400;
+    color: #F97316;
+    font-size: 1.05em;
+  }
+  .spark .pv-mock-title .marker {
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+  }
+  .spark .pv-mock-title .marker::before {
+    content: "";
+    position: absolute;
+    inset: 30% -2% 8% -2%;
+    background: #F97316;
+    z-index: -1;
+    border-radius: 4px;
+    transform: rotate(-1deg);
+    opacity: 0.85;
+  }
+  .spark .pv-row {
+    background: white;
+    border: 1px solid rgba(19,18,16,0.14);
+    border-radius: 10px;
+  }
+  .spark .pv-mono { font-family: "JetBrains Mono", monospace; font-size: 11.5px; color: #131210; }
+  .spark .pv-mono .slug { color: #F97316; font-weight: 600; }
+  .spark .pv-mono .slug.s-emerald { color: #10B981; }
+  .spark .pv-mono .slug.s-sky { color: #0EA5E9; }
+  .spark .pv-pill {
+    background: #FFEDD5; color: #F97316;
+    border: 1px solid rgba(249,115,22,0.3);
+    border-radius: 99px; padding: 1px 8px;
+    font-size: 9px; font-weight: 500;
+  }
+  .spark .pv-pill.emerald { background: #D1FAE5; color: #10B981; border-color: rgba(16,185,129,0.3); }
+  .spark .pv-pill.sky { background: #E0F2FE; color: #0EA5E9; border-color: rgba(14,165,233,0.3); }
+  .spark .pv-spark {
+    width: 36px; height: 14px;
+  }
+  .spark .pv-spark path.line { stroke: #059669; stroke-width: 1.4; fill: none; }
+  .spark .pv-spark path.area { fill: #D1FAE5; opacity: 0.7; }
+  .spark .pv-clicks {
+    margin-left: auto;
+    font-family: "Migra", serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #131210;
+    letter-spacing: -0.025em;
+  }
+
+  /* === SIGNAL === */
+  .signal { background: #F1EDE3; }
+  .signal .pv-mock-title {
+    font-family: "Geist", sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: #0E0E10;
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+    margin-bottom: 14px;
+  }
+  .signal .pv-mock-title .accent {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-weight: 400;
+    color: #F26D5B;
+    font-size: 1.1em;
+  }
+  .signal .pv-row {
+    background: #FAF7EE;
+    border: 1px solid #E2DBCC;
+  }
+  .signal .pv-mono { font-family: "JetBrains Mono", monospace; font-size: 11.5px; color: #0E0E10; }
+  .signal .pv-mono .slug { color: #F26D5B; }
+  .signal .pv-pill {
+    background: #E1DFFC; color: #4F46E5;
+    border-radius: 4px; padding: 1px 6px;
+    font-size: 9px; font-weight: 500;
+  }
+  .signal .pv-pill.coral { background: #FBDDD5; color: #F26D5B; }
+  .signal .pv-pill.outline {
+    background: #FAF7EE;
+    border: 1px solid #E2DBCC;
+    color: #5A5754;
+  }
+  .signal .pv-spark {
+    width: 36px; height: 14px;
+  }
+  .signal .pv-spark path {
+    stroke: #047857;
+    stroke-width: 1.4;
+    fill: none;
+  }
+  .signal .pv-clicks {
+    margin-left: auto;
+    font-family: "Geist", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #0E0E10;
+    letter-spacing: -0.02em;
+  }
+
+  /* === HIGHLIGHTER === */
+  .highlighter {
+    background:
+      radial-gradient(ellipse 50% 30% at 100% 0%, #FFE0EB, transparent 70%),
+      radial-gradient(ellipse 40% 25% at 0% 100%, #DCEBFC, transparent 70%),
+      #FBF6E8;
+  }
+  .highlighter .pv-mock-title {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: #1F1B16;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    margin-bottom: 14px;
+  }
+  .highlighter .pv-marker {
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+    padding: 0 3px;
+  }
+  .highlighter .pv-marker::before {
+    content: "";
+    position: absolute;
+    inset: 30% -2% 8% -2%;
+    background: #FCE954;
+    z-index: -1;
+    transform: rotate(-1deg) skewX(-3deg);
+    border-radius: 2px;
+    opacity: 0.85;
+  }
+  .highlighter .pv-marker.mk-pink::before { background: #FFB5D0; }
+  .highlighter .pv-row {
+    background: #FFFCF1;
+    border: 1.25px solid #1F1B16;
+  }
+  .highlighter .pv-mono { font-family: "JetBrains Mono", monospace; font-size: 11.5px; color: #1F1B16; }
+  .highlighter .pv-mono .slug {
+    position: relative;
+    display: inline-block;
+  }
+  .highlighter .pv-mono .slug::after {
+    content: "";
+    position: absolute;
+    left: -2px; right: -2px;
+    bottom: -1px;
+    height: 4px;
+    background: #FCE954;
+    z-index: -1;
+    transform: rotate(-0.5deg) skewX(-3deg);
+  }
+  .highlighter .pv-pill {
+    background: #FCE954; color: #1F1B16;
+    border: 1.25px solid #1F1B16;
+    border-radius: 99px; padding: 1px 8px;
+    font-size: 9px; font-weight: 600;
+  }
+  .highlighter .pv-pill.mint { background: #A8E6A1; }
+  .highlighter .pv-pill.pink { background: #FFB5D0; }
+  .highlighter .pv-clicks {
+    margin-left: auto;
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #1F1B16;
+  }
+  .highlighter .pv-hand {
+    position: absolute;
+    top: 12px; right: 18px;
+    font-family: "Caveat", cursive;
+    font-weight: 700;
+    color: #2B4FCC;
+    font-size: 18px;
+    transform: rotate(-3deg);
+    line-height: 1;
+  }
+
+  /* === PRISM === */
+  .prism {
+    background:
+      radial-gradient(ellipse 70% 50% at 100% 0%, rgba(251,146,60,0.22), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 0% 80%, rgba(99,102,241,0.18), transparent 60%),
+      radial-gradient(ellipse 50% 30% at 80% 100%, rgba(52,211,153,0.16), transparent 60%),
+      #F5F1E8;
+  }
+  .prism .pv-mock-title {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: #0A0612;
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+    margin-bottom: 14px;
+  }
+  .prism .pv-mock-title .grad {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-weight: 400;
+    background: linear-gradient(135deg, #C2410C 0%, #BE185D 50%, #4338CA 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.1em;
+  }
+  .prism .pv-row {
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(10,6,18,0.18);
+    border-radius: 14px;
+  }
+  .prism .pv-mono { font-family: "JetBrains Mono", monospace; font-size: 11.5px; color: #0A0612; }
+  .prism .pv-mono .slug {
+    color: #BE185D;
+    font-weight: 600;
+  }
+  .prism .pv-pill {
+    background: linear-gradient(135deg, #C2410C, #BE185D);
+    color: white;
+    border-radius: 99px; padding: 2px 9px;
+    font-size: 9px; font-weight: 600;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .prism .pv-pill.cool { background: linear-gradient(135deg, #4338CA, #0E7490); }
+  .prism .pv-pill.mint { background: linear-gradient(135deg, #047857, #4338CA); }
+  .prism .pv-clicks {
+    margin-left: auto;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #0A0612;
+    letter-spacing: -0.02em;
+  }
+
+  /* === HYBRID modifier — Splash card + Beam gradient corner orb === */
+  .preview.has-orb { position: relative; }
+  .preview.has-orb::after {
+    content: ""; position: absolute;
+    top: -22px; right: -22px;
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FB8B3C, #F49AC0);
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .preview.has-orb > * { position: relative; z-index: 1; }
+
+  /* === BEAM === */
+  .beam {
+    background:
+      radial-gradient(ellipse 60% 40% at 100% 0%, rgba(249,115,22,0.16), transparent 60%),
+      radial-gradient(ellipse 50% 35% at 0% 30%, rgba(14,165,233,0.13), transparent 60%),
+      radial-gradient(ellipse 45% 30% at 100% 100%, rgba(219,39,119,0.12), transparent 60%),
+      radial-gradient(ellipse 35% 25% at 0% 100%, rgba(124,58,237,0.14), transparent 60%),
+      #F8F4EB;
+  }
+  .beam .pv-mock-title {
+    font-family: "Migra", "Cormorant Garamond", serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: #0F0D14;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    margin-bottom: 14px;
+  }
+  .beam .pv-mock-title .grad {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-weight: 400;
+    background: linear-gradient(135deg, #F97316 0%, #DB2777 35%, #6D28D9 70%, #0EA5E9 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.08em;
+  }
+  .beam .pv-row {
+    background: rgba(255,255,255,0.86);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(15,13,20,0.13);
+    border-radius: 12px;
+  }
+  .beam .pv-mono { font-family: "JetBrains Mono", monospace; font-size: 11.5px; color: #0F0D14; }
+  .beam .pv-mono .slug { color: #F97316; font-weight: 600; }
+  .beam .pv-mono .slug.s-emerald { color: #059669; }
+  .beam .pv-mono .slug.s-sky { color: #0EA5E9; }
+  .beam .pv-pill {
+    background: linear-gradient(135deg, #F97316, #DB2777);
+    color: white;
+    border-radius: 99px; padding: 2px 9px;
+    font-size: 9px; font-weight: 600;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .beam .pv-pill.emerald { background: linear-gradient(135deg, #047857, #0E7490); }
+  .beam .pv-pill.sky { background: linear-gradient(135deg, #0EA5E9, #4338CA); }
+  .beam .pv-spark {
+    width: 36px; height: 14px;
+    filter: drop-shadow(0 0 3px rgba(219,39,119,0.20));
+  }
+  .beam .pv-spark path.line { stroke: url(#beam-card-grad); stroke-width: 1.5; fill: none; }
+  .beam .pv-spark path.area { fill: url(#beam-card-grad); opacity: 0.20; }
+  .beam .pv-spark.emerald path.line { stroke: #047857; }
+  .beam .pv-spark.emerald path.area { fill: #047857; }
+  .beam .pv-spark.sky path.line { stroke: #0EA5E9; }
+  .beam .pv-spark.sky path.area { fill: #0EA5E9; }
+  .beam .pv-clicks {
+    margin-left: auto;
+    font-family: "Migra", serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #0F0D14;
+    letter-spacing: -0.025em;
+  }
+
+
+  .meta {
+    padding: 24px 26px;
+  }
+  .meta .name {
+    font-family: "Geist", sans-serif;
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin: 0 0 6px;
+  }
+  .meta .tagline {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin: 0 0 18px;
+    line-height: 1.5;
+  }
+  .meta .row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .swatch {
+    width: 24px; height: 24px;
+    border-radius: 7px;
+    border: 1px solid var(--rule);
+  }
+  .meta .specs {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 4px 14px;
+    font-size: 12px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+  }
+  .meta .specs dt {
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+  .meta .specs dd {
+    margin: 0;
+    color: var(--ink-soft);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+  }
+  .meta .open {
+    margin-top: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* Card with two view buttons instead of single .open link */
+  .grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media (max-width: 1100px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px)  { .grid { grid-template-columns: 1fr; } }
+  .grid.grid-single {
+    grid-template-columns: minmax(0, 540px);
+    justify-content: center;
+  }
+  .card-final {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    overflow: hidden;
+    transition: all 0.2s;
+    color: inherit;
+  }
+  .card-final:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px -16px rgba(0,0,0,0.15);
+    border-color: var(--ink-soft);
+  }
+  .meta .views {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .meta .views a.view {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-decoration: none;
+    padding: 12px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    color: var(--ink);
+    transition: all 0.12s ease;
+  }
+  .meta .views a.view:hover {
+    border-color: var(--ink-soft);
+    background: var(--paper);
+  }
+  .meta .views a.view .view-kind {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .meta .views a.view .view-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Exploration archive */
+  .archive {
+    margin-top: 56px;
+    padding: 28px 30px;
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+  }
+  .archive .archive-head {
+    display: flex; align-items: baseline; gap: 12px;
+    margin-bottom: 18px;
+  }
+  .archive .archive-head h3 {
+    font-family: "Geist", sans-serif;
+    font-size: 18px; font-weight: 600;
+    margin: 0; letter-spacing: -0.02em;
+  }
+  .archive .archive-head p {
+    color: var(--ink-faint);
+    font-size: 13px;
+    margin: 0;
+  }
+  .archive-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 800px) { .archive-grid { grid-template-columns: repeat(2, 1fr); } }
+  .archive-link {
+    display: block;
+    padding: 14px 16px;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--paper);
+    transition: all 0.12s ease;
+  }
+  .archive-link:hover {
+    border-color: var(--ink-soft);
+    transform: translateY(-1px);
+  }
+  .archive-link .arch-name {
+    font-family: "Geist", sans-serif;
+    font-size: 14px; font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .archive-link .arch-desc {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+  .archive-link.archive-pair { cursor: default; }
+  .archive-link.archive-pair:hover { transform: none; border-color: var(--rule); }
+  .archive-link .arch-views {
+    margin-top: 10px;
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .archive-link .arch-views a {
+    color: var(--ink);
+    text-decoration: none;
+    padding: 2px 0;
+    border-bottom: 1px solid var(--rule);
+    transition: border-color 0.12s ease;
+  }
+  .archive-link .arch-views a:hover { border-color: var(--ink); }
+
+  .notes {
+    margin-top: 80px;
+    padding-top: 40px;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 32px;
+  }
+  .notes h2 {
+    font-family: "Geist", sans-serif;
+    font-weight: 600;
+    font-size: 36px;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    margin: 0;
+  }
+  .notes h2 .accent {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-weight: 400;
+    color: #F26D5B;
+  }
+  .notes ul {
+    margin: 0; padding: 0; list-style: none;
+    display: grid; gap: 12px;
+  }
+  .notes li {
+    padding: 14px 16px;
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .notes li strong { color: var(--ink); font-weight: 600; }
+  .notes li code {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    background: var(--paper);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<main class="shell">
+
+  <p class="small-caps">Rebrand · v9 · 2026-05-01 · <a href="design-system.html" style="color:#F26D5B;text-decoration:underline;">view design system →</a></p>
+  <h1>The direction<br>for <span class="accent">slsh.me</span>.</h1>
+  <p class="lede">
+    Settled on <strong>Splash × Beam</strong> — Splash baseline (sticker energy, ink borders, marker highlights, Migra hero with General Sans for everything else) with surgical Beam injections: gradient corner orbs on the KPI tiles and feature cards, gradient-stroked analytics chart, light final CTA, illustrated OG preview. The earlier directions (Splash, Beam, Signal, Highlighter, Prism, Spark) live in <a href="exploration/" style="color:#F26D5B;text-decoration:underline;">exploration</a>.
+  </p>
+
+  <!-- Shared SVG defs for card sparklines -->
+  <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <defs>
+      <linearGradient id="beam-card-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#F97316"/>
+        <stop offset="100%" stop-color="#DB2777"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="grid grid-single">
+
+    <!-- Splash × Beam — the final direction -->
+    <div class="card-final">
+      <div class="preview splash has-orb">
+        <div class="pv-mock-title">
+          Splash with<br>
+          <span class="pv-marker">Beam</span> moments.
+        </div>
+        <div class="pv-row">
+          <span class="pv-mono">slsh.me<span class="slash">/</span>q2-launch</span>
+          <span class="pv-pill">launch</span>
+          <svg class="pv-spark" viewBox="0 0 30 12" preserveAspectRatio="none"><path d="M0,10 L10,7 L20,4 L30,2"/></svg>
+          <span class="pv-clicks">8,432</span>
+        </div>
+        <div class="pv-row">
+          <span class="pv-mono">go.acme.io<span class="slash">/</span>spring</span>
+          <span class="pv-pill lime">sale</span>
+          <svg class="pv-spark" viewBox="0 0 30 12" preserveAspectRatio="none"><path d="M0,9 L10,6 L20,5 L30,3"/></svg>
+          <span class="pv-clicks">14k</span>
+        </div>
+        <div class="pv-row">
+          <span class="pv-mono">slsh.me<span class="slash">/</span>podcast</span>
+          <span class="pv-pill sky">tour</span>
+          <svg class="pv-spark" viewBox="0 0 30 12" preserveAspectRatio="none"><path d="M0,11 L10,8 L20,5 L30,2"/></svg>
+          <span class="pv-clicks">47k</span>
+        </div>
+      </div>
+      <div class="meta">
+        <p class="name">Splash × Beam <span style="font-size:13px;color:var(--ink-faint);font-weight:400;">— the direction</span></p>
+        <p class="tagline">Splash baseline with surgical Beam injections: gradient corner orbs on the KPI tiles and feature cards, gradient-stroked analytics chart, marker-highlighted persona headlines, illustrated OG preview, light final CTA. Migra carries the hero only — General Sans handles every other H2/H3.</p>
+        <div class="row">
+          <span class="swatch" style="background:#FFFCF5;"></span>
+          <span class="swatch" style="background:#131210;"></span>
+          <span class="swatch" style="background:#FB8B3C;"></span>
+          <span class="swatch" style="background:linear-gradient(135deg,#FB8B3C,#F49AC0);"></span>
+          <span class="swatch" style="background:#B6DE5B;"></span>
+          <span class="swatch" style="background:linear-gradient(135deg,#6FC4EE,#B5A0FB);"></span>
+          <span class="swatch" style="background:#F49AC0;"></span>
+          <span class="swatch" style="background:linear-gradient(135deg,#FBDF6E,#FB8B3C);"></span>
+        </div>
+        <dl class="specs">
+          <dt>Hero</dt><dd>Migra</dd>
+          <dt>H2 / H3 / Body</dt><dd>General Sans</dd>
+          <dt>Mono</dt><dd>JetBrains Mono</dd>
+          <dt>Vibe</dt><dd>quirky-confident, with polish where it counts</dd>
+        </dl>
+        <div class="views">
+          <a href="final.html" class="view">
+            <span class="view-kind">Product</span>
+            <span class="view-title">Links index →</span>
+          </a>
+          <a href="landing-final.html" class="view">
+            <span class="view-kind">Marketing</span>
+            <span class="view-title">Landing page →</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Exploration archive -->
+  <section class="archive">
+    <div class="archive-head">
+      <h3>Exploration archive</h3>
+      <p>Earlier directions, kept for reference.</p>
+    </div>
+    <div class="archive-grid">
+      <a href="exploration/signal.html" class="archive-link">
+        <div class="arch-name">Signal</div>
+        <div class="arch-desc">Operator dashboard, terminal strip, italic serif accent</div>
+      </a>
+      <a href="exploration/highlighter.html" class="archive-link">
+        <div class="arch-name">Highlighter</div>
+        <div class="arch-desc">Marketer's notebook, marker strokes, washi tape, Caveat hand</div>
+      </a>
+      <a href="exploration/prism.html" class="archive-link">
+        <div class="arch-name">Prism</div>
+        <div class="arch-desc">Soft auras, glassy cards, jewel-tone gradients</div>
+      </a>
+      <a href="exploration/spark.html" class="archive-link">
+        <div class="arch-name">Spark</div>
+        <div class="arch-desc">Splash quirk + Signal seriousness — the precursor to Beam</div>
+      </a>
+      <div class="archive-link archive-pair">
+        <div class="arch-name">Splash</div>
+        <div class="arch-desc">Sticker energy, ink borders, marker highlights — the baseline for the chosen direction</div>
+        <div class="arch-views">
+          <a href="exploration/splash.html">Index →</a>
+          <a href="exploration/landing-splash.html">Landing →</a>
+        </div>
+      </div>
+      <div class="archive-link archive-pair">
+        <div class="arch-name">Beam</div>
+        <div class="arch-desc">Glass surfaces, soft auras, gradient pairs — the source of the orb injections</div>
+        <div class="arch-views">
+          <a href="exploration/beam.html">Index →</a>
+          <a href="exploration/landing-beam.html">Landing →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="notes">
+    <div>
+      <p class="small-caps" style="margin-bottom:14px;">Notes</p>
+      <h2>What the<br>chosen direction <span class="accent">covers</span>.</h2>
+    </div>
+    <ul>
+      <li><strong>Links index</strong> — fully populated app screen: 10 link rows (campaigns, custom domain, password, expired, OG, limit, API, archived, live-flash), header stats with gradient corner orbs, dev surface stickers, filters, active-campaign banner, empty state.</li>
+      <li><strong>Landing page</strong> — full marketing page: hero (Paste · Slash · Share, Migra), trust bar, Analytics + Custom Domains, 6-card feature grid (Beam orbs + Splash flat icons), three personas with marker-highlighted headlines, FAQ, changelog, light final CTA.</li>
+      <li><strong>Typography rule.</strong> Migra (display serif) renders only the hero h1. Every other H2 / H3 / heading uses General Sans. Mono for slugs and code chips.</li>
+      <li><strong>Beam injections.</strong> Gradient corner orbs on KPI tiles + feature cards, gradient stroke on the analytics chart, illustrated OG preview, light (not dark) final CTA. Everything else stays Splash — ink borders, marker highlights, sticker pills, hard-shadow card pops, tilted cards that straighten on hover.</li>
+      <li style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);">No app code touched. Static HTML in <code style="color:var(--ink-soft);">public/brand/</code>. The live landing page at <code style="color:var(--ink-soft);">/</code> is unchanged.</li>
+    </ul>
+  </section>
+
+</main>
+
+</body>
+</html>

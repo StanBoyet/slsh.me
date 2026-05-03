@@ -13,12 +13,12 @@ module CampaignsHelper
   }.freeze
 
   DEFAULT_CHANNEL = { label: "Custom", icon: "•", medium: nil,
-                      bg: "bg-zinc-100 dark:bg-zinc-700/40", fg: "text-zinc-600 dark:text-zinc-300" }.freeze
+                      bg: "bg-zinc-100", fg: "text-zinc-600" }.freeze
 
   PRESEED_CHANNELS = %w[meta linkedin newsletter].freeze
 
   def channel_for(utm_source)
-    CHANNEL_REGISTRY[utm_source.to_s] || DEFAULT_CHANNEL.merge(label: utm_source.to_s.presence || "Custom")
+    CHANNEL_REGISTRY[utm_source.to_s] || DEFAULT_CHANNEL.merge(label: utm_source.to_s.presence ||"Custom")
   end
 
   # JSON map exposed to the channel_matrix Stimulus controller for utm_source -> medium presets.
